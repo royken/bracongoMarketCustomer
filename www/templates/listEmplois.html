@@ -1,0 +1,22 @@
+<ion-view view-title="Bracongo Jobs">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+  
+     <div class="list card"   ng-repeat="emploi in emplois" >
+<!--          href="#/app/event/{{event.$id}}"-->
+            <div class="item item-divider">
+               <h2> {{emploi.titre}}</h2>
+            </div>
+           <div class="item item-divider" style="margin: 0%; padding: 0%;">
+               
+          <a  href="#" class="subdued" style="margin: 0%; padding: 0%; padding-right: 10px;">
+                <i class="icon ion-calendar "></i> {{emploi.date}}
+               </a></p>
+          </div> 
+           <div class=" item" style="margin: 0%; padding: 0%;">
+              
+               <a class="button button-full button-assertive ink" href="#/app/emploi/{{emploi.$id}}" style="margin: 0%; padding: 0%;"> Plus</a>
+            </div>
+      </div>
+     
+  </ion-content>
+</ion-view>

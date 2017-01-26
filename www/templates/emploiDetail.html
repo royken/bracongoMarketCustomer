@@ -1,0 +1,43 @@
+<ion-view view-title="Détail Emploi">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="tabs tabs-dark  static">
+            <!--<a ui-sref="app.activity" class="tab-item">
+                <i class="icon ion-arrow-graph-up-right"></i> Activity
+            </a>-->
+            <!--<a ui-sref="app.friends" class="tab-item">
+                <i class="icon ion-android-people"></i> Friends
+            </a>-->
+            <!--<a ui-sref="app.gallery" class="tab-item">
+                <i class="icon ion-images"></i> Photos
+            </a>-->
+            <a  class="tab-item">
+                <h2>{{emploi.title}}</h2>
+            </a>
+            
+
+        </div>
+        <div style="text-align:justify; padding: 2%; ">
+            
+            {{emploi.description}}
+        </div>
+       
+         <div style="text-align:justify; padding: 2%; ">
+           
+                <h2> <strong>Misson</strong></h2>
+                {{emploi.mission}}
+        
+        </div>
+       <div style="text-align:justify; padding: 2%; ">
+                <h2><strong> Profil recherché</strong></h2>
+                {{emploi.profil}}
+            
+        </div>
+       <div style="text-align:justify; padding: 2%; ">
+            Publié le : {{emploi.date}}
+        </div>
+
+        <div  >
+            <a class="button button-full button-assertive ink" ng-click="openModal()" >Postuler</a>
+        </div>
+        </ion-content>
+</ion-view>

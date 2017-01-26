@@ -1,0 +1,22 @@
+<ion-view view-title="Campagnes">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+     <div class="list card"   ng-repeat="campagne in campagnes" >
+<!--          href="#/app/event/{{event.$id}}"-->
+            <div class="item item-divider">
+               <h2> {{campagne.titre}}</h2>
+            </div>
+            <div class="item item-image" ng-click="detailCampagne(campagne.$id)">
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image" src="img/worl_cola.jpg">
+            </div>
+           <div class="item" style="margin-top: 5px%;">
+          <a  href="#" class="subdued">
+                <i class="icon ion-calendar "></i> {{campagne.date}}
+               </a></p>
+          </div> 
+           <div class=" item" style="margin: 0%; padding: 0%;">             
+               <a class="button button-full button-assertive ink" href="#/app/campagne/{{campagne.$id}}"> Plus</a>
+            </div>
+      </div>
+  </ion-content>
+</ion-view>

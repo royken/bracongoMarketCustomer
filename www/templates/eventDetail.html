@@ -1,0 +1,40 @@
+<ion-view view-title="Détail Evenements">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+    <div class="hero slide-up" style="background-image: url('img/kwilu_small.png');">
+            <div class="content">
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+            <!--<a ui-sref="app.activity" class="tab-item">
+                <i class="icon ion-arrow-graph-up-right"></i> Activity
+            </a>-->
+            <!--<a ui-sref="app.friends" class="tab-item">
+                <i class="icon ion-android-people"></i> Friends
+            </a>-->
+            <a class="tab-item" href="tel:{{event.contact}}"><i class="icon ion-ios-telephone"></i>Appeler</a>
+            <!--<a ui-sref="app.gallery" class="tab-item">
+                <i class="icon ion-images"></i> Photos
+            </a>-->
+
+        </div>
+        <div style="text-align:justify; padding: 2%; ">
+            <h2>{{event.title}}</h2>
+            {{event.description}}
+        </div>
+        <div  >
+            <a class="item item-icon-left" href="tel:{{event.contact}}"><i class="icon ion-ios-telephone"></i>{{event.contact}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-time"></i>{{event.heure}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-location-outline"></i>{{event.lieu}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-location"></i>{{event.adresse}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{event.date}}</a>
+        </div>
+        </ion-content>
+</ion-view>

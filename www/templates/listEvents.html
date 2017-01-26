@@ -1,0 +1,25 @@
+<ion-view view-title="Evènements">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+  
+     <div class="list card"   ng-repeat="event in events" >
+<!--          href="#/app/event/{{event.$id}}"-->
+            <div class="item item-divider">
+               <h2> {{event.titre}}</h2>
+            </div>
+            <div class="item item-image" ng-click="detailEvent(event.$id)">
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image" src="img/kwilu.png">
+            </div>
+           <div class="item" style="margin-top: 5px%;">
+          <a  href="#" class="subdued">
+                <i class="icon ion-calendar "></i> {{event.date}}
+               </a></p>
+          </div> 
+           <div class=" item" style="margin: 0%; padding: 0%;">
+              
+               <a class="button button-full button-assertive ink" href="#/app/event/{{event.$id}}"> Plus</a>
+            </div>
+      </div>
+     
+  </ion-content>
+</ion-view>

@@ -1,0 +1,31 @@
+<ion-view view-title="Accueil" align-title="left">
+  
+    <ion-content id="fhm_page" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">  
+        <div class="fhm_container">  
+            <div class="fhm_row">  
+                <div class="fhm_item fhm_item1" ui-sref="app.listEvent">  
+                    <span class="sp">Evènements</span>  
+                </div>  
+                <div class="fhm_item fhm_item2" ng-click="campagnesPage()">  
+                    <span class="sp"> Campagnes</span>  
+                </div>  
+            </div>  
+            <div class="fhm_row">  
+                <div class="fhm_item fhm_item3" ng-click="jeuxPage()">  
+                    <span class="sp"> Jeux</span>  
+                </div>  
+                <div class="fhm_item fhm_item4" ng-click="loisirsPage()">  
+                    <span class="sp">Loisirs</span>  
+                </div>  
+            </div>  
+            <div class="fhm_row">  
+                <div class="fhm_item fhm_item5" ng-click="emploisPage()">  
+                    <span class="sp">Emploi</span>  
+                </div>  
+                <div class="fhm_item fhm_item6" ng-click="aboutPage()">  
+                    <span class="sp">A Propos</span>  
+                </div>  
+            </div>  
+        </div>  
+    </ion-content>
+</ion-view>
