@@ -3,12 +3,26 @@
 
 angular.module('starter.controllers', ['ionic','firebase'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout,$ionicPlatform,UserService) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
     $scope.hasHeaderFabRight = false;
+    var vm = this;
+
+    $ionicPlatform.ready(function() {
+
+        // Initialize the database.
+        UserService.initDB();
+
+        // Get all birthday records from the database.
+       /* UserService.getAllUsers()
+                        .then(function (users) {
+                            vm.users = users;
+                        });
+                        */
+    });
 
     var navIcons = document.getElementsByClassName('ion-navicon');
     for (var i = 0; i < navIcons.length; i++) {
@@ -113,7 +127,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk) {
+.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk,UserService) {
     $scope.$parent.clearFabs();
     $timeout(function() {
         $scope.$parent.hideHeader();
@@ -490,6 +504,100 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
+.controller('ContactCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $scope.emailSend = "rdsid@bracongo.cd";
+
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+
+var options = {timeout: 10000, enableHighAccuracy: true};
+ 
+  function initialize() {
+        var myLatlng = new google.maps.LatLng(43.07493,-89.381388);
+        
+        var mapOptions = {
+          center: myLatlng,
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"),
+            mapOptions);
+        
+        //Marker + infowindow + angularjs compiled ng-click
+        var contentString = "<div><a ng-click='clickTest()'>Click me!</a></div>";
+        var compiled = $compile(contentString)($scope);
+
+        var infowindow = new google.maps.InfoWindow({
+          content: compiled[0]
+        });
+
+        var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+
+        $scope.map = map;
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+      
+      $scope.centerOnMe = function() {
+        if(!$scope.map) {
+          return;
+        }
+
+        $scope.loading = $ionicLoading.show({
+          content: 'Getting current location...',
+          showBackdrop: false
+        });
+
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+          $scope.loading.hide();
+        }, function(error) {
+          alert('Unable to get location: ' + error.message);
+        });
+      };
+      
+      $scope.clickTest = function() {
+        alert('Example of infowindow with ng-click')
+      };
+
+  $scope.envoyerSuggestion= function(contenu) {
+      
+        if(window.plugins && window.plugins.emailComposer) {
+            window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+                console.log("Response -> " + result);
+            },  
+            "Message pour boîte à suggestion", // Subject
+            contenu,                      // Body
+            ["roykenvalmy@gmail.com"],    // To
+            null,                    // CC
+            null,                    // BCC
+            false,                   // isHTML
+            null,                    // Attachments
+            null);                   // Attachment Data
+        }
+       // $scope.closeModal();
+    }
+
+    // Set Ink
+    ionicMaterialInk.displayEffect();
+})
 .controller('AboutCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase) {
     // Set Header
     $scope.$parent.showHeader();
@@ -646,6 +754,77 @@ angular.module('starter.controllers', ['ionic','firebase'])
     },
   }  
 })
+
+.factory('UserService',['$q','Loki', function($q, Loki){
+//.factory('UserService', ['$q', 'Loki', UserService]);
+
+//function UserService($q, Loki) {  
+    var _db;
+    var _users;
+
+    function initDB() {          
+        var adapter = new LokiCordovaFSAdapter({"prefix": "loki"});  
+        _db = new Loki('userDB',
+                {
+                    autosave: true,
+                    autosaveInterval: 1000, // 1 second
+                    adapter: adapter
+                });
+    };
+
+     function getAllUsers() {        
+            return $q(function (resolve, reject) {
+    
+                var options = {
+                    users: {
+                        proto: Object,
+                        inflate: function (src, dst) {
+                            var prop;
+                            for (prop in src) {
+                                if (prop === 'Date') {
+                                    dst.Date = new Date(src.Date);
+                                } else {
+                                    dst[prop] = src[prop];
+                                }
+                            }
+                        }
+                    }
+                };
+    
+                _db.loadDatabase(options, function () {
+                    _users = _db.getCollection('users');
+    
+                    if (!_users) {
+                        _users = _db.addCollection('users');
+                    }
+    
+                    resolve(_users.data);
+                });
+            });
+};
+
+
+     function addUser(user) {
+            _users.insert(user);
+        };
+
+        function updateUser(user) {            
+            _users.update(user);
+        };
+
+        function deleteUser(user) {
+            _users.remove(user);
+        };
+
+    return {
+        initDB: initDB,
+        getAllUsers: getAllUsers,
+        addUser: addUser,
+        updateUser: updateUser,
+        deleteUser: deleteUser
+    };
+//}
+}])
 
 .controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.$parent.showHeader();
