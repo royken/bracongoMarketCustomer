@@ -520,6 +520,27 @@ angular.module('starter.controllers', ['ionic','firebase'])
         });
     }, 300);
 
+     $scope.$on('mapInitialized', function (event, map) {
+        $scope.map = map;
+    });
+
+$scope.positions = [{
+            lat: 4.0473831,
+            lng: 9.6951812
+        }];
+    $scope.centerOnMe = function () {
+        $scope.positions = [];
+        $ionicLoading.show();
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            $scope.positions.push({lat: pos.k, lng: pos.B});
+            console.log(pos);
+            $scope.map.setCenter(pos);
+            $ionicLoading.hide();
+        });
+
+    };
+
 var options = {timeout: 10000, enableHighAccuracy: true};
  
   function initialize() {
