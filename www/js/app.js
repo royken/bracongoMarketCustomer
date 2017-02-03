@@ -293,7 +293,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
         }
     })
-
+.state('app.barProche', {
+        url: '/barProche',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/pdv_proche.html',
+                controller: 'ContactCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        }
+    })
     .state('app.profile', {
         url: '/profile',
         views: {

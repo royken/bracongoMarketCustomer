@@ -525,8 +525,15 @@ angular.module('starter.controllers', ['ionic','firebase'])
     });
 
 $scope.positions = [{
-            lat: 4.0473831,
-            lng: 9.6951812
+            lat: -4.3267466,
+            lng: 15.3444303
+        },{
+            lat: -4.3247466,
+            lng: 15.3434303
+        }
+        ,{
+            lat: -4.3245466,
+            lng: 15.3437303
         }];
     $scope.centerOnMe = function () {
         $scope.positions = [];
