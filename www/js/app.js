@@ -305,6 +305,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
         }
     })
+.state('app.planning', {
+        url: '/planning',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/planning.html',
+                controller: 'PlanningCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        }
+    })
     .state('app.profile', {
         url: '/profile',
         views: {

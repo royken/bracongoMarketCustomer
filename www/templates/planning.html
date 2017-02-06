@@ -1,0 +1,33 @@
+<ion-view view-title="Animations de la semaine">
+  <ion-content class="contents"  scroll="true" style="padding: 3%">
+
+
+
+
+  <div   ng-repeat="p in planning" >
+    <div  style="background-color: #da2d2d;color: #000;padding: 5%; margin-top: 2%;margin-bottom: 0%" >
+      {{p.jour}}
+    </div>
+            <div class="row">
+              <div class="list card"   ng-repeat="anim in p.anims" >
+            <div class="item item-image" >
+                <img class="full-image" src="img/marque.png">
+            </div>
+           <div class="item" style="font-size: 10px;">          
+                <i class="icon ion-calendar "></i> {{anim.heure}} </br>
+                <i class="icon ion-location "></i> {{anim.lieu}}</br>
+                <i class="icon ion-calendar "></i> {{anim.responsable}}
+               </p>
+          </div> 
+           
+      </div>
+            </div>
+      </div>
+
+
+
+   
+
+  </ion-content>
+</ion-view>
+

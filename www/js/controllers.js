@@ -504,6 +504,30 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
+.controller('PlanningCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    
+    $scope.emplois = [];
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    
+    $scope.planning = [
+        {jour:"Lundi 06/02/2017",anims:[{responsable:"Royken",lieu:"Kintambo",heure:"17h00",marque:"Nkoyi"},{responsable:"Royken",lieu:"Ngombe",heure:"18h00",marque:"33 Export"},{responsable:"Royken1",lieu:"Ngaliema",heure:"14h00",marque:"World Cola"}]},
+        {jour:"Mardi 07/02/2017",anims:[{responsable:"Roy",lieu:"Ngaba",heure:"17h00",marque:"Doppel"},{responsable:"Royken roy",lieu:"Ngiri Ngiri",heure:"18h00",marque:"Top Cola"},{responsable:"Royken4",lieu:"Bumbu",heure:"14h00",marque:"Castel"}]}
+    ];
+        
+
+     $ionicLoading.hide();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
 .controller('ContactCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation) {
     // Set Header
     $scope.$parent.showHeader();
