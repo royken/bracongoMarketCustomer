@@ -201,3 +201,23 @@ background-color: #ffca2a;
 {  
     background-color: #0086dc;  
 }  
+
+/*For map*/
+.scroll {
+    height: 100%;
+}
+ 
+#map {
+    width: 100%;
+    height: 100%;
+}
+/* For rating*/
+ul.rating li {
+  display: inline;
+  border: 0px;
+  background: none;
+  padding: 5px 3px;
+}
+ul.rating li i {
+  font-size: 15px;
+}

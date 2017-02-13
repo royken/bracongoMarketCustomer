@@ -528,7 +528,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ContactCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
+.controller('ContactCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -536,10 +536,6 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     $scope.emailSend = "rdsid@bracongo.cd";
-    $scope.rating = {};
-    $scope.rating.rate = 3;
-    $scope.rating.max = 5;
-    $scope.pdvs = [];
 
     // Set Motion
     $timeout(function() {
@@ -548,60 +544,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
         });
     }, 300);
 
-    $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });    
-  $scope.pdvs = serviceFactory.getPdvs();
-  console.log("data",$scope.pdvs);
-  $ionicLoading.hide();
-
      $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
     });
-
-     $scope.points = [
-     {
-        nom:"PAPA KAMBAYI",
-        latitude:-4.32324457,
-        longitude:15.27876949,
-        proprio:"KAMBAYI ZEPHIRHIN",
-        adresse:"AVE, LUMANDE, 1",
-        quartier:"QRT,SOCIMAT",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"REGINA",
-        latitude:-4.31285667,
-        longitude:15.30543232,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"GUYLAIN PAYENZO",
-        latitude:-4.33921051,
-        longitude:15.26832485,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"MOLISHO",
-        latitude:-4.33580256,
-        longitude:15.25940990,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     }
-     ];
 
 $scope.positions = [{
             lat: -4.3267466,
@@ -614,71 +559,76 @@ $scope.positions = [{
             lat: -4.3245466,
             lng: 15.3437303
         }];
+    $scope.centerOnMe = function () {
+        $scope.positions = [];
+        $ionicLoading.show();
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            $scope.positions.push({lat: pos.k, lng: pos.B});
+            console.log(pos);
+            $scope.map.setCenter(pos);
+            $ionicLoading.hide();
+        });
+
+    };
 
 var options = {timeout: 10000, enableHighAccuracy: true};
  
- $cordovaGeolocation.getCurrentPosition(options).then(function(position){
- 
-    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
- 
-    var mapOptions = {
-      center: latLng,
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
- 
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    //Wait until the map is loaded
-google.maps.event.addListenerOnce($scope.map, 'idle', function(){
- 
-  var marker = new google.maps.Marker({
-      map: $scope.map,
-      animation: google.maps.Animation.DROP,
-      position: latLng
-  });      
- 
-  var infoWindow = new google.maps.InfoWindow({
-      content: "Here I am!"
-  });
- 
-  google.maps.event.addListener(marker, 'click', function () {
-      infoWindow.open($scope.map, marker);
-  });
- 
-});
- /////////
-  }, function(error){
-    console.log("Could not get location");
-    /*A retier après*/
-    var latLng = new google.maps.LatLng(-4.3245466, 15.3437303);
- 
-    var mapOptions = {
-      center: latLng,
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
- 
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    //Wait until the map is loaded
-google.maps.event.addListenerOnce($scope.map, 'idle', function(){
- 
-  var marker = new google.maps.Marker({
-      map: $scope.map,
-      animation: google.maps.Animation.DROP,
-      position: latLng
-  });      
- 
-  var infoWindow = new google.maps.InfoWindow({
-      content: "Here I am!"
-  });
- 
-  google.maps.event.addListener(marker, 'click', function () {
-      infoWindow.open($scope.map, marker);
-  });
- 
-});
-  });
-  
+  function initialize() {
+        var myLatlng = new google.maps.LatLng(43.07493,-89.381388);
+        
+        var mapOptions = {
+          center: myLatlng,
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"),
+            mapOptions);
+        
+        //Marker + infowindow + angularjs compiled ng-click
+        var contentString = "<div><a ng-click='clickTest()'>Click me!</a></div>";
+        var compiled = $compile(contentString)($scope);
+
+        var infowindow = new google.maps.InfoWindow({
+          content: compiled[0]
+        });
+
+        var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+
+        $scope.map = map;
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+      
+      $scope.centerOnMe = function() {
+        if(!$scope.map) {
+          return;
+        }
+
+        $scope.loading = $ionicLoading.show({
+          content: 'Getting current location...',
+          showBackdrop: false
+        });
+
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+          $scope.loading.hide();
+        }, function(error) {
+          alert('Unable to get location: ' + error.message);
+        });
+      };
+      
+      $scope.clickTest = function() {
+        alert('Example of infowindow with ng-click')
+      };
+
   $scope.envoyerSuggestion= function(contenu) {
       
         if(window.plugins && window.plugins.emailComposer) {
@@ -780,7 +730,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.factory('serviceFactory', function($firebaseArray, $firebaseObject,$http){
+.factory('serviceFactory', function($firebaseArray, $firebaseObject){
  
     var   auth = firebase.auth();
   var database = firebase.database().ref();
@@ -795,20 +745,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var localCampagnes = [];
     var localLoisirs = [];
     var emplois = [];
-    var pdvProche = [];
     var i ;
     
   return {
-
-    getPdvs: function(){
- 
-      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
-          pdvProche = response;
-          return pdvProche;
-      });
- 
-    },
-
     getAllEvent: function(){ 
        
       return $firebaseArray(refEvent);
