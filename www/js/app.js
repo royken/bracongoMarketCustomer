@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','lokijs','ngMap'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','lokijs','ngMap','ionic.rating'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -298,6 +298,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         views: {
             'menuContent': {
                 templateUrl: 'templates/pdv_proche.html',
+                controller: 'ContactCtrl'
+            },
+            'fabContent': {
+                template: '<button id="fab-gallery" class="button button-fab button-fab-top-right expanded button-energized-900 drop"><i class="icon ion-location"></i></button>',
+                controller: function ($timeout) {
+                    $timeout(function () {
+                        document.getElementById('fab-gallery').classList.toggle('on');
+                    }, 600);
+                }
+            }
+        }
+    })
+.state('app.barProcheMap', {
+        url: '/barProcheMap',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/pdv_proche_map.html',
                 controller: 'ContactCtrl'
             },
             'fabContent': {
