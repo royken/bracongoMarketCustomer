@@ -528,7 +528,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ContactCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
+.controller('ContactCtrl', function($scope, $stateParams,$http ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -552,9 +552,19 @@ angular.module('starter.controllers', ['ionic','firebase'])
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
                   });    
-  $scope.pdvs = serviceFactory.getPdvs();
-  console.log("data",$scope.pdvs);
+    $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+          $scope.pdvs = response.data;
+          console.log("fresh", JSON.stringify(response));
+        //  return pdvProche;
+      });
+ // $scope.pdvs = serviceFactory.getPdvs();
+  console.log("data",JSON.stringify($scope.pdvs));
+  //console.log("data0",$scope.pdvs[0]);
   $ionicLoading.hide();
+
+  $scope.todo = function(){
+    console.log("helooooooooo");
+  };
 
      $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
@@ -802,10 +812,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getPdvs: function(){
  
-      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
-          pdvProche = response;
+      $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+          pdvProche = response.data;
+          console.log("fresh", JSON.stringify(response));
           return pdvProche;
       });
+
  
     },
 

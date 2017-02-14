@@ -301,7 +301,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 controller: 'ContactCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-gallery" class="button button-fab button-fab-top-right expanded button-energized-900 drop"><i class="icon ion-location"></i></button>',
+                template: '<button id="fab-gallery" class="button button-fab button-fab-top-right expanded button-energized-900 drop" ng-click=toto()><i class="icon ion-location"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-gallery').classList.toggle('on');
@@ -362,5 +362,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/login');
 }).constant('ApiEndpoint', {
-  url: 'http://41.223.104.197:8080/api'
+  url: 'http://41.223.104.197:8080/pdv/api'
 });
