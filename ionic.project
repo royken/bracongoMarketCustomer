@@ -1,6 +1,12 @@
 {
   "name": "sample",
   "app_id": "d9c83c08",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://41.223.104.197:8080/pdv/api"
+    }
+  ],
   "gulpStartupTasks": [
     "sass",
     "watch"

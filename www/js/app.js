@@ -361,4 +361,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/login');
+}).constant('ApiEndpoint', {
+  url: 'http://41.223.104.197:8080/api'
 });
