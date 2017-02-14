@@ -528,7 +528,28 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ContactCtrl', function($scope, $stateParams,$http ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
+
+.controller('MapCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,GoogleMaps) {
+    
+    
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    
+     $ionicLoading.hide();
+
+     GoogleMaps.init();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
+.controller('ContactCtrl', function($scope,$state ,$stateParams,$http ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -562,9 +583,13 @@ angular.module('starter.controllers', ['ionic','firebase'])
   //console.log("data0",$scope.pdvs[0]);
   $ionicLoading.hide();
 
-  $scope.todo = function(){
+  $scope.toto = function(){
     console.log("helooooooooo");
   };
+
+  $scope.showMap = function(){ 
+        $state.go('app.barProcheMap');        
+    }
 
      $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
@@ -790,6 +815,93 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
+
+.factory('GoogleMaps', function($cordovaGeolocation, serviceFactory){
+ 
+  var apiKey = false;
+  var map = null;
+ 
+  function initMap(){
+ 
+    var options = {timeout: 10000, enableHighAccuracy: true};
+ 
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+ 
+      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+ 
+      var mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+ 
+      map = new google.maps.Map(document.getElementById("map"), mapOptions);
+ 
+      //Wait until the map is loaded
+      google.maps.event.addListenerOnce(map, 'idle', function(){
+ 
+        //Load the markers
+        loadMarkers();
+ 
+      });
+ 
+    }, function(error){
+      console.log("Could not get location");
+ 
+        //Load the markers
+        loadMarkers();
+    });
+  }
+ 
+  function loadMarkers(){
+ 
+      //Get all of the markers from our Markers factory
+      serviceFactory.getPdvs().then(function(markers){
+ 
+        //console.log("Markers: ", markers);
+ 
+        var records = markers;
+ 
+        for (var i = 0; i < records.length; i++) {
+ 
+          var record = records[i];  
+          console.log("Markers: ", records[i]); 
+          var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
+ 
+          // Add the markerto the map
+          var marker = new google.maps.Marker({
+              map: map,
+              animation: google.maps.Animation.DROP,
+              position: markerPos
+          });
+ 
+          var infoWindowContent = "<h4>" + record.nom + "</h4>";          
+ 
+          addInfoWindow(marker, infoWindowContent, record);
+        }
+ 
+      }); 
+ 
+  }
+ 
+  function addInfoWindow(marker, message, record) {
+ 
+      var infoWindow = new google.maps.InfoWindow({
+          content: message
+      });
+ 
+      google.maps.event.addListener(marker, 'click', function () {
+          infoWindow.open(map, marker);
+      });
+  }
+ 
+  return {
+    init: function(){
+      initMap();
+    }
+  }
+ 
+})
 .factory('serviceFactory', function($firebaseArray, $firebaseObject,$http,ApiEndpoint){
  
     var   auth = firebase.auth();
@@ -806,16 +918,17 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var localLoisirs = [];
     var emplois = [];
     var pdvProche = [];
+    var pdvProches = [];
     var i ;
     
   return {
 
     getPdvs: function(){
-
-     return  $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
           pdvProche = response.data;
+          pdvProches = response.data;
           console.log("fresh", JSON.stringify(response));
-          return pdvProche;
+          return pdvProches;
       });
  
     },
