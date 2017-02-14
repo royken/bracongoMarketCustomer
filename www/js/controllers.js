@@ -804,8 +804,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
 
 
-        $http.get('http://192.168.1.100:8080/pdv/api/pdv', { headers: {'Access-Control-Allow-Origin': '*'}
-  }).success(function(response){
+        $http.get(ApiEndpoint.url + '/pdv').success(function(response){
     console.log(response)
             pdvProche = response;
           return pdvProche;
