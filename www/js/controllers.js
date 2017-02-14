@@ -801,11 +801,21 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   return {
 
     getPdvs: function(){
+
+
+
+        $http.get('http://192.168.1.100:8080/pdv/api/pdv', { headers: {'Access-Control-Allow-Origin': '*'}
+  }).success(function(response){
+    console.log(response)
+            pdvProche = response;
+          return pdvProche;
+  });
  
-      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+     /* return $http.get("http://192.168.1.100:8080/pdv/api/pdv").then(function(response){
           pdvProche = response;
           return pdvProche;
       });
+      */
  
     },
 
