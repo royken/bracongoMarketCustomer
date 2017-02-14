@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['ionic','firebase'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout,$ionicPlatform,UserService) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout,$ionicPlatform,UserService,ApiEndpoint) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -780,7 +780,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.factory('serviceFactory', function($firebaseArray, $firebaseObject,$http){
+.factory('serviceFactory', function($firebaseArray, $firebaseObject,$http,ApiEndpoint){
  
     var   auth = firebase.auth();
   var database = firebase.database().ref();

@@ -9,5 +9,11 @@
     "www/**/*",
     "!www/lib/**/*",
     "!www/**/*.map"
+  ],
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://41.223.104.197:8080/pdv/api"
+    }
   ]
 }
