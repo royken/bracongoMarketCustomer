@@ -102,6 +102,11 @@ angular.module('starter.controllers', ['ionic','firebase'])
 })
 
 .controller('AccueilCtrl', function($scope ,$state, $timeout, $stateParams, ionicMaterialInk) {
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
     $timeout(function() {
         $scope.$parent.hideHeader();
@@ -124,6 +129,19 @@ angular.module('starter.controllers', ['ionic','firebase'])
         $scope.aboutPage = function(){ 
             $state.go('app.about');        
         }
+        $scope.fete = function(){ 
+            $state.go('app.serviceFete');        
+        }
+        $scope.barProche = function(){ 
+            $state.go('app.barProche');        
+        }
+        $scope.animation = function(){ 
+            $state.go('app.planning');        
+        }
+        $scope.chateaux= function(){ 
+            $state.go('app.cleCategorie');        
+        }
+
     ionicMaterialInk.displayEffect();
 })
 
@@ -205,7 +223,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
     
             
     $scope.events = serviceFactory.getAllEvent();
@@ -264,7 +282,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab('right');
+   $scope.$parent.clearFabs();
     
     $scope.campagnes = serviceFactory.getAllCampagnes();
         console.log( $scope.campagnes) ; 
@@ -323,7 +341,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
-    
+    $scope.$parent.clearFabs();
     $scope.jeux = serviceFactory.getAllJeux();
         console.log( $scope.jeux) ; 
 
@@ -381,7 +399,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
-    
+    $scope.$parent.clearFabs();
     $scope.loisirs = serviceFactory.getAllLoisirs();
 
     $scope.detailLoisir = function(id){ 
@@ -403,7 +421,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab(false);
     $scope.loisir = null;
     var loisirId = $stateParams.id;
-
+    $scope.$parent.clearFabs();
     // Set Motion
     $timeout(function() {
         ionicMaterialMotion.slideUp({
@@ -433,6 +451,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
     
     $scope.emplois = serviceFactory.getAllEmplois();
     $scope.detailEmploi = function(id){ 
@@ -500,6 +519,72 @@ angular.module('starter.controllers', ['ionic','firebase'])
         }
         $scope.closeModal();
     }
+
+    // Set Ink
+    ionicMaterialInk.displayEffect();
+})
+
+.controller('ChateauCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    
+    $scope.emplois = [];
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+
+    $scope.categories = [
+        {nom:"Vins rouges",id:1},{nom:"Vins blancs",id:2},{nom:"Vins roses"},{nom:"Champagnes",id:3},{nom:"very",id:4},{nom:"Jus compal",id:5}
+    ];
+    
+    $scope.detailCat = function(id){ 
+        $state.go('app.categorieList', {id: id});        
+    }
+   /* $scope.emplois = serviceFactory.getAllEmplois();
+    $scope.detailEmploi = function(id){ 
+        $state.go('app.itemEmploi', {id: id});        
+    }
+    */    
+
+     $ionicLoading.hide();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
+.controller('CategorieListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $scope.jeu = null;
+    var jeuId = $stateParams.id;
+    console.log("L'id de la categorie", $stateParams.id);
+     console.log("L'id de l'event", $stateParams);
+    console.log(jeuId) ;
+
+    $scope.produits = [
+        {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
+        {nom:"Château ferrande rouge",prix:[{volume:"1,5L",valeur:"61,000"},{volume:"75CL",valeur:"36,000"},{volume:"37,5CL",valeur:"15,000"}]}
+    ];
+
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+
+  $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });    
+  $ionicLoading.hide();
 
     // Set Ink
     ionicMaterialInk.displayEffect();
@@ -735,6 +820,112 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
+.controller('ServiceFeteCtrl', function($scope ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    
+    $scope.emplois = [];
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.tel="+2437726627";
+    $scope.mail = "servicefete@bracongo.cd";
+    $scope.pageSimuler = function(){
+        $state.go('app.simulateur');
+    };
+        
+    $ionicModal.fromTemplateUrl('templates/proforma.html',{
+        scope: $scope,
+     animation:'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+  $scope.openModal = function(){
+    $scope.modal.show();
+  }
+  $scope.closeModal = function(){
+    $scope.modal.hide();
+  }
+  $scope.biere;
+    $scope.bg;
+    $scope.casier;
+    $scope.pression;
+    $scope.nbrFutTembo;
+    $scope.nbrFutSkol;
+    $scope.nbrCasierBeau ;
+    $scope.nbrCasierCastel ;
+    $scope.nbrCasierDoppel;
+    $scope.nbrCasierCastel ;
+    $scope.nbrCasierNkoyi ;
+    $scope.nbrCasierNkoyiBlaclk ;
+    $scope.nbrCasierTembo ;
+    $scope.nbrCasierSkol ;
+    $scope.nbrCasierBg ;
+        
+    $scope.calculer = function(){
+        console.log("biere", $scope.biere);
+        console.log("casier", $scope.casier);
+        console.log("pression", $scope.pression);
+        console.log("nbrFutTembo", $scope.nbrFutTembo);
+        console.log("nbrCasierBeau", $scope.nbrCasierBeau);
+        console.log("nbrCasierNkoyi", $scope.nbrCasierNkoyi);
+        console.log("biere", $scope.biere);
+    }
+
+     $ionicLoading.hide();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
+.controller('SimulateurCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    
+    $scope.emplois = [];
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.nbrPlace=null;
+    $scope.mail = "servicefete@bracongo.cd";
+    $scope.biere;
+    $scope.bg;
+    $scope.casier;
+    $scope.pression;
+    $scope.nbrFutTembo;
+    $scope.nbrFutSkol;
+    $scope.nbrCasierBeau ;
+    $scope.nbrCasierCastel ;
+    $scope.nbrCasierDoppel;
+    $scope.nbrCasierCastel ;
+    $scope.nbrCasierNkoyi ;
+    $scope.nbrCasierNkoyiBlaclk ;
+    $scope.nbrCasierTembo ;
+    $scope.nbrCasierSkol ;
+    $scope.nbrCasierBg ;
+        
+    $scope.calculer = function(){
+        console.log("biere", $scope.biere);
+        console.log("casier", $scope.casier);
+        console.log("pression", $scope.pression);
+        console.log("nbrFutTembo", $scope.nbrFutTembo);
+        console.log("nbrCasierBeau", $scope.nbrCasierBeau);
+        console.log("nbrCasierNkoyi", $scope.nbrCasierNkoyi);
+        console.log("biere", $scope.biere);
+    }
+
+     $ionicLoading.hide();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
 .controller('AboutCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase) {
     // Set Header
     $scope.$parent.showHeader();
@@ -936,7 +1127,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     },
 
     getAllEvent: function(){ 
-       
+       localEvents = $firebaseArray(refEvent);
       return $firebaseArray(refEvent);
     },
     getOneEvent: function(id){

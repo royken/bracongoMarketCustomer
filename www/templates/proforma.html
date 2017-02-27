@@ -1,0 +1,75 @@
+<ion-modal-view>
+<!-- <ion-header-bar class="bar-balanced"> -->
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">Remplir le formulaire</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeModal()">
+        <i class="icon ion-close"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content class= "splash">
+ <form >
+      <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+        <div class="col" style="border: 0px 0px 0px 0px !important white;">
+          <label class="item item-input">
+            <span class="input-label">Nombre de places</span>
+            <input type="text" placeholder="Nombre de places" ng-model="nbrPlace">
+          </label>
+        </div>
+      </div> 
+
+      <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+        <div class="col" style="border: 0px 0px 0px 0px !important white !important;">
+          <label class="item item-input">
+            <span class="input-label">Bière</span>
+             <ion-checkbox ng-model="biere"></ion-checkbox>
+          </label>
+        </div>
+      </div>
+
+      <div class="row responsive-sm" ng-show="biere" style="border: 0px 0px 0px 0px !important white;">
+        <div class="col"style="border: 0px 0px 0px 0px !important white;">
+          <label class="item item-input">
+            <span class="input-label">Casier</span>
+            <ion-checkbox ng-model="casier"></ion-checkbox> 
+          </label>
+        </div>
+        <div class="row responsive-sm" ng-show="casier" style="border: 0px 0px 0px 0px !important white;">
+          <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+            <div class="col"style="border:0px 0px 0px 0px !important white;">
+              <label class="item item-input">
+                <span class="input-label">Nombre Casiers Beaufort</span>
+                <input type="number"  ng-model="nbrCasierBeau">
+              </label>
+            </div>
+          </div>
+          <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+            <div class="col"style="border: 0px 0px 0px 0px !important white;">
+              <label class="item item-input">
+                <span class="input-label">Nombre Casiers Castel</span>
+                <input type="number"  ng-model="nbrCasierCastel">
+              </label>
+            </div>
+          </div>
+           <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+            <div class="col"style="border: 0px 0px 0px 0px !important white;">
+              <label class="item item-input">
+                <span class="input-label">Nombre Casiers Doppel</span>
+                <input type="number"  ng-model="nbrCasierDoppel">
+              </label>
+            </div>
+          </div>
+      </div> 
+      </div>
+
+      <div class="row responsive-sm"> 
+        <div class="col">
+          <button  class="button button-block button-balanced" type="submit" ng-click="calculer()"> 
+               <i class="ion-android-send">Envoyer</i>
+          </button>
+        </div>
+      </div>
+    </form>
+    </ion-content>
+</ion-modal-view>

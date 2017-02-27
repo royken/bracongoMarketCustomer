@@ -1,31 +1,55 @@
-<ion-view view-title="Accueil" align-title="left">
-  
-    <ion-content id="fhm_page" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">  
+<ion-view view-title="Evènements">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" scroll="false" class="animate-fade-slide-in"> 
+  <ion-header-bar class="bar-assertive">
+      <div class="buttons">
+      <h1 class="title">Accueil</h1>
+      </div>
+    </ion-header-bar>
+    <div id="fhm_page"> 
         <div class="fhm_container">  
             <div class="fhm_row">  
-                <div class="fhm_item fhm_item1" ui-sref="app.listEvent">  
-                    <span class="sp">Evènements</span>  
+                <div class="fhm_item fhm_item1" ui-sref="app.listEvent"> 
+                <img src="img/black/cart.png" alt="" title="" /> 
+                    <span >Evènements</span>  
                 </div>  
                 <div class="fhm_item fhm_item2" ng-click="campagnesPage()">  
-                    <span class="sp"> Campagnes</span>  
+                    <img src="img/black/blog.png" alt="" title="" />
+                    <span > Campagnes</span>  
+                </div> 
+                 <div class="fhm_item fhm_item2" ng-click="animation()">  
+                    <img src="img/black/building.png" alt="" title="" />
+                    <span > Animation</span>  
                 </div>  
             </div>  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item3" ng-click="jeuxPage()">  
-                    <span class="sp"> Jeux</span>  
+                    <img src="img/black/bus.png" alt="" title="" />
+                    <span>Jeux</span>
                 </div>  
-                <div class="fhm_item fhm_item4" ng-click="loisirsPage()">  
-                    <span class="sp">Loisirs</span>  
+                <div class="fhm_item fhm_item4" ng-click="loisirsPage()"> 
+                <img src="img/black/form.png" alt="" title="" /> 
+                    <span >Infos</span>  
+                </div>
+                <div class="fhm_item fhm_item4" ng-click="barProche()">  
+                    <img src="img/black/favorites.png" alt="" title="" />
+                    <span >Bar Proche</span>  
                 </div>  
             </div>  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item5" ng-click="emploisPage()">  
-                    <span class="sp">Emploi</span>  
+                    <img src="img/black/categories.png" alt="" title="" />
+                    <span >Emploi</span>  
                 </div>  
-                <div class="fhm_item fhm_item6" ng-click="aboutPage()">  
-                    <span class="sp">A Propos</span>  
+                <div class="fhm_item fhm_item6" ng-click="fete()">  
+                    <img src="img/black/lock.png" alt="" title="" />
+                    <span >Service Fête</span>  
+                </div>  
+                <div class="fhm_item fhm_item6" ng-click="chateaux()">  
+                    <img src="img/black/form.png" alt="" title="" />
+                    <span style="white-space: nowrap">Clé des Châteaux</span>  
                 </div>  
             </div>  
+        </div>
         </div>  
     </ion-content>
 </ion-view>
