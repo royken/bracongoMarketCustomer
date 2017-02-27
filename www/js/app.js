@@ -330,6 +330,54 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
         }
     })
+.state('app.cleCategorie', {
+        url: '/cleCategorie',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/cleCategorie.html',
+                controller: 'ChateauCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        }
+    })
+.state('app.categorieList', {
+    url: '/cleCategorie/:id',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/categorieDetail.html',
+        controller: 'CategorieListCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
+.state('app.serviceFete', {
+    url: '/serviceFete',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/serviceFete.html',
+        controller: 'ServiceFeteCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
+.state('app.simulateur', {
+    url: '/simulateur',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/proforma.html',
+        controller: 'SimulateurCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
     .state('app.profile', {
         url: '/profile',
         views: {

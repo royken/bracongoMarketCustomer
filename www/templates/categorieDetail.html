@@ -1,0 +1,24 @@
+<ion-view view-title="Catégories">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+
+  <div class="row gallery">
+    <div class="col col-50 " ng-repeat="prod in produits">
+        <div class="item item-image" >
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image" src="img/germain.jpg" style="width: 35px !important; height: 102px !important;">
+            </div>
+           <div class="item item-text-wrap" >
+            <p>
+                 {{prod.nom}}
+            </p>
+          </div>
+          <div class="item" >
+            <div class="list" ng-repeat="p in prod.prix" style="margin-bottom:2px; ">
+                 {{p.volume}} : {{p.valeur}} FC
+            </div>
+         </div>
+    </div>
+</div>
+     
+  </ion-content>
+</ion-view>
