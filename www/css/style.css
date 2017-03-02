@@ -153,7 +153,7 @@ p {
   height: 25%;
   left:0;
   right:0;
-  background-color:#FFFFFF;
+  background-color:#000000;
   clear:both;
   padding-top: 0%;
   padding-bottom:0%;
@@ -161,24 +161,24 @@ p {
   margin-top: 0%;
 }
 .fhm_item {
-  height: 100%;
-  width:33.33%;
-  background-color: #FFFFFF;
-  border: 0px solid #FFFFFF;
+  height: 99.5%;
+  width:33%;
+  background-color: #000000;
+  border: 0px solid #000000;
   padding-top: 0%;
-  padding-left: 0%;
-  padding-right: 0%;
-  padding-bottom:0%;
-  margin-bottom: 0%;
+  padding-left: 1%;
+  padding-right: 1%;
+  padding-bottom:1%;
+  margin-bottom: 1%;
   margin-top: 0%;
   margin-left: 0%;
-  margin-right: 0%;
+  margin-right:0%;
   float:left;
    font-family: Arial,  Helvetica,  sans-serif;  
     font-size: 50 px;  
     color: black;  
     text-align: center;  
-    border: 0 px solid #FFFFFF;
+    border: 0 px solid #000000;
     position:relative; /*it can be fixed too*/
        
 
@@ -264,3 +264,7 @@ ul.rating li i {
 .contents{
   background-color: #eff0f1;
 } 
+
+#fhm_page{
+  background-color: #000000;
+}

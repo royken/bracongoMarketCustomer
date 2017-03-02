@@ -829,6 +829,28 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
+.controller('InfosCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk) {
+    
+    
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
+    
+   
+        
+
+     $ionicLoading.hide();
+
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
 .controller('ServiceFeteCtrl', function($scope ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.emplois = [];
@@ -1060,7 +1082,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
     }, function(error){
       console.log("Could not get location");
- 
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
         //Load the markers
         loadMarkers();
     });
@@ -1098,7 +1120,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
           }
       };
  
-      var boundingRadius = getBoundingRadius(centerNorm, boundsNorm);
+   /*   var boundingRadius = getBoundingRadius(centerNorm, boundsNorm);
  
       var params = {
         "centre": centerNorm,
@@ -1106,7 +1128,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         "zoom": zoom,
         "boundingRadius": boundingRadius
       };
- 
+    */
       //Get all of the markers from our Markers factory
       serviceFactory.getPdvs().then(function(markers){
  

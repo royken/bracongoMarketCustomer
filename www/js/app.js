@@ -273,7 +273,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         url: '/infos',
         views: {
             'menuContent': {
-                templateUrl: 'templates/infos.html'
+                templateUrl: 'templates/infos.html',
+                controller:'InfosCtrl'
             },
             'fabContent': {
                 template: ''
