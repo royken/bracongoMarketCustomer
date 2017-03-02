@@ -141,6 +141,15 @@ angular.module('starter.controllers', ['ionic','firebase'])
         $scope.chateaux= function(){ 
             $state.go('app.cleCategorie');        
         }
+        $scope.game = function(){
+            //$state.go('app.cleCategorie');
+        }
+        $scope.contact = function(){
+            $state.go('app.contact');
+        }
+        $scope.infos = function(){
+            $state.go('app.infos');
+        }
 
     ionicMaterialInk.displayEffect();
 })
@@ -873,7 +882,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         console.log("nbrFutTembo", $scope.nbrFutTembo);
         console.log("nbrCasierBeau", $scope.nbrCasierBeau);
         console.log("nbrCasierNkoyi", $scope.nbrCasierNkoyi);
-        console.log("biere", $scope.biere);
     }
 
      $ionicLoading.hide();
@@ -1011,6 +1019,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
   var apiKey = false;
   var map = null;
+  var markerCache = [];
  
   function initMap(){
  
@@ -1033,6 +1042,19 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
         //Load the markers
         loadMarkers();
+        //Reload markers every time the map moves
+        google.maps.event.addListener(map, 'dragend', function(){
+          console.log("moved!");
+          loadMarkers();
+        });
+ 
+        //Reload markers every time the zoom changes
+        google.maps.event.addListener(map, 'zoom_changed', function(){
+          console.log("zoomed!");
+          loadMarkers();
+        });
+ 
+       // enableMap();
  
       });
  
@@ -1043,8 +1065,47 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         loadMarkers();
     });
   }
+
+   function enableMap(){
+    $ionicLoading.hide();
+  }
+ 
+  function disableMap(){
+    $ionicLoading.show({
+      template: 'You must be connected to the Internet to view this map.'
+    });
+  }
  
   function loadMarkers(){
+    var center = map.getCenter();
+      var bounds = map.getBounds();
+      var zoom = map.getZoom();
+ 
+      //Convert objects returned by Google to be more readable
+      var centerNorm = {
+          lat: center.lat(),
+          lng: center.lng()
+      };
+ 
+      var boundsNorm = {
+          northeast: {
+              lat: bounds.getNorthEast().lat(),
+              lng: bounds.getNorthEast().lng()
+          },
+          southwest: {
+              lat: bounds.getSouthWest().lat(),
+              lng: bounds.getSouthWest().lng()
+          }
+      };
+ 
+      var boundingRadius = getBoundingRadius(centerNorm, boundsNorm);
+ 
+      var params = {
+        "centre": centerNorm,
+        "bounds": boundsNorm,
+        "zoom": zoom,
+        "boundingRadius": boundingRadius
+      };
  
       //Get all of the markers from our Markers factory
       serviceFactory.getPdvs().then(function(markers){
@@ -1057,7 +1118,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
           var record = records[i];  
           console.log("Markers: ", records[i]); 
-          var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
+         /* var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
  
           // Add the markerto the map
           var marker = new google.maps.Marker({
@@ -1069,10 +1130,46 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
           var infoWindowContent = "<h4>" + record.nom + "</h4>";          
  
           addInfoWindow(marker, infoWindowContent, record);
+          */
+          if (!markerExists(record.latitude, record.longitude)) {
+ 
+              var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
+              // add the marker
+              var marker = new google.maps.Marker({
+                  map: map,
+                  animation: google.maps.Animation.DROP,
+                  position: markerPos
+              });
+ 
+// Add the marker to the markerCache so we know not to add it again later
+              var markerData = {
+                latitude: record.latitude,
+                latitude: record.longitude,
+                marker: marker
+              };
+ 
+              markerCache.push(markerData);
+ 
+              var infoWindowContent = "<h4>" + record.nom + "</h4>"+"/br" + "<h3>" + record.adresse + "</h3>";          
+ 
+              addInfoWindow(marker, infoWindowContent, record);
+          }
         }
  
       }); 
  
+  }
+
+  function markerExists(lat, lng){
+      var exists = false;
+      var cache = markerCache;
+      for(var i = 0; i < cache.length; i++){
+        if(cache[i].latitude === lat && cache[i].longitude === lng){
+          exists = true;
+        }
+      }
+ 
+      return exists;
   }
  
   function addInfoWindow(marker, message, record) {
@@ -1115,12 +1212,14 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   return {
 
     getPdvs: function(){
+ 
       return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
           pdvProche = response.data;
           pdvProches = response.data;
           console.log("fresh", JSON.stringify(response));
           return pdvProches;
       });
+
  
     },
 

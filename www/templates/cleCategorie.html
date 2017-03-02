@@ -2,16 +2,18 @@
   <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
 
   <div class="row gallery">
-    <div class="col col-50" ng-repeat="cat in categories">
+    <div class="col col-50 " ng-repeat="cat in categories">
+      <div class="card">
         <div class="item item-image" ng-click="detailCat(cat.id)">
 <!--                href="#/app/event/{{event.$id}}"-->
-                <img class="full-image" src="img/vin2.png">
+                <img class="full-image" src="img/titi.png" style="height: 100%; width: 100%">
             </div>
            <div class="item" style="margin-top: 5px%;">
           <a  href="#/app/cleCategorie/{{cat.id}}" class="subdued">
                  {{cat.nom}}
                </a></p>
           </div>
+    </div>
     </div>
 </div>
      

@@ -1,55 +1,56 @@
-<ion-view view-title="Evènements">
-  <ion-content class="contents" ng-class="{expanded:isExpanded}" scroll="false" class="animate-fade-slide-in"> 
-  <ion-header-bar class="bar-assertive">
-      <div class="buttons">
+<ion-view view-title="Evènements"> 
+  <ion-header-bar class="bar-assertive ink" style="background-color: #B71C1C">
+      <div class="buttons button-assertive" style="background-color: #B71C1C">
       <h1 class="title">Accueil</h1>
       </div>
     </ion-header-bar>
-    <div id="fhm_page"> 
+    <ion-content id="fhm_page">
         <div class="fhm_container">  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item1" ui-sref="app.listEvent"> 
-                <img src="img/black/cart.png" alt="" title="" /> 
-                    <span >Evènements</span>  
+                <img src="img/menu/big/event.png" alt="" title="" style="height: 100%;width: 100%"/>   
                 </div>  
                 <div class="fhm_item fhm_item2" ng-click="campagnesPage()">  
-                    <img src="img/black/blog.png" alt="" title="" />
-                    <span > Campagnes</span>  
+                    <img src="img/menu/big/campagne.png" alt="" title="" style="height: 100%;width: 100%" />  
                 </div> 
                  <div class="fhm_item fhm_item2" ng-click="animation()">  
-                    <img src="img/black/building.png" alt="" title="" />
-                    <span > Animation</span>  
+                    <img src="img/menu/big/animation.png" alt="" title="" style="height: 100%;width: 100%"/>
                 </div>  
             </div>  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item3" ng-click="jeuxPage()">  
-                    <img src="img/black/bus.png" alt="" title="" />
-                    <span>Jeux</span>
+                    <img src="img/menu/big/jeux.png" alt="" title="" style="height: 100%;width: 100%"/>
                 </div>  
-                <div class="fhm_item fhm_item4" ng-click="loisirsPage()"> 
-                <img src="img/black/form.png" alt="" title="" /> 
-                    <span >Infos</span>  
+                <div class="fhm_item fhm_item4" ng-click="infos()"> 
+                <img src="img/menu/big/infos.png" alt="" title="" style="height: 100%;width: 100%"/>  
                 </div>
                 <div class="fhm_item fhm_item4" ng-click="barProche()">  
-                    <img src="img/black/favorites.png" alt="" title="" />
-                    <span >Bar Proche</span>  
+                    <img src="img/menu/big/bar.png" alt="" title="" style="height: 100%;width: 100%"/> 
                 </div>  
             </div>  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item5" ng-click="emploisPage()">  
-                    <img src="img/black/categories.png" alt="" title="" />
-                    <span >Emploi</span>  
+                    <img src="img/menu/big/jobs.png" alt="" title="" style="height: 100%;width: 100%"/> 
                 </div>  
                 <div class="fhm_item fhm_item6" ng-click="fete()">  
-                    <img src="img/black/lock.png" alt="" title="" />
-                    <span >Service Fête</span>  
+                    <img src="img/menu/big/fete.png" alt="" title="" style="height: 100%;width: 100%"/>  
                 </div>  
                 <div class="fhm_item fhm_item6" ng-click="chateaux()">  
-                    <img src="img/black/form.png" alt="" title="" />
-                    <span style="white-space: nowrap">Clé des Châteaux</span>  
+                    <img src="img/menu/big/cle.png" alt="" title="" style="height: 100%;width: 100%"/>
+                </div>  
+            </div>
+            <div class="fhm_row">  
+                <div class="fhm_item fhm_item7" ng-click="game()">  
+                    <img src="img/menu/big/jeuxL.png" alt="" title="" style="height: 100%;width: 100%"/> 
+                </div>  
+                <div class="fhm_item fhm_item8" ng-click="aboutPage()">  
+                    <img src="img/menu/big/about.png" alt="" title="" style="height: 100%;width: 100%"/>  
+                </div>  
+                <div class="fhm_item fhm_item9" ng-click="contact()">  
+                    <img src="img/menu/big/contact.png" alt="" title="" style="height: 100%;width: 100%"/>
                 </div>  
             </div>  
         </div>
-        </div>  
+         
     </ion-content>
 </ion-view>

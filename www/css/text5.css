@@ -19,7 +19,7 @@ a,
 a:visited { font-family: Enriqueta; font-size: 16px; color: #92864d; text-decoration: none; }
 
 
-a:hover { text-decoration: underline }
+a:hover { text-decoration: none }
 
 
 /*p { color: #605833; font-family: Enriqueta; font-size: 16px; padding: 10px 0; }*/
