@@ -543,6 +543,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
 
     $scope.categories = [
         {nom:"Vins rouges",id:1},{nom:"Vins blancs",id:2},{nom:"Vins roses"},{nom:"Champagnes",id:3},{nom:"very",id:4},{nom:"Jus compal",id:5}
@@ -569,6 +570,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $scope.$parent.clearFabs();
     $scope.jeu = null;
     var jeuId = $stateParams.id;
     console.log("L'id de la categorie", $stateParams.id);
@@ -608,6 +610,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
     
     $scope.planning = [
         {jour:"Lundi 06/02/2017",anims:[{responsable:"Royken",lieu:"Kintambo",heure:"17h00",marque:"Nkoyi"},{responsable:"Royken",lieu:"Ngombe",heure:"18h00",marque:"33 Export"},{responsable:"Royken1",lieu:"Ngaliema",heure:"14h00",marque:"World Cola"}]},
@@ -648,6 +651,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $scope.$parent.clearFabs();
     $scope.emailSend = "rdsid@bracongo.cd";
     $scope.rating = {};
     $scope.rating.rate = 3;

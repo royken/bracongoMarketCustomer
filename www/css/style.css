@@ -272,3 +272,7 @@ ul.rating li i {
 #fhm_page{
   background-color: #000000;
 }
+
+.bar,.bar-assertive,.bar-assertive-900{
+  background-color: #000000;
+}
