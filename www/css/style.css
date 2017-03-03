@@ -138,6 +138,10 @@ p {
 }
 
 /* Menu de la page d'accueil*/
+#myHeader{
+
+}
+
 #fhm_page,
 .fhm_container {
   position:absolute;
@@ -145,7 +149,7 @@ p {
   right:0;
   left:0;
   bottom:0;
-  margin-top: 5%;
+  margin-top: 6%;
 }
 
 .fhm_row {

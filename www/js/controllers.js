@@ -102,15 +102,13 @@ angular.module('starter.controllers', ['ionic','firebase'])
 })
 
 .controller('AccueilCtrl', function($scope ,$state, $timeout, $stateParams, ionicMaterialInk) {
-    $scope.$parent.showHeader();
+     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
-    $timeout(function() {
-        $scope.$parent.hideHeader();
-    }, 0);
+    
         $scope.eventsPage = function(){ 
             $state.go('app.listEvent');        
         }
@@ -1215,8 +1213,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 .factory('serviceFactory', function($firebaseArray, $firebaseObject,$http,ApiEndpoint){
  
     var   auth = firebase.auth();
-  var database = firebase.database().ref();
-  var storage = firebase.storage();
+    var database = firebase.database().ref();
+    var storage = firebase.storage();
     var refEvent = database.child('events');
     var refJeux = database.child('jeux');
     var refCampagnes = database.child('campagnes');
