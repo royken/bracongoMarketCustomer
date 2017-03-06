@@ -1,6 +1,7 @@
 <ion-view view-title="Evènements">
   <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
   
+    <li ng-if="events.length === 0">( Aucun évènement ! )</li>
      <div class="list card"   ng-repeat="event in events" >
 <!--          href="#/app/event/{{event.$id}}"-->
             <div class="item item-divider">

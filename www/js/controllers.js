@@ -533,7 +533,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
 
 .controller('ChateauCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
-    $scope.emplois = [];
+    $scope.categories = [];
     $ionicLoading.show({     
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
@@ -545,18 +545,11 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
-    $scope.categories = [
-        {nom:"Vins rouges",id:1},{nom:"Vins blancs",id:2},{nom:"Vins roses"},{nom:"Champagnes",id:3},{nom:"very",id:4},{nom:"Jus compal",id:5}
-    ];
-    
-    $scope.detailCat = function(id){ 
-        $state.go('app.categorieList', {id: id});        
-    }
-   /* $scope.emplois = serviceFactory.getAllEmplois();
+    $scope.categories = serviceFactory.getAllCategories();
     $scope.detailEmploi = function(id){ 
-        $state.go('app.itemEmploi', {id: id});        
+        state.go('app.categorieList', {id: id});        
     }
-    */    
+        
 
      $ionicLoading.hide();
 
@@ -769,7 +762,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   });      
  
   var infoWindow = new google.maps.InfoWindow({
-      content: "Here I am!"
+      content: "Je suis ici!"
   });
  
   google.maps.event.addListener(marker, 'click', function () {
@@ -800,7 +793,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   });      
  
   var infoWindow = new google.maps.InfoWindow({
-      content: "Here I am!"
+      content: "Nous sommes ici"
   });
  
   google.maps.event.addListener(marker, 'click', function () {
@@ -1063,21 +1056,35 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
       //Wait until the map is loaded
       google.maps.event.addListenerOnce(map, 'idle', function(){
+
+        // add the user's position marker
+        var markerPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              
+              var marker = new google.maps.Marker({
+                  map: map,
+                  animation: google.maps.Animation.DROP,
+                  position: markerPos,
+                  icon: 'img/pin/green-dot.png'
+              });
+        var infoWindowContent = "<h3>" + "Je suis ici" + "</h3>" ;          
+ 
+              addInfoWindow(marker, infoWindowContent, latLng);
  
         //Load the markers
         loadMarkers();
         //Reload markers every time the map moves
-        google.maps.event.addListener(map, 'dragend', function(){
+       /* google.maps.event.addListener(map, 'dragend', function(){
           console.log("moved!");
           loadMarkers();
         });
+        */
  
         //Reload markers every time the zoom changes
-        google.maps.event.addListener(map, 'zoom_changed', function(){
+       /* google.maps.event.addListener(map, 'zoom_changed', function(){
           console.log("zoomed!");
           loadMarkers();
         });
- 
+        */
        // enableMap();
  
       });
@@ -1174,7 +1181,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
               markerCache.push(markerData);
  
-              var infoWindowContent = "<h4>" + record.nom + "</h4>"+"/br" + "<h3>" + record.adresse + "</h3>";          
+              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>";          
  
               addInfoWindow(marker, infoWindowContent, record);
           }
@@ -1223,7 +1230,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var refJeux = database.child('jeux');
     var refCampagnes = database.child('campagnes');
     var refLoisirs = database.child('loisirs');
-     var refEmplois = database.child('emplois');
+    var refEmplois = database.child('emplois');
+    var refCategories = database.child('categories');
     var localEvents = [];
     var localJeux = [];
     var localCampagnes = [];
@@ -1231,6 +1239,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var emplois = [];
     var pdvProche = [];
     var pdvProches = [];
+    var localCategories = [];
     var i ;
     
   return {
@@ -1303,6 +1312,17 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
                 }
             }
     },
+    getAllCategories: function(){
+        localCategories = $firebaseArray(refCategories);
+        return $firebaseArray(refCategories);
+    },
+    getOneCategorie: function(id){       
+            for(i=0; i < localCategories.length; i++){
+                if(localCategories[i].$id == id){
+                    return localCategories[i];
+                }
+            }
+    }
   }  
 })
 
