@@ -565,8 +565,10 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.clearFabs();
     var categorieId = $stateParams.id;
+    $scope.cat = null;
     console.log("L'id de la categorie", $stateParams.id);
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
+    console.log("categorie", $scope.cat);
     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.categorie);
 
     /*$scope.produits = [
@@ -1317,6 +1319,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     getAllCategories: function(){
         localCategories = $firebaseArray(refCategories);
         localVins = $firebaseArray(refVins);
+        //console.log("vins",localVins);
         return $firebaseArray(refCategories);
     },
     getOneCategorie: function(id){       
