@@ -546,7 +546,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.clearFabs();
 
     $scope.categories = serviceFactory.getAllCategories();
-    $scope.detailEmploi = function(id){ 
+    $scope.detailCat = function(id){ 
         state.go('app.categorieList', {id: id});        
     }
         
@@ -569,7 +569,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     console.log("L'id de la categorie", $stateParams.id);
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
     console.log("categorie", $scope.cat);
-    $scope.produits = serviceFactory.getCategorieProductList($scope.cat.categorie);
+    $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
 
     /*$scope.produits = [
         {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
@@ -587,7 +587,39 @@ angular.module('starter.controllers', ['ionic','firebase'])
   $ionicLoading.show({
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
+                  });  
+    $scope.detailVin = function(id){ 
+        state.go('app.vinDetail', {id: id});        
+    }  
+
+  
+  $ionicLoading.hide();
+
+    // Set Ink
+    ionicMaterialInk.displayEffect();
+})
+.controller('VinCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $scope.vin = null;
+    var vinId = $stateParams.id;
+    $scope.$parent.clearFabs();
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+
+  $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
                   });    
+  $scope.vin = serviceFactory.getOneVin(vinId);
   $ionicLoading.hide();
 
     // Set Ink
@@ -1319,7 +1351,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     getAllCategories: function(){
         localCategories = $firebaseArray(refCategories);
         localVins = $firebaseArray(refVins);
-        //console.log("vins",localVins);
+        console.log("vins",localVins);
         return $firebaseArray(refCategories);
     },
     getOneCategorie: function(id){       
@@ -1332,6 +1364,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getCategorieProductList: function(code){
         var result = [];    
+            console.log("CODE",code);
+            console.log("TAILLE",localVins.length);
             for(i = 0; i < localVins.length; i++){
                 if(localVins[i].categorie === code){
                     result.push(localVins[i]);

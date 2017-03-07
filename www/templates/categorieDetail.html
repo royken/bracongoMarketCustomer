@@ -1,17 +1,17 @@
-<ion-view view-title="Catégories">
+<ion-view view-title="Produits">
   <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
 
   <div class="row gallery">
     <div class="col col-50 " ng-repeat="prod in produits">
       <div class="card">
-        <div class="item item-image" >
+        <div class="item item-image" ng-click="detailVin(prod.$id)">
 <!--                href="#/app/event/{{event.$id}}"-->
                 <img class="full-image" data-ng-src="data:image/jpeg;base64,{{prod.image}}" style="height: 100%; width: 100%">
             </div>
            <div class="item item-text-wrap" >
-            <p>
+           <a  href="#/app/vin/{{prod.$id}}" class="subdued">
                  {{prod.nom}}
-            </p>
+            </a>
           </div>
        <!--   <div class="item" >
             <div class="list" ng-repeat="p in prod.prix" style="margin-bottom:2px; ">

@@ -355,6 +355,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
     }
   })
+.state('app.vinDetail', {
+    url: '/vin/:id',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/detailVin.html',
+        controller: 'VinCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
 .state('app.serviceFete', {
     url: '/serviceFete',   
     views: {
