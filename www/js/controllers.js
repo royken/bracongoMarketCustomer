@@ -564,10 +564,8 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.clearFabs();
-    $scope.jeu = null;
     var categorieId = $stateParams.id;
     console.log("L'id de la categorie", $stateParams.id);
-    console.log(jeuId) ;
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.categorie);
 
