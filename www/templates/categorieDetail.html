@@ -6,18 +6,19 @@
       <div class="card">
         <div class="item item-image" >
 <!--                href="#/app/event/{{event.$id}}"-->
-                <img class="full-image" src="img/categories.jpg" style="width: 100% !important; ">
+                <img class="full-image" data-ng-src="data:image/jpeg;base64,{{prod.image}}" style="height: 100%; width: 100%">
             </div>
            <div class="item item-text-wrap" >
             <p>
                  {{prod.nom}}
             </p>
           </div>
-          <div class="item" >
+       <!--   <div class="item" >
             <div class="list" ng-repeat="p in prod.prix" style="margin-bottom:2px; ">
                  {{p.volume}} : {{p.valeur}} FC
             </div>
          </div>
+       -->
     </div>
     </div>
 </div>

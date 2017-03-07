@@ -565,15 +565,17 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.clearFabs();
     $scope.jeu = null;
-    var jeuId = $stateParams.id;
+    var categorieId = $stateParams.id;
     console.log("L'id de la categorie", $stateParams.id);
-     console.log("L'id de l'event", $stateParams);
     console.log(jeuId) ;
+    $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
+    $scope.produits = serviceFactory.getCategorieProductList($scope.cat.categorie);
 
-    $scope.produits = [
+    /*$scope.produits = [
         {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
         {nom:"Château ferrande rouge",prix:[{volume:"1,5L",valeur:"61,000"},{volume:"75CL",valeur:"36,000"},{volume:"37,5CL",valeur:"15,000"}]}
     ];
+    */
 
     // Set Motion
     $timeout(function() {
@@ -1232,6 +1234,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var refLoisirs = database.child('loisirs');
     var refEmplois = database.child('emplois');
     var refCategories = database.child('categories');
+    var refVins = database.child('vins');
     var localEvents = [];
     var localJeux = [];
     var localCampagnes = [];
@@ -1240,6 +1243,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var pdvProche = [];
     var pdvProches = [];
     var localCategories = [];
+    var localVins = [];
     var i ;
     
   return {
@@ -1314,6 +1318,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     },
     getAllCategories: function(){
         localCategories = $firebaseArray(refCategories);
+        localVins = $firebaseArray(refVins);
         return $firebaseArray(refCategories);
     },
     getOneCategorie: function(id){       
@@ -1322,7 +1327,29 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
                     return localCategories[i];
                 }
             }
-    }
+    },
+
+    getCategorieProductList: function(code){
+        var result = [];    
+            for(i = 0; i < localVins.length; i++){
+                if(localVins[i].categorie === code){
+                    result.push(localVins[i]);
+                }
+            }
+            return result;
+
+    },
+    getAllVins: function(){
+        localVins = $firebaseArray(refVins);
+        return $firebaseArray(refVins);
+    },
+    getOneVin: function(id){       
+            for(i=0; i < localVins.length; i++){
+                if(localVins[i].$id == id){
+                    return localVins[i];
+                }
+            }
+    },
   }  
 })
 
