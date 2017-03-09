@@ -18,12 +18,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+        console.log("JE VEUX TESTER");
+        console.log("RESULT",Application.isInitialRun());
         var state = "app.accueil";
         if (Application.isInitialRun()) {
+            console.log("WEEEEEELLLLLLLLLCCCCCCCOO");
            Application.setInitialRun(false);
-           state = "app.accueil";
+           state = "app.login";
         }
-
+        console.log("J'AI TESTE");
         $state.go(state);
 
      /*   var push = new Ionic.Push({
