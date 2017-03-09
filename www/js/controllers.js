@@ -709,7 +709,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
         //  return pdvProche;
       });
  // $scope.pdvs = serviceFactory.getPdvs();
-  console.log("data",JSON.stringify($scope.pdvs));
+ // console.log("data",JSON.stringify($scope.pdvs));
   //console.log("data0",$scope.pdvs[0]);
   $ionicLoading.hide();
 
@@ -815,7 +815,10 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   }, function(error){
     console.log("Could not get location");
     /*A retier après*/
-    $scope.showPopup = function() {
+        showPopup();
+  });
+
+  function showPopup() {
         var alertPopup = $ionicPopup.alert({
             title: 'Etat GPS!',
             template: 'Veuillez activer votre GPS :-)!!! '
@@ -824,7 +827,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             console.log('Thank you for not eating my delicious ice cream cone');
         });
     };
-  });
   
   $scope.envoyerSuggestion= function(contenu) {
       
@@ -1114,7 +1116,11 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
     }, function(error){
       // Triggered on a button click, or some other target
-    $scope.showPopup = function() {
+        showPopup();
+    });
+  }
+
+   function showPopup() {
         var alertPopup = $ionicPopup.alert({
             title: 'Etat GPS!',
             template: 'Veuillez activer votre GPS :-)!!! '
@@ -1123,8 +1129,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             console.log('Thank you for not eating my delicious ice cream cone');
         });
     };
-    });
-  }
 
    function enableMap(){
     $ionicLoading.hide();
