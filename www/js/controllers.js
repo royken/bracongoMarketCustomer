@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['ionic','firebase'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout,$ionicPlatform,UserService,ApiEndpoint) {
+.controller('AppCtrl', function($scope, $ionicModal,$state ,$ionicPopover, $timeout,$ionicPlatform,UserService,ApiEndpoint,Application) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -99,6 +99,13 @@ angular.module('starter.controllers', ['ionic','firebase'])
             fabs[0].remove();
         }
     };
+
+    $scope.login = function(){
+        console.log("credentials",$scope.loginData);
+        Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
+        $state.go('app.accueil');
+
+    };
 })
 
 .controller('AccueilCtrl', function($scope ,$state, $timeout, $stateParams, ionicMaterialInk) {
@@ -152,12 +159,23 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk,UserService) {
+.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk,UserService,Application) {
     $scope.$parent.clearFabs();
+    $scope.loginData = {};
+    $scope.isExpanded = false;
+    $scope.hasHeaderFabLeft = false;
+    $scope.hasHeaderFabRight = false;
     $timeout(function() {
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
+
+    $scope.login = function(){
+        console.log("credentials",$scope.loginData);
+        Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
+        $state.go('app.accueil');
+
+    };
 })
 
 .controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
@@ -1460,6 +1478,26 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     };
 //}
 }])
+
+.factory('Application', function ($cordovaNativeStorage) {
+    return {
+      setInitialRun: function (initial) {
+        $cordovaNativeStorage.setItem("initialRun", initial);
+      },
+      isInitialRun : function () {
+        $cordovaNativeStorage.getItem("initialRun").then(function (value) {
+            console.log("InitialRun",value);
+            return value == "true";
+        });
+      },
+      registerUser : function(login,mdp,mail,name){
+        $cordovaNativeStorage.setItem("login", login);
+        $cordovaNativeStorage.setItem("mdp", mdp);
+        $cordovaNativeStorage.setItem("mail", mail);
+        $cordovaNativeStorage.setItem("name", name);
+      },
+    };
+})
 
 .controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.$parent.showHeader();

@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','lokijs','ngMap','ionic.rating','ngStorage'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','lokijs','ngMap','ionic.rating','ngStorage','ngCordova.plugins.nativeStorage'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$state, Application) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -18,6 +18,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+        var state = "app.accueil";
+        if (Application.isInitialRun()) {
+           Application.setInitialRun(false);
+           state = "app.accueil";
+        }
+
+        $state.go(state);
 
      /*   var push = new Ionic.Push({
             "debug":true
@@ -417,7 +424,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     */
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/login');
+  //  $urlRouterProvider.otherwise('/app/login');
 }).constant('ApiEndpoint', {
   url: 'http://41.223.104.197:8080/pdv/api'
 });

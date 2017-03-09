@@ -7,14 +7,14 @@
             </div>
         </div>
         <div class="list">
-             <ion-md-input placeholder="Nom" highlight-color="balanced" type="text"></ion-md-input>
-            <ion-md-input placeholder="Utilisateur" highlight-color="balanced" type="text"></ion-md-input>
-            <ion-md-input placeholder="E-mail" highlight-color="balanced" type="email"></ion-md-input>
-            <ion-md-input placeholder="Mot de passe" highlight-color="energized" type="password"></ion-md-input>
+             <ion-md-input placeholder="Nom" highlight-color="balanced" type="text" ng-model="loginData.nom"></ion-md-input>
+            <ion-md-input placeholder="Utilisateur" highlight-color="balanced" type="text" ng-model="loginData.login"></ion-md-input>
+            <ion-md-input placeholder="E-mail" highlight-color="balanced" type="email" ng-model="loginData.mail"></ion-md-input >
+            <ion-md-input placeholder="Mot de passe" highlight-color="energized" type="password" ng-model="loginData.passwd"></ion-md-input>
            <!-- <ion-md-input placeholder="Téléphone" highlight-color="energized" type="tel"></ion-md-input> -->
         </div>
         <div class="padding">
-            <button ui-sref="app.accueil" class="button button-full button-assertive ink">Enregistrement</button>
+            <button ng-click="login()" class="button button-full button-assertive ink">Enregistrement</button>
         </div>
         
     </ion-content>
