@@ -224,7 +224,8 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.events = [];
     $ionicLoading.show({     
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
+                    duration: 3000,
+                    animation: 'fade-in',
                   });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -234,8 +235,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     
             
     $scope.events = serviceFactory.getAllEvent();
-        console.log( $scope.events) ; 
-
+       
     $scope.detailEvent = function(id){ 
         console.log("J'envoie", id);
         $state.go('app.itemEvent', {id: id});        
@@ -450,8 +450,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
     
     $scope.emplois = [];
     $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
+                    template: '<div class="icon ion-loading-a"></div> Loading... ',
+                    animation: 'fade-in',
+                    showBackdrop: true
                   });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -459,8 +460,14 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
-    
+
+   /* Trendingpackages.$loaded().then(function(){
+    $ionicLoading.hide();
+  })
+   */ 
     $scope.emplois = serviceFactory.getAllEmplois();
+
+
     $scope.detailEmploi = function(id){ 
         $state.go('app.itemEmploi', {id: id});        
     }
@@ -535,8 +542,8 @@ angular.module('starter.controllers', ['ionic','firebase'])
     
     $scope.categories = [];
     $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
+                    template: '<div class="icon ion-loading-a"></div> Loading... ',
+                    animation: 'fade-in',
                   });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -566,11 +573,15 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.clearFabs();
     var categorieId = $stateParams.id;
     $scope.cat = null;
+    $ionicLoading.show({     
+                    template: '<div class="icon ion-loading-a"></div> Loading... ',
+                    animation: 'fade-in',
+                    showBackdrop: true
+                  });
     console.log("L'id de la categorie", $stateParams.id);
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
     console.log("categorie", $scope.cat);
     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
-
     /*$scope.produits = [
         {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
         {nom:"Château ferrande rouge",prix:[{volume:"1,5L",valeur:"61,000"},{volume:"75CL",valeur:"36,000"},{volume:"37,5CL",valeur:"15,000"}]}
@@ -583,11 +594,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             selector: '.slide-up'
         });
     }, 300);
-
-  $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });  
+  
     $scope.detailVin = function(id){ 
         state.go('app.vinDetail', {id: id});        
     }  
@@ -671,7 +678,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ContactCtrl', function($scope,$state ,$stateParams,$http ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
+.controller('ContactCtrl', function($scope,$state ,$stateParams,$http ,$timeout,$ionicPopup,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,$cordovaGeolocation,serviceFactory) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -808,33 +815,15 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   }, function(error){
     console.log("Could not get location");
     /*A retier après*/
-    var latLng = new google.maps.LatLng(-4.3245466, 15.3437303);
- 
-    var mapOptions = {
-      center: latLng,
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+    $scope.showPopup = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Etat GPS!',
+            template: 'Veuillez activer votre GPS :-)!!! '
+        });
+        alertPopup.then(function(res) {
+            console.log('Thank you for not eating my delicious ice cream cone');
+        });
     };
- 
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    //Wait until the map is loaded
-google.maps.event.addListenerOnce($scope.map, 'idle', function(){
- 
-  var marker = new google.maps.Marker({
-      map: $scope.map,
-      animation: google.maps.Animation.DROP,
-      position: latLng
-  });      
- 
-  var infoWindow = new google.maps.InfoWindow({
-      content: "Nous sommes ici"
-  });
- 
-  google.maps.event.addListener(marker, 'click', function () {
-      infoWindow.open($scope.map, marker);
-  });
- 
-});
   });
   
   $scope.envoyerSuggestion= function(contenu) {
@@ -1066,7 +1055,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     ionicMaterialInk.displayEffect();
 })
 
-.factory('GoogleMaps', function($cordovaGeolocation, serviceFactory){
+.factory('GoogleMaps', function($cordovaGeolocation, serviceFactory,$ionicPopup){
  
   var apiKey = false;
   var map = null;
@@ -1124,10 +1113,16 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       });
  
     }, function(error){
-      console.log("Could not get location");
-        map = new google.maps.Map(document.getElementById("map"), mapOptions);
-        //Load the markers
-        loadMarkers();
+      // Triggered on a button click, or some other target
+    $scope.showPopup = function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Etat GPS!',
+            template: 'Veuillez activer votre GPS :-)!!! '
+        });
+        alertPopup.then(function(res) {
+            console.log('Thank you for not eating my delicious ice cream cone');
+        });
+    };
     });
   }
 
@@ -1255,7 +1250,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   }
  
 })
-.factory('serviceFactory', function($firebaseArray, $firebaseObject,$http,ApiEndpoint){
+.factory('serviceFactory', function($ionicLoading,$firebaseArray, $firebaseObject,$http,ApiEndpoint){
  
     var   auth = firebase.auth();
     var database = firebase.database().ref();
@@ -1277,6 +1272,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var localCategories = [];
     var localVins = [];
     var i ;
+
+    
     
   return {
 
@@ -1292,7 +1289,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
     },
 
-    getAllEvent: function(){ 
+    getAllEvent: function(){
+
        localEvents = $firebaseArray(refEvent);
       return $firebaseArray(refEvent);
     },
@@ -1364,8 +1362,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getCategorieProductList: function(code){
         var result = [];    
-            console.log("CODE",code);
-            console.log("TAILLE",localVins.length);
+            //console.log("CODE",code);
+            //console.log("TAILLE",localVins.length);
             for(i = 0; i < localVins.length; i++){
                 if(localVins[i].categorie === code){
                     result.push(localVins[i]);
