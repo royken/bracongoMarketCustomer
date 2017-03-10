@@ -159,7 +159,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk,UserService,Application) {
+.controller('LoginCtrl', function($scope, $timeout,$state,  $stateParams, ionicMaterialInk,UserService,Application,firebase) {
     $scope.$parent.clearFabs();
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -173,6 +173,14 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.login = function(){
         console.log("credentials",$scope.loginData);
         Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
+        var refEvent = firebase.database().ref().child("users");
+        var objet = {
+            nom : $scope.loginData.nom,
+            mail : $scope.loginData.mail,
+            mdp : $scope.loginData.passwd,
+            login:$scope.loginData.login
+        }
+        refEvent.push(objet);
         $state.go('app.accueil');
 
     };
@@ -743,60 +751,8 @@ angular.module('starter.controllers', ['ionic','firebase'])
         $scope.map = map;
     });
 
-     $scope.points = [
-     {
-        nom:"PAPA KAMBAYI",
-        latitude:-4.32324457,
-        longitude:15.27876949,
-        proprio:"KAMBAYI ZEPHIRHIN",
-        adresse:"AVE, LUMANDE, 1",
-        quartier:"QRT,SOCIMAT",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"REGINA",
-        latitude:-4.31285667,
-        longitude:15.30543232,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"GUYLAIN PAYENZO",
-        latitude:-4.33921051,
-        longitude:15.26832485,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     },
-     {
-        nom:"MOLISHO",
-        latitude:-4.33580256,
-        longitude:15.25940990,
-        proprio:"KOSOLOKOLO",
-        adresse:"AVE, WANGATA, 150",
-        quartier:"QRT, NGBAKA",
-        tel:"+243851270558",
-        rate:5
-     }
-     ];
+    
 
-$scope.positions = [{
-            lat: -4.3267466,
-            lng: 15.3444303
-        },{
-            lat: -4.3247466,
-            lng: 15.3434303
-        }
-        ,{
-            lat: -4.3245466,
-            lng: 15.3437303
-        }];
 
 var options = {timeout: 10000, enableHighAccuracy: true};
  
@@ -994,13 +950,24 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('AboutCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase) {
+.controller('AboutCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase,Application) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
+    $scope.nom = null;
+
+    $scope.getNom = function(){
+        Application.getName().then(function(value){
+            $scope.nom = value;
+            console.log("Le nom du user",$scope.nom);
+        });
+    
+    }
+
+    // console.log("Le nom du user 2 ",$scope.nom);
 
     // Set Motion
     $timeout(function() {
@@ -1008,66 +975,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             selector: '.slide-up'
         });
     }, 300);
-    $scope.addJeux = function(){
-       var refEvent = firebase.database().ref().child("jeux");
-        var objet = {
-            titre : " Whatsapp selfie",
-            description : "Postez vos photos sur notre page facebook, <strong> whatsapp <strong> ",
-            image : 'sansa-snowcastle4.jpg',
-            lots:['samsumg phone','montre']
-        }
-        refEvent.push(objet);
-    }
-    $scope.addCampagne = function(){
-       var refEvent = firebase.database().ref().child("campagnes");
-        var objet = {
-            titre : " Nouvelle boisson World Cola",
-            description : "World Cola est une nouvelle boisson Cola <i> panafricaine</i> ",
-            image : 'sansa-snowcastle4.jpg'
-        }
-        refEvent.push(objet);
-    }
-    $scope.addLoisir = function(){
-       var refEvent = firebase.database().ref().child("loisirs");
-        var objet = {
-            titre : " JAZZ KIFF 2016",
-            description : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a dui non est mollis vehicula sit amet at magna. Donec feugiat orci non vestibulum mattis. Nulla facilisi. Mauris suscipit quam sapien, ac dictum purus mattis quis ",
-            image : 'sansa-snowcastle4.jpg',
-            date:"du 01/06/2016 au 04/06/2016",
-            heure:"18H00",
-            lieu:"Halle de la Gombe",
-            adresse:"Av. YYYYYY",
-            contact:"09875444"
-        }
-        refEvent.push(objet);
-    }
-    $scope.addEvent = function(){
-       var refEvent = firebase.database().ref().child("events");
-        var objet = {
-            titre : " Nouvelle boisson World Cola",
-            description : "World Cola est une nouvelle boisson Cola <i> panafricaine</i> ",
-            image : 'sansa-snowcastle4.jpg',
-            date:"",
-            heure:"",
-            lieu:"",
-            adresse:"",
-            contact:""
-        }
-        refEvent.push(objet);
-    }
-    $scope.addEmploi = function(){
-        console.log('lol');
-       var refEvent = firebase.database().ref().child("emplois");
-        var objet = {
-            titre : " Promoteur de vente H/F",
-            description : "La BRACONGO recherche un Promoteur de vente H/F ",
-            reference : '76543',
-            date:"07/12/2016",
-            mission:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a dui non est mollis vehicula sit amet at magna. Donec feugiat orci non vestibulum mattis. Nulla facilisi. Mauris suscipit quam sapien, ac dictum purus mattis quis. Suspendisse hendrerit turpis lorem, sit amet auctor libero tincidunt eu.",
-            profil:"Morbi nibh augue, tincidunt ut sapien vel, viverra commodo mi. Quisque tempor nibh sit amet augue fringilla, mollis condimentum justo dignissim."
-        }
-        refEvent.push(objet);
-    }
+   
   
   $ionicLoading.hide();
 
@@ -1226,7 +1134,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 // Add the marker to the markerCache so we know not to add it again later
               var markerData = {
                 latitude: record.latitude,
-                latitude: record.longitude,
+                longitude: record.longitude,
                 marker: marker
               };
  
@@ -1479,22 +1387,87 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 //}
 }])
 
-.factory('Application', function ($cordovaNativeStorage) {
+.factory('Application', function ($cordovaNativeStorage,$state) {
     return {
       setInitialRun: function (initial) {
-        $cordovaNativeStorage.setItem("initialRun", initial);
+        $cordovaNativeStorage.setItem("initialRun", initial).then(function () {
+            console.log("Initialrun set");
+        }, function(error){
+             console.log("ERRRRUUUURRRRRRR");
+             console.log(error);  
+        });
       },
       isInitialRun : function () {
-        $cordovaNativeStorage.getItem("initialRun").then(function (value) {
+      /*  NativeStorage.getBoolean("initialRun",
+            function(value){
+                 console.log("InitialRun",value);
+                 return value == "true";
+             },
+             function(e){
+                fail("Erreur lors de l'enregistrement");
+             });
+        */
+        console.log("TOOOOOTTTTOOOOOO");
+        return $cordovaNativeStorage.getItem("initialRun").then(function (value) {
             console.log("InitialRun",value);
             return value == "true";
+        }, function(error){
+            console.log("EROR GET INITIALRUN");
+            $cordovaNativeStorage.setItem("initialRun", false).then(function () {
+            console.log("Initialrun set 2");
+        }, function(error){
+             console.log("roor setting initial run");
+             console.log(error);  
+        });
+            $state.go("app.login");            
+             console.log(error);  
         });
       },
       registerUser : function(login,mdp,mail,name){
-        $cordovaNativeStorage.setItem("login", login);
-        $cordovaNativeStorage.setItem("mdp", mdp);
-        $cordovaNativeStorage.setItem("mail", mail);
-        $cordovaNativeStorage.setItem("name", name);
+        $cordovaNativeStorage.setItem("login", login).then(function () {
+            console.log("YOUUUPIIII login");
+        }, function(error){
+             console.log("ERRRRUUUURRRRRRR login");
+             console.log(error);  
+        });
+        $cordovaNativeStorage.setItem("mdp", mdp).then(function () {
+            console.log("YOUUUPIIII mdp");
+        }, function(error){
+             console.log("ERRRRUUUURRRRRRR mdp");
+             console.log(error);  
+        });
+        $cordovaNativeStorage.setItem("mail", mail).then(function () {
+            console.log("YOUUUPIIII mail");
+        }, function(error){
+             console.log("ERRRRUUUURRRRRRR mail");
+             console.log(error);  
+        });
+        $cordovaNativeStorage.setItem("name", name).then(function () {
+            console.log("YOUUUPIIII");
+        }, function(error){
+             console.log("ERRRRUUUURRRRRRR");
+             console.log(error);  
+        });
+      },
+
+      getName : function () {
+        return $cordovaNativeStorage.getItem("name").then(function (value) {
+            console.log("name",value);
+            return value;
+        }, function(error){
+             console.log("ERRRRUUUUR Recup Nom");
+             console.log(error);  
+        });
+      },
+
+      getMail : function () {
+        $cordovaNativeStorage.getItem("mail").then(function (value) {
+            console.log("name",value);
+            return value;
+        }, function(error){
+             console.log("ERRRRUUUUR Recup Mail");
+             console.log(error);  
+        });
       },
     };
 })
