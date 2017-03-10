@@ -1212,11 +1212,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
           pdvProche = response.data;
           pdvProches = response.data;
-          console.log("fresh", JSON.stringify(response));
+          //console.log("fresh", JSON.stringify(response));
           return pdvProches;
       });
-
- 
     },
 
     getAllEvent: function(){

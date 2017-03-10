@@ -263,6 +263,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     })
 
     .state('app.login', {
+        cache: false,
         url: '/login',
         views: {
             'menuContent': {
