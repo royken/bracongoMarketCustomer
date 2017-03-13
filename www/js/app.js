@@ -245,17 +245,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     })
 
     .state('app.gallery', {
-        url: '/gallery',
+        url: '/gallery/:level',
         views: {
             'menuContent': {
                 templateUrl: 'templates/gallery.html',
                 controller: 'GalleryCtrl'
+            }
+        }
+    })
+    .state('app.game', {
+        url: '/gallery/game/:pack/:level',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/game.html',
+                controller: 'GameCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-gallery" class="button button-fab button-fab-top-right expanded button-energized-900 drop"><i class="icon ion-heart"></i></button>',
+                template: '<button id="seeView" class="hide button button-fab button-fab-top-right button-energized-900 on" ><i class="icon ion-eye"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
-                        document.getElementById('fab-gallery').classList.toggle('on');
+                        $('#seeView').show();
                     }, 600);
                 }
             }

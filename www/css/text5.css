@@ -8,7 +8,7 @@ h1 a:visited { font-family: Georgia, arial, serif; font-size: 38px; }
 h1 a,
 
 
-h1 a:visited { color: #605833; font-family: Georgia, arial, serif; }
+/*h1 a:visited { color: #605833; font-family: Georgia, arial, serif; }*/
 
 
 h1 a:hover { color: #92864d; text-decoration: none; }
@@ -16,7 +16,7 @@ h1 a:hover { color: #92864d; text-decoration: none; }
 a,
 
 
-a:visited { font-family: Enriqueta; font-size: 16px; color: #92864d; text-decoration: none; }
+/*a:visited { font-family: Enriqueta; font-size: 16px; color: #92864d; text-decoration: none; }*/
 
 
 a:hover { text-decoration: none }
