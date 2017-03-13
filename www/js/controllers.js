@@ -836,11 +836,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
-    
-   
-        
-
-     $ionicLoading.hide();
+    $ionicLoading.hide();
 
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
@@ -909,10 +905,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         console.log("biere", $scope.loginData.biere);
         console.log("casier", $scope.loginData.casier);
         console.log("pression", $scope.loginData.pression);
-       // console.log("nbrFutTembo", $scope.loginData.nbrFutTembo);
-       // console.log("nbrCasierBeau", $scope.loginData.nbrCasierBeau);
-        //console.log("nbrCasierNkoyi", $scope.loginData.nbrCasierNkoyi);
-        //console.log("biere", $scope.loginData.biere);
         $scope.prixUnique = $scope.prixIndividus($scope.loginData.nbrPlace);
         $scope.nbrBarman = $scope.barman($scope.loginData.nbrPlace);
         $scope.nbrHotesse = $scope.hotesse($scope.loginData.nbrPlace);
@@ -1048,8 +1040,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         });
     
     }
-
-    // console.log("Le nom du user 2 ",$scope.nom);
 
     // Set Motion
     $timeout(function() {
