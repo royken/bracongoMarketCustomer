@@ -10,6 +10,7 @@
   </ion-header-bar>
   <ion-content class= "splash">
  <form >
+  <div ng-show="prixUnique<0">
       <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
         <div class="col" style="border: 0px 0px 0px 0px !important white;">
           <label class="item item-input">
@@ -120,14 +121,14 @@
           Calculer
           </button>
         </div>
-        <div class="col">
-          <button  class="button button-block  ink" type="submit" ng-click="reinitialier()"> 
+      </div>
+      </div>
+        <div class="col" ng-show="prixUnique>0">
+          <button  class="button button-block button-balanced  ink" type="submit" ng-click="reinitialier()"> 
           Reinitialiser
           </button>
         </div>
-      </div>
-    </form>
-    <div class="row responsive-sm" ng-show="prixUnique>0"> 
+      <div class="row responsive-sm" ng-show="prixUnique>0"> 
         <p class="alert alert-success" style="text-align: left">
            - Environ {{prixUnique}}$/prs  </br>
            - Environ 2 Litres de Boissons par personne  </br>
@@ -141,5 +142,7 @@
            - Mise en place 2h avant l'évènement et nettoyage après évènement</p>
         </p>
       </div>
+    </form>
+    
     </ion-content>
 </ion-modal-view>

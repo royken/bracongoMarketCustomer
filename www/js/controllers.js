@@ -866,6 +866,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.modal = modal;
   });
   $scope.openModal = function(){
+    $scope.reinitialier();
     $scope.modal.show();
   }
   $scope.closeModal = function(){
@@ -887,14 +888,14 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.nbrCasierSkol ;
     $scope.nbrCasierBg ;
     $scope.loginData = {};
-    $scope.prixUnique = 0;
+    $scope.prixUnique = -1;
     $scope.nbrBarman;
     $scope.nbrHotesse;
     $scope.boissonPrise;
 
     $scope.reinitialier = function(){
         $scope.loginData = {};
-        $scope.prixUnique = 0;
+        $scope.prixUnique = -1;
         $scope.nbrBarman = null;
         $scope.nbrHotesse = null;
         $scope.boissonPrise = null;
@@ -930,6 +931,10 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         }
         if(!($scope.loginData.biere) && $scope.loginData.bg){
              temp = "Vous prenez des boissons gazeuses uniquement.";
+        }
+
+        if($scope.loginData.biere && !($scope.loginData.bg)){
+             temp = "Vous prenez de la bière.";
         }
 
         if(!($scope.loginData.biere) &&  !($scope.loginData.bg)){
