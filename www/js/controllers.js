@@ -138,7 +138,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             $state.go('app.serviceFete');        
         }
         $scope.barProche = function(){ 
-            $state.go('app.barProche');        
+            $state.go('app.barProcheMap');        
         }
         $scope.animation = function(){ 
             $state.go('app.planning');        
@@ -729,11 +729,12 @@ angular.module('starter.controllers', ['ionic','firebase'])
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
                   });    
-    $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+  /*  $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
           $scope.pdvs = response.data;
           console.log("fresh", JSON.stringify(response));
         //  return pdvProche;
       });
+    */
  // $scope.pdvs = serviceFactory.getPdvs();
  // console.log("data",JSON.stringify($scope.pdvs));
   //console.log("data0",$scope.pdvs[0]);
@@ -841,23 +842,29 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ServiceFeteCtrl', function($scope ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ServiceFeteCtrl', function($scope,$timeout ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
-    $scope.emplois = [];
-    $ionicLoading.show({     
+   $ionicLoading.show({     
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
                   });
-    $scope.$parent.showHeader();
+     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab('right');
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
     $scope.tel="+2437726627";
     $scope.mail = "servicefete@bracongo.cd";
     $scope.pageSimuler = function(){
         $state.go('app.simulateur');
     };
+
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
         
     $ionicModal.fromTemplateUrl('templates/proforma.html',{
         scope: $scope,
@@ -1060,13 +1067,25 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     ionicMaterialInk.displayEffect();
 })
 
-.factory('GoogleMaps', function($cordovaGeolocation, serviceFactory,$ionicPopup){
+.factory('GoogleMaps', function($cordovaGeolocation, serviceFactory,$ionicPopup,$ionicLoading){
+
+    function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            duration: 3000,
+            animation: 'fade-in',
+        });
+  };
+  function hide(){
+        $ionicLoading.hide();
+  };
  
   var apiKey = false;
   var map = null;
   var markerCache = [];
  
   function initMap(){
+    show();
  
     var options = {timeout: 10000, enableHighAccuracy: true};
  
@@ -1119,6 +1138,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
     }, function(error){
       // Triggered on a button click, or some other target
+      hide();
         showPopup();
     });
   }
@@ -1128,9 +1148,10 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             title: 'Etat GPS!',
             template: 'Veuillez activer votre GPS :-)!!! '
         });
-        alertPopup.then(function(res) {
+       /* alertPopup.then(function(res) {
             console.log('Thank you for not eating my delicious ice cream cone');
         });
+        */
     };
 
    function enableMap(){
@@ -1144,6 +1165,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   }
  
   function loadMarkers(){
+    var rating = {};
+    rating.rate = 3;
+    rating.max = 5;
     var center = map.getCenter();
       var bounds = map.getBounds();
       var zoom = map.getZoom();
@@ -1175,16 +1199,20 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       };
     */
       //Get all of the markers from our Markers factory
+      //var toto = [];
+      //toto = serviceFactory.getSavedPdv();
+      //console.log("I've got ",toto);
+
       serviceFactory.getPdvs().then(function(markers){
  
-        //console.log("Markers: ", markers);
+        
  
         var records = markers;
  
         for (var i = 0; i < records.length; i++) {
  
           var record = records[i];  
-          console.log("Markers: ", records[i]); 
+          //console.log("Markers: ", records[i]); 
          /* var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
  
           // Add the markerto the map
@@ -1217,13 +1245,15 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
               markerCache.push(markerData);
  
-              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>";          
+              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>"+"</br>"+"<rating ng-model=3 max=5 readonly=true>"+"</rating>";          
  
               addInfoWindow(marker, infoWindowContent, record);
           }
         }
+
  
-      }); 
+      });
+      hide(); 
  
   }
 
@@ -1287,11 +1317,15 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     getPdvs: function(){
  
       return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
-          pdvProche = response.data;
+          pdvProche = response;
           pdvProches = response.data;
           //console.log("fresh", JSON.stringify(response));
           return pdvProches;
       });
+    },
+
+    getSavedPdv: function(){
+        return pdvProches;
     },
 
     getAllEvent: function(){

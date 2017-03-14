@@ -7,7 +7,8 @@
             </div>
             <div class="item item-image" ng-click="detailCampagne(campagne.$id)">
 <!--                href="#/app/event/{{event.$id}}"-->
-                <img class="full-image" src="img/worl_cola.jpg">
+                <img class="full-image" data-ng-src="data:image/png;base64,{{campagne.image}}">
+
             </div>
            <div class="item" style="margin-top: 5px%;">
           <a  href="#" class="subdued">
