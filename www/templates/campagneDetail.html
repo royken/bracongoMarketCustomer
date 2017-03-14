@@ -25,11 +25,12 @@
         <div class="card" ng-show="{{campagne.hasVideo}}">
             <ion-item>
                 <div class="video-container">
-                    <youtube-video video-id={{campagne.video}} player-width="'560px'" player-height="'315px'"></youtube-video>
+                    <iframe src="{{campagne.video}}" frameborder="0" width="560" height="315"></iframe>
                 </div>
             </ion-item>
         </div>
-        
+       <!-- <iframe src="https://www.youtube.com/embed/gvI2ClWqHO0" frameborder="0" width="560" height="315"></iframe>-->
+       <!-- <youtube-video video-id="{{campagne.video}}" player-width="'560px'" player-height="'315px'"></youtube-video>-->
         <div  >
             <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{campagne.date}}</a>
         </div>
