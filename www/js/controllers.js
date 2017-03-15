@@ -258,9 +258,24 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.clearFabs();
+
+    function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            duration: 3000,
+            animation: 'fade-in',
+        });
+  };
+  function hide(){
+        $ionicLoading.hide();
+  };
     
-            
+    show();        
     $scope.events = serviceFactory.getAllEvent();
+    $scope.events.$loaded().then(function(){
+        // access events here;
+        hide();
+    });
        
     $scope.detailEvent = function(id){ 
         console.log("J'envoie", id);
@@ -315,6 +330,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
    $scope.$parent.clearFabs();
     
     $scope.campagnes = serviceFactory.getAllCampagnes();
@@ -569,8 +585,10 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.categories = [];
     $ionicLoading.show({     
                     template: '<div class="icon ion-loading-a"></div> Loading... ',
+                    duration: 3000,
                     animation: 'fade-in',
                   });
+    
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
@@ -578,7 +596,25 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
+
+    function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            duration: 3000,
+            animation: 'fade-in',
+        });
+    };
+    function hide(){
+        $ionicLoading.hide();
+    };
+    
+    //show();          
+
     $scope.categories = serviceFactory.getAllCategories();
+    serviceFactory.getAllCategories().$loaded().then(function(){
+        // access events here;
+       $ionicLoading.hide();
+    });
     $scope.detailCat = function(id){ 
         state.go('app.categorieList', {id: id});        
     }

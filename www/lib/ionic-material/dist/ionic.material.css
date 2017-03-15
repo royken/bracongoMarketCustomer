@@ -2511,7 +2511,7 @@ a {
 .button-bar-assertive.activated,
 .bar-assertive.activated,
 .assertive-border.activated {
-  background-color: #F44336;
+  background-color: #000000;
   color: #fff; }
 
 .assertive-900-bg,
