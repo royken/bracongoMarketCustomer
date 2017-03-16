@@ -11,6 +11,7 @@
     <access origin="*" />
     <access launch-external="yes" origin="tel:*" />
     <allow-navigation href="http://*/*" />
+    <allow-navigation href="*://*.youtube.com/*" />
     <allow-intent href="tel:*" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
