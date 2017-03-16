@@ -111,8 +111,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
 .controller('AccueilCtrl', function($scope ,$state, $timeout, $stateParams, ionicMaterialInk) {
      $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    $scope.$parent.setExpanded(true);
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
     
@@ -616,7 +617,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
        $ionicLoading.hide();
     });
     $scope.detailCat = function(id){ 
-        state.go('app.categorieList', {id: id});        
+        $state.go('app.categorieList', {id: id});        
     }
         
 
