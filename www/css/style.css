@@ -374,3 +374,14 @@ table.game-3 td:nth-child(3){
     margin-top: 2px;
     height: 40px;
 }
+
+.customized-image{
+  max-height: 100% !important;
+  max-width: : 100% !important;
+}
+
+.list .item {
+    border: none;
+    min-height: 72px;
+    text-align: left;
+}
