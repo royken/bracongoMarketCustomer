@@ -10,33 +10,31 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
-       /* if (window.cordova && window.cordova.plugins.Keyboard) {
+        if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             cordova.plugins.Keyboard.disableScroll(true);
         }
-        */
+        
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
-        console.log("JE VEUX TESTER");
        var result = null;
         Application.isInitialRun().then(function(value){
             result = value;
             console.log("result1 ",result);
         });
-
-        console.log("result2 ",result);
-
         var state = "app.accueil";
         if (result) {
-            console.log("WEEEEEELLLLLLLLLCCCCCCCOO");
            Application.setInitialRun(false);
            state = "app.login";
         }
-        console.log("J'AI TESTE");
+        
         $state.go(state);
-
+        if (navigator && navigator.splashscreen){
+             navigator.splashscreen.hide();
+        }
+       
      /*   var push = new Ionic.Push({
             "debug":true
         });
@@ -348,18 +346,30 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
         }
     })
-.state('app.planning', {
-        url: '/planning',
+.state('app.produits', {
+        url: '/produits',
         views: {
             'menuContent': {
-                templateUrl: 'templates/planning.html',
-                controller: 'PlanningCtrl'
+                templateUrl: 'templates/produits.html',
+                controller: 'ProduitCtrl'
             },
             'fabContent': {
                 template: ''
             }
         }
     })
+.state('app.produitList', {
+    url: '/produits/:id',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/produitList.html',
+        controller: 'ProduitListCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
 .state('app.cleCategorie', {
         url: '/cleCategorie',
         views: {

@@ -142,7 +142,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             $state.go('app.barProcheMap');        
         }
         $scope.animation = function(){ 
-            $state.go('app.planning');        
+            $state.go('app.produits');        
         }
         $scope.chateaux= function(){ 
             $state.go('app.cleCategorie');        
@@ -612,10 +612,11 @@ angular.module('starter.controllers', ['ionic','firebase'])
     //show();          
 
     $scope.categories = serviceFactory.getAllCategories();
-    serviceFactory.getAllCategories().$loaded().then(function(){
+    /*serviceFactory.getAllCategories().$loaded().then(function(){
         // access events here;
        $ionicLoading.hide();
     });
+    */
     $scope.detailCat = function(id){ 
         $state.go('app.categorieList', {id: id});        
     }
@@ -645,11 +646,11 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
     console.log("categorie", $scope.cat);
     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
-    /*$scope.produits = [
+   /* $scope.produits = [
         {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
         {nom:"Château ferrande rouge",prix:[{volume:"1,5L",valeur:"61,000"},{volume:"75CL",valeur:"36,000"},{volume:"37,5CL",valeur:"15,000"}]}
     ];
-    */
+   */ 
 
     // Set Motion
     $timeout(function() {
@@ -695,7 +696,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('PlanningCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ProduitCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.emplois = [];
     $ionicLoading.show({     
@@ -708,16 +709,46 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
-    
-    $scope.planning = [
-        {jour:"Lundi 06/02/2017",anims:[{responsable:"Royken",lieu:"Kintambo",heure:"17h00",marque:"Nkoyi"},{responsable:"Royken",lieu:"Ngombe",heure:"18h00",marque:"33 Export"},{responsable:"Royken1",lieu:"Ngaliema",heure:"14h00",marque:"World Cola"}]},
-        {jour:"Mardi 07/02/2017",anims:[{responsable:"Roy",lieu:"Ngaba",heure:"17h00",marque:"Doppel"},{responsable:"Royken roy",lieu:"Ngiri Ngiri",heure:"18h00",marque:"Top Cola"},{responsable:"Royken4",lieu:"Bumbu",heure:"14h00",marque:"Castel"}]}
-    ];
-        
 
+    $scope.categories = serviceFactory.getAllCategoriesBrac();
+        
+    $scope.listProduit = function(id){ 
+        $state.go('app.produitList', {id: id});        
+    }
      $ionicLoading.hide();
 
     // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
+
+.controller('ProduitListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $scope.categorie = null;
+    var catId = $stateParams.id;
+    $scope.$parent.clearFabs();
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+
+  $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });    
+  $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
+  console.log("catttttttt",$scope.categorie);
+  $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
+  $ionicLoading.hide();
+  //$scope.produits = [{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"}];
+
+    // Set Ink
     ionicMaterialInk.displayEffect();
 })
 
@@ -1336,6 +1367,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var refEmplois = database.child('emplois');
     var refCategories = database.child('categories');
     var refVins = database.child('vins');
+    var refCategoriesBrac = database.child('categoriesBrac');
+    var refProduits = database.child('produits');
     var localEvents = [];
     var localJeux = [];
     var localCampagnes = [];
@@ -1345,6 +1378,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var pdvProches = [];
     var localCategories = [];
     var localVins = [];
+    var localCategoriesBrac = [];
+    var localProduits = [];
     var i ;
 
     
@@ -1438,15 +1473,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getCategorieProductList: function(code){
         var result = [];    
-            //console.log("CODE",code);
-            //console.log("TAILLE",localVins.length);
             for(i = 0; i < localVins.length; i++){
                 if(localVins[i].categorie === code){
                     result.push(localVins[i]);
                 }
             }
             return result;
-
     },
     getAllVins: function(){
         localVins = $firebaseArray(refVins);
@@ -1458,6 +1490,28 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
                     return localVins[i];
                 }
             }
+    },
+    getAllCategoriesBrac: function(){
+        localCategoriesBrac = $firebaseArray(refCategoriesBrac);
+        localProduits = $firebaseArray(refProduits);
+        //console.log("vins",localProduits);
+        return $firebaseArray(refCategoriesBrac);
+    },
+    getOneCategorieBrac: function(id){       
+            for(i=0; i < localCategoriesBrac.length; i++){
+                if(localCategoriesBrac[i].$id == id){
+                    return localCategoriesBrac[i];
+                }
+            }
+    },
+    getCategorieBracProductList: function(code){
+        var result = [];    
+            for(i = 0; i < localProduits.length; i++){
+                if(localProduits[i].categorie === code){
+                    result.push(localProduits[i]);
+                }
+            }
+            return result;
     },
   }  
 })
