@@ -1186,7 +1186,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
               addInfoWindow(marker, infoWindowContent, latLng);
  
         //Load the markers
-        loadMarkers();
+        loadMarkers(position.coords.latitude, position.coords.longitude);
         //Reload markers every time the map moves
        /* google.maps.event.addListener(map, 'dragend', function(){
           console.log("moved!");
@@ -1232,7 +1232,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     });
   }
  
-  function loadMarkers(){
+  function loadMarkers(latitude,longitude){
     var rating = {};
     rating.rate = 3;
     rating.max = 5;
@@ -1271,15 +1271,22 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       //toto = serviceFactory.getSavedPdv();
       //console.log("I've got ",toto);
 
+      console.log("My Possss",centerNorm);
       serviceFactory.getPdvs().then(function(markers){
  
         
  
         var records = markers;
- 
+        /*Test*/
+        console.log("My Possss 2",centerNorm);
+       /* for(var i = 0; i < records.length; i++){
+            records[i].distance = getDistanceBetweenPoints(centerNorm, record[i], 'km').toFixed(2);
+        }
+        */
         for (var i = 0; i < records.length; i++) {
  
           var record = records[i];  
+          record.distance = getDistanceBetweenPoints(centerNorm, record, 'km').toFixed(2);
           //console.log("Markers: ", records[i]); 
          /* var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
  
@@ -1313,7 +1320,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
               markerCache.push(markerData);
  
-              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>"+"</br>"+"<rating ng-model=3 max=5 readonly=true>"+"</rating>";          
+              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>"+"</br>"+"<h4>"+ "Vous êtes à "+ record.distance+ " km du lieu" + "</h4>"+"<rating ng-model=3 max=5 readonly=true>"+"</rating>";          
  
               addInfoWindow(marker, infoWindowContent, record);
           }
@@ -1323,6 +1330,36 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       });
       hide(); 
  
+  }
+
+  function getDistanceBetweenPoints(start, end, units){
+ 
+        let earthRadius = {
+            miles: 3958.8,
+            km: 6371
+        };
+ 
+        let R = earthRadius[units || 'miles'];
+        let lat1 = start.lat;
+        let lon1 = start.lng;
+        let lat2 = end.latitude;
+        let lon2 = end.longitude;
+ 
+        let dLat = this.toRad((lat2 - lat1));
+        let dLon = this.toRad((lon2 - lon1));
+        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        let d = R * c;
+ 
+        return d;
+ 
+    }
+ 
+  function toRad(x){
+        return x * Math.PI / 180;
   }
 
   function markerExists(lat, lng){
