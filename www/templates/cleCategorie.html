@@ -8,7 +8,7 @@
 <!--                href="#/app/event/{{event.$id}}"-->
                 <img class="full-image" src="{{cat.image}}" style="height: 100%; width: 100%">
             </div>
-           <div class="item" style="margin-top: 5px%;">
+           <div class="item" style="margin-top: 5px%;" ng-click="detailCat(cat.$id)">
           <a  href="#/app/cleCategorie/{{cat.$id}}" class="subdued">
                  {{cat.nom}}
                </a>

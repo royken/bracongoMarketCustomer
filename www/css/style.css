@@ -245,13 +245,19 @@ ul.rating li i {
     border-color: #B71C1C;
 }
 
+/*
 .contents{
   background-color: #000;
   color: #fff;
 } 
+*/
 
 h2{
   color: #fff;
+}
+
+.MyH2{
+  color: #000;
 }
 
 .item{
@@ -384,4 +390,15 @@ table.game-3 td:nth-child(3){
     border: none;
     min-height: 72px;
     text-align: left;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+    display: block;
+    padding-top: 2px;
+    padding-left: 0;
+    height: 34px;
+    color: #ffffff;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 16px;
 }

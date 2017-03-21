@@ -710,7 +710,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
-    $scope.categories = serviceFactory.getAllCategoriesBrac();
+    $scope.categories = [{nom:"BIERES"},{nom:"Boissons Gazeuses"}, {nom:"Eau de Table"}];
         
     $scope.listProduit = function(id){ 
         $state.go('app.produitList', {id: id});        
@@ -728,8 +728,8 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
-    $scope.categorie = null;
-    var catId = $stateParams.id;
+    $scope.vin = null;
+    var vinId = $stateParams.id;
     $scope.$parent.clearFabs();
     // Set Motion
     $timeout(function() {
@@ -742,11 +742,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
                   });    
-  $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
-  console.log("catttttttt",$scope.categorie);
-  $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
+  $scope.vin = serviceFactory.getOneVin(vinId);
   $ionicLoading.hide();
-  //$scope.produits = [{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"}];
+  $scope.produits = [{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"}];
 
     // Set Ink
     ionicMaterialInk.displayEffect();
@@ -967,6 +965,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.nbrBarman;
     $scope.nbrHotesse;
     $scope.boissonPrise;
+    $scope.prixApprox;
 
     $scope.reinitialier = function(){
         $scope.loginData = {};
@@ -974,6 +973,11 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         $scope.nbrBarman = null;
         $scope.nbrHotesse = null;
         $scope.boissonPrise = null;
+    }
+
+    $scope.prixGlobal = function(){        
+        $scope.prixUnique = $scope.prixIndividus($scope.loginData.nbrPlace);
+        $scope.prixApprox = $scope.prixUnique * $scope.loginData.nbrPlace;
     }
         
     $scope.calculer = function(){
@@ -1186,7 +1190,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
               addInfoWindow(marker, infoWindowContent, latLng);
  
         //Load the markers
-        loadMarkers(position.coords.latitude, position.coords.longitude);
+        loadMarkers();
         //Reload markers every time the map moves
        /* google.maps.event.addListener(map, 'dragend', function(){
           console.log("moved!");
@@ -1232,7 +1236,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     });
   }
  
-  function loadMarkers(latitude,longitude){
+  function loadMarkers(){
     var rating = {};
     rating.rate = 3;
     rating.max = 5;
@@ -1271,22 +1275,15 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       //toto = serviceFactory.getSavedPdv();
       //console.log("I've got ",toto);
 
-      console.log("My Possss",centerNorm);
       serviceFactory.getPdvs().then(function(markers){
  
         
  
         var records = markers;
-        /*Test*/
-        console.log("My Possss 2",centerNorm);
-       /* for(var i = 0; i < records.length; i++){
-            records[i].distance = getDistanceBetweenPoints(centerNorm, record[i], 'km').toFixed(2);
-        }
-        */
+ 
         for (var i = 0; i < records.length; i++) {
  
           var record = records[i];  
-          record.distance = getDistanceBetweenPoints(centerNorm, record, 'km').toFixed(2);
           //console.log("Markers: ", records[i]); 
          /* var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
  
@@ -1320,7 +1317,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
               markerCache.push(markerData);
  
-              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>"+"</br>"+"<h4>"+ "Vous êtes à "+ record.distance+ " km du lieu" + "</h4>"+"<rating ng-model=3 max=5 readonly=true>"+"</rating>";          
+              var infoWindowContent = "<h3>" + record.nom + "</h3>"+"</br>" + "<h4>" + record.adresse + "</h4>"+"</br>"+"<rating ng-model=3 max=5 readonly=true>"+"</rating>";          
  
               addInfoWindow(marker, infoWindowContent, record);
           }
@@ -1330,36 +1327,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       });
       hide(); 
  
-  }
-
-  function getDistanceBetweenPoints(start, end, units){
- 
-        let earthRadius = {
-            miles: 3958.8,
-            km: 6371
-        };
- 
-        let R = earthRadius[units || 'miles'];
-        let lat1 = start.lat;
-        let lon1 = start.lng;
-        let lat2 = end.latitude;
-        let lon2 = end.longitude;
- 
-        let dLat = this.toRad((lat2 - lat1));
-        let dLon = this.toRad((lon2 - lon1));
-        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        let d = R * c;
- 
-        return d;
- 
-    }
- 
-  function toRad(x){
-        return x * Math.PI / 180;
   }
 
   function markerExists(lat, lng){
@@ -1404,8 +1371,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var refEmplois = database.child('emplois');
     var refCategories = database.child('categories');
     var refVins = database.child('vins');
-    var refCategoriesBrac = database.child('categoriesBrac');
-    var refProduits = database.child('produits');
     var localEvents = [];
     var localJeux = [];
     var localCampagnes = [];
@@ -1415,8 +1380,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var pdvProches = [];
     var localCategories = [];
     var localVins = [];
-    var localCategoriesBrac = [];
-    var localProduits = [];
     var i ;
 
     
@@ -1510,12 +1473,15 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getCategorieProductList: function(code){
         var result = [];    
+            //console.log("CODE",code);
+            //console.log("TAILLE",localVins.length);
             for(i = 0; i < localVins.length; i++){
                 if(localVins[i].categorie === code){
                     result.push(localVins[i]);
                 }
             }
             return result;
+
     },
     getAllVins: function(){
         localVins = $firebaseArray(refVins);
@@ -1528,28 +1494,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
                 }
             }
     },
-    getAllCategoriesBrac: function(){
-        localCategoriesBrac = $firebaseArray(refCategoriesBrac);
-        localProduits = $firebaseArray(refProduits);
-        //console.log("vins",localProduits);
-        return $firebaseArray(refCategoriesBrac);
-    },
-    getOneCategorieBrac: function(id){       
-            for(i=0; i < localCategoriesBrac.length; i++){
-                if(localCategoriesBrac[i].$id == id){
-                    return localCategoriesBrac[i];
-                }
-            }
-    },
-    getCategorieBracProductList: function(code){
-        var result = [];    
-            for(i = 0; i < localProduits.length; i++){
-                if(localProduits[i].categorie === code){
-                    result.push(localProduits[i]);
-                }
-            }
-            return result;
-    },
+    
   }  
 })
 
