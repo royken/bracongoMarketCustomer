@@ -138,8 +138,8 @@ p {
     color: #fff;
 }
 .bar-assertive{
-  border-color: #B71C1C;
-    background-color: #B71C1C;
+  border-color: #FF0000;
+    background-color: #FF0000;
     color: #fff;
 }
 
@@ -150,21 +150,21 @@ p {
 
 #fhm_page,
 .fhm_container {
-  position:absolute;
+  /*position:absolute;
   top:0;
   right:0;
   left:0;
   bottom:0;
-  margin-top: 6%;
-  background-color:#C0C0C0;
+  //margin-top: 6%;*/
+  height: 80%;
 }
 
 .fhm_row {
   /* position: absolute;*/
-  height: 25%;
-  left:0;
-  right:0;
-  background-color:#C0C0C0;
+ height: 33%;
+  /*left:0;
+  right:0;*/
+  background-color:#F5F5F5;
   clear:both;
   padding-top: 0%;
   padding-bottom:0%;
@@ -172,12 +172,11 @@ p {
   margin-top: 0%;
 }
 .fhm_item {
-  height: 99.5%;
+  height: 33%%;
   width:33%;
-  background-color: #C0C0C0;
-  border: 0px solid #C0C0C0;
-  padding-top: 0%;
-  padding-left: 1%;
+ background-color: #F5F5F5;
+  border: 0px solid #F5F5F5;
+ padding-left: 1%;
   padding-right: 1%;
   padding-bottom:1%;
   margin-bottom: 1%;
@@ -189,13 +188,13 @@ p {
     font-size: 50 px;  
     color: black;  
     text-align: center;  
-    border: 0 px  #C0C0C0;
+    border: 0 px solid #F5F5F5;
     position:relative; /*it can be fixed too*/
        
 
         /*this to solve "the content will not be cut when the window is smaller than the content": */
-        max-width:100%;
-        max-height:100%;
+     /*   max-width:100%;
+        max-height:100%;*/
         
 }
 
@@ -248,7 +247,7 @@ ul.rating li i {
 
 
 .contents{
-  background-color: #C0C0C0;
+  background-color: #F5F5F5;
   color: #000;
 } 
 
@@ -275,8 +274,8 @@ h2{
 }
 
 .bar-assertive{
-  border-color: #B71C1C;
-    background-color: #B71C1C;
+  border-color: #FF0000;
+    background-color: #FF0000;
     color: #fff;
 }
 ion-md-input{
@@ -402,4 +401,26 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
     vertical-align: middle;
     font-size: 14px;
     line-height: 16px;
+}
+
+.home-hello {
+  position: relative;
+}
+
+.home-hello .item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  border: 0;
+  padding-bottom: 40px;
+}
+
+.home-hello .item {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.box{
+  height: 20%;
 }

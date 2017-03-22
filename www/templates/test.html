@@ -8,7 +8,43 @@
         </ion-nav-title>
     </ion-header-bar>
 
-    <ion-content id="fhm_page" >
+    <ion-content  class="contents">
+    <ion-slide-box show-pager="true" auto-play="true" does-continue="true" >
+            <ion-slide ng-repeat="product in products">
+                <div class="box blue home-hello" ng-click="vm.showProductDetails(product)">
+                    <!--<img ng-src="{{product.image}}"/> -->
+                    <img ng-src="{{product.image}}" style="width:100%;height:20%" >
+                    <div class="item">
+                        <h2 style="color: #000000;">{{product.title}}</h2>
+                    </div>
+                </div>
+            </ion-slide>
+    </ion-slide-box>
+
+
+    <div style="height: 80%">
+<div class="row animated bounceInLeft " style="height: 30%;">
+  <div class=" card col col-20"><div class="item item-image" ui-sref="app.listEvent"><img src="img/menu/black/event.png"></div></div>
+  <div class="card col col-20 col-offset-20"><div class="item item-image" ng-click="campagnesPage()"><img src="img/menu/black/campagne.png"></div></div>
+  <div class="card col col-20 col-offset-20"><div class="item item-image" ng-click="animation()"><img src="img/menu/black/produits.png"></div></div>
+  
+</div>
+<div class="row" style="height: 30%">
+  <div class="card col"><div class="item item-image" ng-click="chateaux()"><img src="img/menu/black/cle.png"></div></div>
+  <div class="card col"><div class="item item-image" ng-click="barProche()"><img src="img/menu/black/bar.png"></div></div>
+  <div class="card col"><div class="item item-image" ng-click="fete()"><img src="img/menu/black/fete.png"></div></div>
+  
+</div>
+<div class="row animated bounceInLeft" style="height: 30%">
+  <div class="card col"><div class="item item-image" ng-click="jeuxPage()"><img src="img/menu/black/concours.png"></div></div>
+  <div class="card col"><div class="item item-image" ng-click="emploisPage()"><img src="img/menu/black/jobs.png"></div></div>
+  <div class="card col"><div class="item item-image" ng-click="game()"><img src="img/menu/black/jeux.png"></div></div>
+</div>
+<div>
+
+
+
+<!--
         <div class="fhm_container" >  
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item1" ui-sref="app.listEvent"> 
@@ -43,6 +79,7 @@
                     <img src="img/menu/black/cle.png" alt="" title="" style="height: 100%;width: 100%"/>
                 </div>  
             </div>
+
             <div class="fhm_row">  
                 <div class="fhm_item fhm_item7" ng-click="game()">  
                     <img src="img/menu/black/jeux.png" alt="" title="" style="height: 100%;width: 100%"/> 
@@ -53,8 +90,9 @@
                 <div class="fhm_item fhm_item9" ng-click="contact()">  
                     <img src="img/menu/black/contact.png" alt="" title="" style="height: 100%;width: 100%"/>
                 </div>  
-            </div>  
+            </div> 
+            
         </div>
-         
+         -->
     </ion-content>
 </ion-view>
