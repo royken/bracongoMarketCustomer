@@ -108,7 +108,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     };
 })
 
-.controller('AccueilCtrl', function($scope ,$state, $timeout, $stateParams, ionicMaterialInk) {
+.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk) {
      $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
@@ -116,6 +116,21 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+
+    $scope.nextSlide = function() {
+      $ionicSlideBoxDelegate.next();
+   }
+
+    $scope.products = [{title:"JAZZ KIFF",image:"img/kwilu_big.png"},{title:"ICE BAR NEW KWILU",image:"img/kwilu_big.png"},{title:"WORLD COLA",image:"img/kwilu_big.png"},{title:"WHATSAPP SELFIE",image:"img/kwilu_big.png"}];
+
+    $scope.getNom = function(){
+        Application.getName().then(function(value){
+            $scope.nom = value;
+            console.log("Le nom du user",$scope.nom);
+        });
+    
+    }
+
     
         $scope.eventsPage = function(){ 
             $state.go('app.listEvent');        
@@ -1104,7 +1119,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('AboutCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase,Application) {
+.controller('AboutCtrl', function($scope, $stateParams,$ionicSlideBoxDelegate ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,firebase,Application) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -1113,6 +1128,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.$parent.setHeaderFab('right');
     $scope.nom = null;
 
+    $scope.nextSlide = function() {
+      $ionicSlideBoxDelegate.next();
+   }
+
+    $scope.products = [{title:"JAZZ KIFF",image:"img/kwilu_big.png"},{title:"ICE BAR NEW KWILU",image:"img/kwilu_big.png"},{title:"WORLD COLA",image:"img/kwilu_big.png"},{title:"WHATSAPP SELFIE",image:"img/kwilu_big.png"}];
+
     $scope.getNom = function(){
         Application.getName().then(function(value){
             $scope.nom = value;
@@ -1120,6 +1141,8 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         });
     
     }
+
+
 
     // Set Motion
     $timeout(function() {
