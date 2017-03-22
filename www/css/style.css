@@ -156,6 +156,7 @@ p {
   left:0;
   bottom:0;
   margin-top: 6%;
+  background-color:#C0C0C0;
 }
 
 .fhm_row {
@@ -163,7 +164,7 @@ p {
   height: 25%;
   left:0;
   right:0;
-  background-color:#000000;
+  background-color:#C0C0C0;
   clear:both;
   padding-top: 0%;
   padding-bottom:0%;
@@ -173,8 +174,8 @@ p {
 .fhm_item {
   height: 99.5%;
   width:33%;
-  background-color: #000000;
-  border: 0px solid #000000;
+  background-color: #C0C0C0;
+  border: 0px solid #C0C0C0;
   padding-top: 0%;
   padding-left: 1%;
   padding-right: 1%;
@@ -188,7 +189,7 @@ p {
     font-size: 50 px;  
     color: black;  
     text-align: center;  
-    border: 0 px solid #000000;
+    border: 0 px  #C0C0C0;
     position:relative; /*it can be fixed too*/
        
 
@@ -245,12 +246,12 @@ ul.rating li i {
     border-color: #B71C1C;
 }
 
-/*
+
 .contents{
-  background-color: #000;
-  color: #fff;
+  background-color: #C0C0C0;
+  color: #000;
 } 
-*/
+
 
 h2{
   color: #fff;
