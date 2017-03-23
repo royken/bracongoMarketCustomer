@@ -138,8 +138,8 @@ p {
     color: #fff;
 }
 .bar-assertive{
-  border-color: #FF0000;
-    background-color: #FF0000;
+  border-color: #F44336;
+    background-color: #F44336;
     color: #fff;
 }
 
@@ -253,18 +253,19 @@ ul.rating li i {
 
 
 h2{
-  color: #fff;
+  color: #000;
 }
 
 .MyH2{
   color: #000;
 }
 
+/*
 .item{
  background-color: #222221;
   color: #fff;
 }
-
+*/
 .myInput{
   background-color: transparent;
 }
@@ -274,8 +275,8 @@ h2{
 }
 
 .bar-assertive{
-  border-color: #FF0000;
-    background-color: #FF0000;
+  border-color: #F44336;
+    background-color: #F44336;
     color: #fff;
 }
 ion-md-input{
@@ -387,21 +388,12 @@ table.game-3 td:nth-child(3){
 }
 
 .list .item {
-    border: none;
+    /*border: none;
     min-height: 72px;
-    text-align: left;
+    text-align: left;*/
 }
 
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-    display: block;
-    padding-top: 2px;
-    padding-left: 0;
-    height: 34px;
-    color: #ffffff;
-    vertical-align: middle;
-    font-size: 14px;
-    line-height: 16px;
-}
+s
 
 .home-hello {
   position: relative;

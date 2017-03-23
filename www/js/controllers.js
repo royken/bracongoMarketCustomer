@@ -14,7 +14,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $ionicPlatform.ready(function() {
 
         // Initialize the database.
-        UserService.initDB();
+       // UserService.initDB();
 
         // Get all birthday records from the database.
        /* UserService.getAllUsers()
@@ -121,7 +121,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
       $ionicSlideBoxDelegate.next();
    }
 
-    $scope.products = [{title:"JAZZ KIFF",image:"img/kwilu_big.png"},{title:"ICE BAR NEW KWILU",image:"img/kwilu_big.png"},{title:"WORLD COLA",image:"img/kwilu_big.png"},{title:"WHATSAPP SELFIE",image:"img/kwilu_big.png"}];
+    $scope.products = [{title:"SKOL MOLANGI YA MBOKA",image:"img/heritier.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/djino.png"},{title:"JAZZ KIFF",image:"img/jazzkif.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/skol-2.png"}];
 
     $scope.getNom = function(){
         Application.getName().then(function(value){
@@ -261,7 +261,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity) {
     
     $scope.events = [];
     $ionicLoading.show({     
@@ -982,6 +982,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.nbrBarman;
     $scope.nbrHotesse;
     $scope.boissonPrise;
+    $scope.prixG;
+
+    $scope.prixGlobal = function(){
+         $scope.prixUnique =  $scope.prixIndividus($scope.loginData.nbrPlace);
+         $scope.prixG = $scope.prixUnique * $scope.loginData.nbrPlace;
+    }
 
     $scope.reinitialier = function(){
         $scope.loginData = {};
@@ -1296,11 +1302,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
       console.log("My Possss",centerNorm);
       serviceFactory.getPdvs().then(function(markers){
- 
-        
- 
         var records = markers;
         /*Test*/
+        console.log("HELLLLOOOO");
         console.log("My Possss 2",centerNorm);
        /* for(var i = 0; i < records.length; i++){
             records[i].distance = getDistanceBetweenPoints(centerNorm, record[i], 'km').toFixed(2);
@@ -1357,25 +1361,25 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
   function getDistanceBetweenPoints(start, end, units){
  
-        let earthRadius = {
+        var earthRadius = {
             miles: 3958.8,
             km: 6371
         };
  
-        let R = earthRadius[units || 'miles'];
-        let lat1 = start.lat;
-        let lon1 = start.lng;
-        let lat2 = end.latitude;
-        let lon2 = end.longitude;
+        var R = earthRadius[units || 'miles'];
+        var lat1 = start.lat;
+        var lon1 = start.lng;
+        var lat2 = end.latitude;
+        var lon2 = end.longitude;
  
-        let dLat = this.toRad((lat2 - lat1));
-        let dLon = this.toRad((lon2 - lon1));
-        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+        var dLat = toRad((lat2 - lat1));
+        var dLon = toRad((lon2 - lon1));
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        let d = R * c;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
  
         return d;
  
@@ -1447,11 +1451,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   return {
 
     getPdvs: function(){
- 
-      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+        console.log("HELLLLOOOO MAAAPPPPP xxxxxxxxx");
+      return $http.get("/api/pdv").then(function(response){
+            console.log("HELLLLOOOO MAAAPPPPP");
           pdvProche = response;
           pdvProches = response.data;
-          //console.log("fresh", JSON.stringify(response));
+          console.log("fresh", JSON.stringify(response));
           return pdvProches;
       });
     },
@@ -1646,6 +1651,25 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     };
 //}
 }])
+
+.factory('Connectivity', function($rootScope,$cordovaNetwork){
+    return {
+        isOnline: function(){
+            if(ionic.Platform.isWebView()){
+                return $cordovaNetwork.isOnline();
+            }else{
+                return navigator.onLine;
+            }
+        },
+        ifOffline: function(){
+            if(ionic.Platform.isWebView()){
+                return !$cordovaNetwork.isOnline();
+            }else{
+                return !navigator.onLine;
+            }
+        }
+    }
+})
 
 .factory('Application', function ($cordovaNativeStorage,$state) {
     return {

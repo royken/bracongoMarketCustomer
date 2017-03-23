@@ -46,11 +46,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider,$sceDelegateProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider,$sceDelegateProvider,$httpProvider) {
 
     // Turn off caching for demo simplicity's sake
     $ionicConfigProvider.views.maxCache(0);
     $sceDelegateProvider.resourceUrlWhitelist(['**']);
+    $httpProvider.defaults.useXDomain = true;
 
     /*
     // Turn off back button text
@@ -221,6 +222,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         'menuContent': {
           templateUrl: 'templates/about.html',
           controller: 'AboutCtrl'
+                        }
+            }
+    })
+     .state('app.offline', {
+      url: '/offline',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/offline.html',
+          controller: 'OfflineCtrl'
                         }
             }
     })
