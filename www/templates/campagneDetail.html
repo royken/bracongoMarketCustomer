@@ -8,8 +8,9 @@
             
         </div>
         <div style="text-align:justify; padding: 2%; " >
-            <h2>{{campagne.title}}</h2>
-            {{campagne.description}}
+            <h2>{{campagne.titre}}</h2>
+            <p ng-bind-html="campagne.description"></p>
+           
         </div>
 
         <div class="card" ng-show="{{campagne.hasVideo}}">

@@ -5,15 +5,17 @@
         Appli pour market
     </description>
   <author email="rdsid@bracongo.cd" href="www.bracongo.cd">
-      Bracongo
+      BRACONGO SA
     </author>
   <content src="index.html"/>
   <access origin="*"/>
   <access launch-external="yes" origin="tel:*"/>
   <allow-navigation href="http://*/*"/>
+  <allow-navigation href="http://localhost:8100"/>
   <allow-navigation href="http://10.112.3.45:8100"/>
   <allow-navigation href="http://192.168.1.100:8100"/>
   <allow-navigation href="http://localhost:8100"/>
+  <allow-navigation href="http://192.168.1.101:8100"/>
   <allow-intent href="http://41.223.104.197:8080/pdv/api/pdv"/>
   <allow-intent href="tel:*"/>
   <preference name="webviewbounce" value="false"/>

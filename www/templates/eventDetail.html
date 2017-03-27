@@ -1,4 +1,4 @@
-<ion-view view-title="Détail Evenements">
+<ion-view view-title="Détail Evenement">
   <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
     <div class="hero slide-up" style="background-image: url({{event.image}});">
             <div class="content">
@@ -18,8 +18,9 @@
 
         </div>
         <div style="text-align:justify; padding: 2%; ">
-            <h2>{{event.title}}</h2>
-            {{event.description}}
+            <h2>{{event.titre}}</h2>
+                <p ng-bind-html="event.description"></p>
+          
         </div>
         <div class="list card">
         
@@ -39,9 +40,5 @@
         
         </div>
         
-
-  
-
-
         </ion-content>
 </ion-view>

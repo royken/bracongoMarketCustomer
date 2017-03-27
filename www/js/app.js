@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','lokijs','ngMap','ionic.rating','ngStorage','ngCordova.plugins.nativeStorage','youtube-embed'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','ngMap','ionic.rating','ngCordova.plugins.nativeStorage','youtube-embed','ionic.cloud','ngSanitize'])
 
-.run(function($ionicPlatform,$state, Application) {
+.run(function($ionicPlatform,$state, Application,$ionicPush) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -19,6 +19,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
+        $ionicPush.register().then(function(t) {
+            return $ionicPush.saveToken(t);
+        }).then(function(t) {
+            console.log('Token saved:', t.token);
+        });
+        
+
        var result = null;
         Application.isInitialRun().then(function(value){
             result = value;
@@ -26,7 +34,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         });
         var state = "app.accueil";
         if (result) {
-           Application.setInitialRun(false);
            state = "app.login";
         }
         
@@ -35,24 +42,33 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
              navigator.splashscreen.hide();
         }
        
-     /*   var push = new Ionic.Push({
-            "debug":true
-        });
-        push.register(function(token){
-            console.log("Device token:",token.token);
-            push.saveToken(token);  // persist the token in the Ionic Platform
-        });
-        */
     });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider,$sceDelegateProvider,$httpProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider,$sceDelegateProvider,$httpProvider,$ionicCloudProvider) {
 
     // Turn off caching for demo simplicity's sake
     $ionicConfigProvider.views.maxCache(0);
     $sceDelegateProvider.resourceUrlWhitelist(['**']);
     $httpProvider.defaults.useXDomain = true;
-
+    $ionicCloudProvider.init({
+    "core": {
+      "app_id": "da4cdfc4"
+    },
+    "push": {
+      "sender_id": "513360151004",
+      "pluginConfig": {
+        "ios": {
+          "badge": true,
+          "sound": true
+        },
+        "android": {
+          "iconColor": "#343434"
+        }
+      }
+    }
+  });
+    
     /*
     // Turn off back button text
     $ionicConfigProvider.backButton.previousTitleText(false);
@@ -73,8 +89,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 controller: 'ActivityCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-activity" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-paper-airplane"></i></button>',
-               /* controller: function ($timeout) {
+               /* template: '<button id="fab-activity" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-paper-airplane"></i></button>',
+                controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-activity').classList.toggle('on');
                     }, 200);
@@ -100,12 +116,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         controller: 'EventCtrl'
       },
       'fabContent': {
-                template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
+              /*  template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-share').classList.toggle('on');
                     }, 200);
-                }
+                }*/
             }
     }
   })
@@ -127,12 +143,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         controller: 'CampagneCtrl'
       },
       'fabContent': {
-                template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
+               /* template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-share').classList.toggle('on');
                     }, 200);
-                }
+                }*/
             }
     }
   })
@@ -154,12 +170,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         controller: 'JeuCtrl'
       },
       'fabContent': {
-                template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
+             /*   template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-share').classList.toggle('on');
                     }, 200);
-                }
+                }*/
             }
     }
   })
@@ -181,12 +197,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         controller: 'LoisirCtrl'
       },
       'fabContent': {
-                template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
+             /*   template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-share').classList.toggle('on');
                     }, 200);
-                }
+                }*/
             }
     }
   })
@@ -207,12 +223,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         controller: 'EmploiCtrl'
       },
       'fabContent': {
-                template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
+               /* template: '<button id="fab-share" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-android-share-alt"></i></button>',
                 controller: function ($timeout) {
                     $timeout(function () {
                         document.getElementById('fab-share').classList.toggle('on');
                     }, 200);
-                }
+                }*/
             }
     }
   })
@@ -448,12 +464,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
+               /* template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
                 controller: function ($timeout) {
-                    /*$timeout(function () {
+                    $timeout(function () {
                         document.getElementById('fab-profile').classList.toggle('on');
-                    }, 800);*/
-                }
+                    }, 800);
+                }*/
             }
         }
     });

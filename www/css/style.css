@@ -94,6 +94,10 @@ p {
     bottom: 0;
 }
 
+.hero.no-header {
+    height: 200px;
+}
+
 .timeline ul li {
   list-style-type: none;
   position: relative;
@@ -393,7 +397,10 @@ table.game-3 td:nth-child(3){
     text-align: left;*/
 }
 
-s
+.fete-hello{
+  height: 600px;
+  width: 100%;
+}
 
 .home-hello {
   position: relative;
@@ -416,3 +423,4 @@ s
 .box{
   height: 20%;
 }
+

@@ -1,9 +1,9 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['ionic','firebase'])
+angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
 
-.controller('AppCtrl', function($scope, $ionicModal,$state ,$ionicPopover, $timeout,$ionicPlatform,UserService,ApiEndpoint,Application) {
+.controller('AppCtrl', function($scope,$rootScope, $ionicModal,$state ,$ionicPopover, $timeout,$ionicPlatform,ApiEndpoint,Application) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -23,6 +23,13 @@ angular.module('starter.controllers', ['ionic','firebase'])
                         });
                         */
     });
+
+    $rootScope.$on('cloud:push:notification', function(event, data) {
+        var msg = data.message;
+        alert(msg.title + ': ' + msg.text);
+    });
+
+
 
     var navIcons = document.getElementsByClassName('ion-navicon');
     for (var i = 0; i < navIcons.length; i++) {
@@ -175,7 +182,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('LoginCtrl', function($scope, $timeout,$state,  $stateParams, ionicMaterialInk,UserService,Application,firebase) {
+.controller('LoginCtrl', function($scope, $timeout,$state,  $stateParams, ionicMaterialInk,Application,firebase) {
     $scope.$parent.clearFabs();
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -187,7 +194,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 
     $scope.login = function(){
-        console.log("credentials",$scope.loginData);
+       // console.log("credentials",$scope.loginData);
         Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
         var refEvent = firebase.database().ref().child("users");
         var objet = {
@@ -196,6 +203,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             mdp : $scope.loginData.passwd,
             login:$scope.loginData.login
         }
+        Application.setInitialRun(false);
         refEvent.push(objet);
         $state.go('app.accueil');
 
@@ -264,21 +272,20 @@ angular.module('starter.controllers', ['ionic','firebase'])
 .controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity) {
     
     $scope.events = [];
-    $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000,
-                    animation: 'fade-in',
-                  });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.clearFabs();
 
+    if(Connectivity.ifOffline()){
+        console.log("offline");
+        $state.go('app.offline'); 
+    }
+
     function show() {
         $ionicLoading.show({
            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            duration: 3000,
             animation: 'fade-in',
         });
   };
@@ -286,21 +293,15 @@ angular.module('starter.controllers', ['ionic','firebase'])
         $ionicLoading.hide();
   };
     
-    show();        
-    $scope.events = serviceFactory.getAllEvent();
-    $scope.events.$loaded().then(function(){
-        // access events here;
-        hide();
-    });
-       
+    show();
+    serviceFactory.getAllEvent().$loaded().then(function(data){
+            $scope.events = data;
+            hide();
+    });        
     $scope.detailEvent = function(id){ 
-        console.log("J'envoie", id);
         $state.go('app.itemEvent', {id: id});        
     }
-        
-
-     $ionicLoading.hide();
-
+    
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -338,28 +339,34 @@ angular.module('starter.controllers', ['ionic','firebase'])
 .controller('CampagnesCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.campagnes = [];
-    $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
    $scope.$parent.clearFabs();
-    
-    $scope.campagnes = serviceFactory.getAllCampagnes();
-        console.log( $scope.campagnes) ; 
 
+
+   function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in',
+        });
+  };
+  function hide(){
+        $ionicLoading.hide();
+  };
+    
+    show();
+    serviceFactory.getAllCampagnes().$loaded().then(function(data){
+            $scope.campagnes = data;
+            hide();
+    });
+ 
     $scope.detailCampagne = function(id){ 
-        console.log("J'envoie", id);
         $state.go('app.itemCampagne', {id: id});        
     }
         
-
-     $ionicLoading.hide();
-
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -397,27 +404,33 @@ angular.module('starter.controllers', ['ionic','firebase'])
 .controller('JeuxCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.jeux = [];
-    $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });
-    $scope.$parent.showHeader();
+   $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
-    $scope.jeux = serviceFactory.getAllJeux();
-        console.log( $scope.jeux) ; 
 
+    function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in',
+        });
+  };
+  function hide(){
+        $ionicLoading.hide();
+  };
+    
+    show();
+    serviceFactory.getAllJeux().$loaded().then(function(data){
+            $scope.jeux = data;
+            hide();
+    });
+    
     $scope.detailJeux = function(id){ 
-        console.log("J'envoie", id);
         $state.go('app.itemJeux', {id: id});        
     }
         
-
-     $ionicLoading.hide();
-
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -430,10 +443,6 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab(false);
     $scope.jeu = null;
     var jeuId = $stateParams.id;
-    console.log("L'id de l'event", $stateParams.id);
-     console.log("L'id de l'event", $stateParams);
-    console.log(jeuId) ;
-
     // Set Motion
     $timeout(function() {
         ionicMaterialMotion.slideUp({
@@ -441,77 +450,15 @@ angular.module('starter.controllers', ['ionic','firebase'])
         });
     }, 300);
 
-  $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });    
-  $scope.jeu = serviceFactory.getOneJeux(jeuId);
-  console.log("jeu",$scope.jeu.titre);
-  $ionicLoading.hide();
-
-    // Set Ink
-    ionicMaterialInk.displayEffect();
-})
-.controller('LoisirsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
-    
-    $scope.loisirs = [];
-    $ionicLoading.show({     
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    $scope.$parent.setExpanded(true);
-    $scope.$parent.setHeaderFab('right');
-    $scope.$parent.clearFabs();
-    $scope.loisirs = serviceFactory.getAllLoisirs();
-
-    $scope.detailLoisir = function(id){ 
-        $state.go('app.itemLoisir', {id: id});        
-    }
-        
-
-     $ionicLoading.hide();
-
-    // Activate ink for controller
-    ionicMaterialInk.displayEffect();
-})
-.controller('LoisirCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
-    // Set Header
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = false;
-    $scope.$parent.setExpanded(false);
-    $scope.$parent.setHeaderFab(false);
-    $scope.loisir = null;
-    var loisirId = $stateParams.id;
-    $scope.$parent.clearFabs();
-    // Set Motion
-    $timeout(function() {
-        ionicMaterialMotion.slideUp({
-            selector: '.slide-up'
-        });
-    }, 300);
-
-  $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });    
-  $scope.loisir = serviceFactory.getOneLoisir(loisirId);
-  $ionicLoading.hide();
-
+    $scope.jeu = serviceFactory.getOneJeux(jeuId);
+    console.log("jeu",$scope.jeu.titre);
+  
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
 .controller('EmploisCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.emplois = [];
-    $ionicLoading.show({     
-                    template: '<div class="icon ion-loading-a"></div> Loading... ',
-                    animation: 'fade-in',
-                    showBackdrop: true
-                  });
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = true;
@@ -519,20 +466,26 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
-   /* Trendingpackages.$loaded().then(function(){
-    $ionicLoading.hide();
-  })
-   */ 
-    $scope.emplois = serviceFactory.getAllEmplois();
+     function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in',
+        });
+    };
 
-
+    function hide(){
+        $ionicLoading.hide();
+    };
+    
+    show();
+    serviceFactory.getAllEmplois().$loaded().then(function(data){
+            $scope.emplois = data;
+            hide();
+    });
     $scope.detailEmploi = function(id){ 
         $state.go('app.itemEmploi', {id: id});        
     }
         
-
-     $ionicLoading.hide();
-
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -553,11 +506,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             selector: '.slide-up'
         });
     }, 300);
-
-  $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });    
+   
   $scope.emploi = serviceFactory.getOneEmploi(emploiId);
   $ionicLoading.hide();
   $ionicModal.fromTemplateUrl('templates/postuler.html',{
@@ -582,7 +531,7 @@ angular.module('starter.controllers', ['ionic','firebase'])
             },  
             "Réponse Offre d'emploi ref: " + $scope.emploi.reference, // Subject
             " Nom : "+nom+"\n Prenom : "+prenom+"\n Email : "+mail+"\n Téléphone : "+tel+"\n LinkedIn : "+linkedin,                      // Body
-            ["roykenvalmy@gmail.com"],    // To
+            ["rdsid@bracongo.cd"],    // To
             null,                    // CC
             null,                    // BCC
             false,                   // isHTML
@@ -596,14 +545,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ChateauCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ChateauCtrl', function($scope ,$state,$ionicSlideBoxDelegate ,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
     $scope.categories = [];
-    $ionicLoading.show({     
-                    template: '<div class="icon ion-loading-a"></div> Loading... ',
-                    duration: 3000,
-                    animation: 'fade-in',
-                  });
     
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -612,33 +556,34 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
+     $scope.nextSlide = function() {
+      $ionicSlideBoxDelegate.next();
+   }
+   
+    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/chateau/chateau2.png"},{title:"JAZZ KIFF",image:"img/chateau/chateau3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau5.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau6.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau7.png"}];
+
 
     function show() {
         $ionicLoading.show({
            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            duration: 3000,
             animation: 'fade-in',
         });
     };
+
     function hide(){
         $ionicLoading.hide();
     };
     
-    //show();          
+    show();
+    serviceFactory.getAllCategories().$loaded().then(function(data){
+            $scope.categories = data;
+            hide();
+    });          
 
-    $scope.categories = serviceFactory.getAllCategories();
-    /*serviceFactory.getAllCategories().$loaded().then(function(){
-        // access events here;
-       $ionicLoading.hide();
-    });
-    */
     $scope.detailCat = function(id){ 
         $state.go('app.categorieList', {id: id});        
     }
-        
-
-     $ionicLoading.hide();
-
+    
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -657,16 +602,9 @@ angular.module('starter.controllers', ['ionic','firebase'])
                     animation: 'fade-in',
                     showBackdrop: true
                   });
-    console.log("L'id de la categorie", $stateParams.id);
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
-    console.log("categorie", $scope.cat);
-    $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
-   /* $scope.produits = [
-        {nom:"Saint Julien Chateau Beychevelle",prix:[{volume:"75CL",valeur:"234,000"}]},
-        {nom:"Château ferrande rouge",prix:[{volume:"1,5L",valeur:"61,000"},{volume:"75CL",valeur:"36,000"},{volume:"37,5CL",valeur:"15,000"}]}
-    ];
-   */ 
-
+     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
+   
     // Set Motion
     $timeout(function() {
         ionicMaterialMotion.slideUp({
@@ -725,13 +663,28 @@ angular.module('starter.controllers', ['ionic','firebase'])
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
-    $scope.categories = serviceFactory.getAllCategoriesBrac();
-        
+
+    function show() {
+        $ionicLoading.show({
+           template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in',
+        });
+    };
+
+    function hide(){
+        $ionicLoading.hide();
+    };
+    
+    show();
+    serviceFactory.getAllCategoriesBrac().$loaded().then(function(data){
+            $scope.categories = data;
+            hide();
+    });   
+  
     $scope.listProduit = function(id){ 
         $state.go('app.produitList', {id: id});        
     }
-     $ionicLoading.hide();
-
+     
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -753,16 +706,10 @@ angular.module('starter.controllers', ['ionic','firebase'])
         });
     }, 300);
 
-  $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-                    duration: 3000
-                  });    
-  $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
+ $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
   console.log("catttttttt",$scope.categorie);
   $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
-  $ionicLoading.hide();
-  //$scope.produits = [{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"},{nom:"Nkoyi",condi:"72 Cl et 50 Cl",type:"Blonde",tauxAlcco:"5 %",slogan:"Molangi Ya Mboka",signature:"Entre nous, ça SKOL"}];
-
+  
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
@@ -812,15 +759,6 @@ angular.module('starter.controllers', ['ionic','firebase'])
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                     duration: 3000
                   });    
-  /*  $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
-          $scope.pdvs = response.data;
-          console.log("fresh", JSON.stringify(response));
-        //  return pdvProche;
-      });
-    */
- // $scope.pdvs = serviceFactory.getPdvs();
- // console.log("data",JSON.stringify($scope.pdvs));
-  //console.log("data0",$scope.pdvs[0]);
   $ionicLoading.hide();
 
   $scope.toto = function(){
@@ -894,7 +832,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             },  
             "Message pour boîte à suggestion", // Subject
             contenu,                      // Body
-            ["roykenvalmy@gmail.com"],    // To
+            ["rdsid@bracongo.cd"],    // To
             null,                    // CC
             null,                    // BCC
             false,                   // isHTML
@@ -925,7 +863,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ServiceFeteCtrl', function($scope,$timeout ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ServiceFeteCtrl', function($scope,$timeout,$ionicSlideBoxDelegate ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
     
    $ionicLoading.show({     
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -941,6 +879,13 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.pageSimuler = function(){
         $state.go('app.simulateur');
     };
+
+    $scope.nextSlide = function() {
+      $ionicSlideBoxDelegate.next();
+   }
+   
+    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.png"},{title:"JAZZ KIFF",image:"img/fete/fete3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.png"}];
+
 
     // Set Motion
     $timeout(function() {
@@ -1164,12 +1109,33 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     ionicMaterialInk.displayEffect();
 })
 
+.controller('OfflineCtrl', function($scope, $stateParams,$ionicSlideBoxDelegate ,$timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.nom = null;
+
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+   
+  
+  $ionicLoading.hide();
+
+    // Set Ink
+    ionicMaterialInk.displayEffect();
+})
 .factory('GoogleMaps', function($cordovaGeolocation, serviceFactory,$ionicPopup,$ionicLoading){
 
     function show() {
         $ionicLoading.show({
            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            duration: 3000,
             animation: 'fade-in',
         });
   };
@@ -1216,6 +1182,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
  
         //Load the markers
         loadMarkers(position.coords.latitude, position.coords.longitude);
+        hide();
         //Reload markers every time the map moves
        /* google.maps.event.addListener(map, 'dragend', function(){
           console.log("moved!");
@@ -1452,7 +1419,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getPdvs: function(){
         console.log("HELLLLOOOO MAAAPPPPP xxxxxxxxx");
-      return $http.get("/api/pdv").then(function(response){
+      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
             console.log("HELLLLOOOO MAAAPPPPP");
           pdvProche = response;
           pdvProches = response.data;
@@ -1581,77 +1548,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
   }  
 })
 
-.factory('UserService',['$q','Loki', function($q, Loki){
-//.factory('UserService', ['$q', 'Loki', UserService]);
-
-//function UserService($q, Loki) {  
-    var _db;
-    var _users;
-
-    function initDB() {          
-        var adapter = new LokiCordovaFSAdapter({"prefix": "loki"});  
-        _db = new Loki('userDB',
-                {
-                    autosave: true,
-                    autosaveInterval: 1000, // 1 second
-                    adapter: adapter
-                });
-    };
-
-     function getAllUsers() {        
-            return $q(function (resolve, reject) {
-    
-                var options = {
-                    users: {
-                        proto: Object,
-                        inflate: function (src, dst) {
-                            var prop;
-                            for (prop in src) {
-                                if (prop === 'Date') {
-                                    dst.Date = new Date(src.Date);
-                                } else {
-                                    dst[prop] = src[prop];
-                                }
-                            }
-                        }
-                    }
-                };
-    
-                _db.loadDatabase(options, function () {
-                    _users = _db.getCollection('users');
-    
-                    if (!_users) {
-                        _users = _db.addCollection('users');
-                    }
-    
-                    resolve(_users.data);
-                });
-            });
-};
-
-
-     function addUser(user) {
-            _users.insert(user);
-        };
-
-        function updateUser(user) {            
-            _users.update(user);
-        };
-
-        function deleteUser(user) {
-            _users.remove(user);
-        };
-
-    return {
-        initDB: initDB,
-        getAllUsers: getAllUsers,
-        addUser: addUser,
-        updateUser: updateUser,
-        deleteUser: deleteUser
-    };
-//}
-}])
-
 .factory('Connectivity', function($rootScope,$cordovaNetwork){
     return {
         isOnline: function(){
@@ -1667,7 +1563,30 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             }else{
                 return !navigator.onLine;
             }
+        },
+        startWatching: function(){
+        if(ionic.Platform.isWebView()){
+ 
+          $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+            console.log("went online");
+          });
+ 
+          $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+            console.log("went offline");
+          });
+ 
         }
+        else {
+ 
+          window.addEventListener("online", function(e) {
+            console.log("went online");
+          }, false);    
+ 
+          window.addEventListener("offline", function(e) {
+            console.log("went offline");
+          }, false);  
+        }       
+    }
     }
 })
 

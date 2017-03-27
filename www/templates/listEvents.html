@@ -1,26 +1,28 @@
 <ion-view view-title="Evènements">
   <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
   
-    <li ng-if="events.length === 0"> Aucun évènement !!!</li>
-     <div class="list card"   ng-repeat="event in events" >
+    
+      <div class="row gallery">
+  <div class="col col-50 " ng-repeat="event in events">
+      <div class="card">
 <!--          href="#/app/event/{{event.$id}}"-->
-            <div class="item item-divider">
-               <h2> {{event.titre}}</h2>
+            <div class="item item-divider item-text-wrap">
+               <h4> {{event.titre}}</h4>
             </div>
             <div class="item item-image" ng-click="detailEvent(event.$id)">
 <!--                href="#/app/event/{{event.$id}}"-->
-                <img class="full-image" src="{{event.image}}">
+                <img class="full-image"  src="{{event.image}}">
+
             </div>
-           <div class="item" style="margin-top: 5px%;">
-          <a  href="#" class="subdued">
-                <i class="icon ion-calendar "></i> {{event.date}}
-               </a></p>
+           <div class="item item-text-wrap" style="margin-bottom: 0px;padding: 0px 0px 0px 0px;margin: 0px 0px 0px 0px;">
+               <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{event.date}}</a>
           </div> 
-           <div class=" item" style="margin: 0%; padding: 0%;">
-              
+           <div class=" item" style="margin-bottom: 0px;padding: 0px 0px 0px 0px;margin: 0px 0px 0px 0px;">             
                <a class="button button-full button-assertive ink" href="#/app/event/{{event.$id}}"> Plus</a>
             </div>
       </div>
+      </div>
+    </div>
      
   </ion-content>
 </ion-view>

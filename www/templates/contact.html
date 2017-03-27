@@ -1,18 +1,18 @@
 <ion-view view-title="Nous contacter">
   <ion-content class="contents"  scroll="false" style="padding: 3%">
     <div  style="margin-top: 5%; padding-left: 5%; margin-bottom: 1%;">
-          <h4>  Votre Message</h4>     
+             
     </div>
     <div style="margin: 0%; padding: 0%; ">
      <form ng-submit="postuler(user, motpass)">
      
       <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
-        <div class="col">
-           <label class="item item-input">
-            <textarea rows="3" type="text" placeholder="Contenu du message" ng-model="contenu">
+        
+           
+            <textarea rows="3" type="text" placeholder="Ecrivez-nous" ng-model="contenu">
             </textarea>
-          </label>
-        </div>
+         
+       
       </div> 
       <div class="row responsive-sm" style="margin-top: 0%; padding: 0%;"> 
           <button ng-disabled="!contenu" class="button button-block button-balanced" type="submit" ng-click="envoyerSuggestion(contenu)"> 
@@ -27,8 +27,7 @@
     <div class="mapWrap"  data-tap-disabled="true" style="margin: 0%; padding: 0%; height:30%;">
           <map  zoom="15" style="margin: 0%; padding: 0%; height: 100%;" center="-4.3277476,15.3414303"> 
             <marker  position="-4.3277476,15.3414303"></marker> 
-          <!-- ngRepeat: pos in positions -->
-         <!-- <marker ng-repeat=" pos in positions" position="{{pos.lat}},{{pos.lng}}"></marker> -->
+         
         </map> 
     </div>
     <div  style="background-color: #da2d2d;color: #000;padding: 5%; margin-top: 2%;margin-bottom: 0%" >
