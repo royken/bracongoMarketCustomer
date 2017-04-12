@@ -3,7 +3,7 @@
     
        <div class="list">
 
-        <a ng-repeat="item in produits" class="item item-thumbnail-left">
+        <div ng-repeat="item in produits" class="item item-thumbnail-left" ng-click="showImages($index)">
 
           <img  src="{{item.image}}" >
         <h2>{{ item.nom}}</h2>
@@ -12,7 +12,7 @@
         <p>{{ item.tauxAlco}}</p>
         <p>{{ item.slogan}}</p>
         <p>{{ item.signature}}</p>
-        </a>
+        </div>
 
       </div>
   </ion-content>

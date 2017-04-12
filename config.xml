@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.bracongo.market.events" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Brakin</name>
+  <name>Bracongo</name>
   <description>
-        Appli pour market
+        Application de la BRACONGO SA 
     </description>
   <author email="rdsid@bracongo.cd" href="www.bracongo.cd">
       BRACONGO SA
@@ -16,6 +16,7 @@
   <allow-navigation href="http://192.168.1.100:8100"/>
   <allow-navigation href="http://localhost:8100"/>
   <allow-navigation href="http://192.168.1.101:8100"/>
+  <allow-navigation href="http://10.112.3.45:8101"/>
   <allow-intent href="http://41.223.104.197:8080/pdv/api/pdv"/>
   <allow-intent href="tel:*"/>
   <preference name="webviewbounce" value="false"/>

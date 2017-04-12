@@ -23,7 +23,7 @@
     <script src="lib/ionic-cloud/ionic.cloud.min.js"></script>
     <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
     <script src="lib/ion-md-input/js/ion-md-input.min.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    
     <script src="lib/ionic-service-core/ionic-core.js"></script>
     <script src="lib/ionic-service-push/ionic-push.js"></script>
     <script src="lib/angular-websocket/dist/angular-websocket.js"></script>
@@ -32,6 +32,7 @@
     <script src="lib/map/ng-map.min.js"></script>
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
     <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
     <script src="cordova.js"></script>
     <script src="lib/firebase/firebase.js"></script>
       <script src="lib/angularfire/dist/angularfire.min.js"></script>
@@ -79,6 +80,8 @@
     </div>
      <script type="text/javascript">
         function openModal(){
+            var scope = angular.element(document.getElementById('#puzzle')).scope();
+            scope.toto();
             $(".modale").show();
             return $(".modale");
 

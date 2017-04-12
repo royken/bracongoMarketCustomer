@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput','firebase','ngCordova','ngMap','ionic.rating','ngCordova.plugins.nativeStorage','youtube-embed','ionic.cloud','ngSanitize'])
 
-.run(function($ionicPlatform,$state, Application,$ionicPush) {
+.run(function($ionicPlatform,$state, Application,$ionicPush,$cordovaBadge) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -20,7 +20,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             StatusBar.styleDefault();
         }
 
-        $ionicPush.register().then(function(t) {
+        $ionicPush.register({
+        canShowAlert: true, //Can pushes show an alert on your screen?
+        canSetBadge: true, //Can pushes update app icon badges?
+        canPlaySound: true, //Can notifications play a sound?
+        canRunActionsOnWake: true, //Can run actions outside the app,
+        onNotification: function(notification) {
+          // Handle new push notifications here
+          console.log("NOTIFICATION ARRIVED");
+          console.log("NOTIFICATION ARRIVED");
+          console.log("NOTIFICATION ARRIVED");
+          console.log("NOTIFICATION ARRIVED");
+          $cordovaBadge.increase().then(function() {
+                // You have permission, badge increased.
+                console.log("increased");
+            }, function(err) {
+                // You do not have permission.
+        });
+          console.log(notification);
+          
+          return true;
+        }
+      }).then(function(t) {
             return $ionicPush.saveToken(t);
         }).then(function(t) {
             console.log('Token saved:', t.token);
@@ -341,6 +362,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             'menuContent': {
                 templateUrl: 'templates/contact.html',
                 controller: 'ContactCtrl'
+            },
+            'fabContent': {
+                template: ''
+            }
+        }
+    })
+     .state('app.nousJoindre', {
+        url: '/joindre',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/joindre.html',
+                controller: 'JoindreCtrl'
             },
             'fabContent': {
                 template: ''

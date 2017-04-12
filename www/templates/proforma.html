@@ -9,26 +9,26 @@
     </div>
   </ion-header-bar>
   <ion-content class= "splash">
- <form >
+ <form  >
   <div ng-show="prixUnique<0">
       <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
         <div class="col" style="border: 0px 0px 0px 0px !important white;">
           <label class="item item-input">
-            <input type="text" placeholder="Nombre de places" ng-model="loginData.nbrPlace">
+            <input type="number" placeholder="Nombre d'invités" ng-model="loginData.nbrPlace"  ng-required="true" ng-minlength="1" >
           </label>
         </div>
       </div> 
        
       <div class="row responsive-sm"> 
         <div class="col">
-          <button  class="button button-block button-assertive ink" type="submit" ng-click="prixGlobal()"> 
+          <button  class="button button-block button-assertive ink" type="submit" ng-click="prixGlobal()" ng-disabled="!(loginData.nbrPlace) || (loginData.nbrPlace < 1)"> 
           Calculer
           </button>
         </div>
       </div>
       </div>
         <div class="col" ng-show="prixUnique>0">
-          <button  class="button button-block button-balanced  ink" type="submit" ng-click="reinitialier()"> 
+          <button  class="button button-block button-assertive  ink" type="submit"  ng-click="reinitialier()"> 
           Reinitialiser
           </button>
         </div>
@@ -42,11 +42,18 @@
            - Chaises  </br>
            - Verres  </br>
            - Plateaux  </br>
-           - Mise en place 2h avant l'évènement et nettoyage après évènement</p>
+           - Mise en place 2h avant l'évènement et nettoyage après évènement</br>
         </p>
         <p class="alert alert-success" style="text-align: left">
-           Bien vouloir contacter le Service fête pour plus amples informations. Merci
+           Bien vouloir contacter le Service fête pour plus amples informations. </br>
+           Vous pouvez aussi envoyer votre commande en cliquant sur le bouton ci-dessous.</br>Merci
         </p>
+      </div>
+
+      <div class="row responsive-sm" ng-show="prixUnique>0"> 
+        <button  class="button button-block button-dark  ink" type="submit"  ng-click="envoyerCommande()"> 
+          <i class="ion-android-send"> Envoyer la Commande</i>
+          </button>
       </div>
     </form>
     

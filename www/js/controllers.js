@@ -1,9 +1,9 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
+angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordova'])
 
-.controller('AppCtrl', function($scope,$rootScope, $ionicModal,$state ,$ionicPopover, $timeout,$ionicPlatform,ApiEndpoint,Application) {
+.controller('AppCtrl', function($scope,$rootScope, $ionicModal,$state ,$ionicPopover, $timeout,$ionicPlatform,$cordovaBadge,ApiEndpoint,Application) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -12,21 +12,54 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     var vm = this;
 
     $ionicPlatform.ready(function() {
+         //   $cordovaBadge.promptForPermission();
 
-        // Initialize the database.
-       // UserService.initDB();
-
-        // Get all birthday records from the database.
-       /* UserService.getAllUsers()
-                        .then(function (users) {
-                            vm.users = users;
-                        });
-                        */
     });
 
-    $rootScope.$on('cloud:push:notification', function(event, data) {
+    $rootScope.$on('cloud:²push:notification', function(event, data) {
+        console.log("NOTIFICATION ARRIVED xxxx");
+          console.log("NOTIFICATION ARRIVED xxxx");
+          console.log("NOTIFICATION ARRIVED xxxx");
+          console.log("NOTIFICATION ARRIVED xxxx");
         var msg = data.message;
-        alert(msg.title + ': ' + msg.text);
+        var menu = msg.payload.menu;
+        console.log("LE MENU RECU",menu);
+        if(menu === "events"){
+            var badge = 0;
+            Application.getEventBadge().then(function(value){
+                badge = value;
+            });
+            Application.setEventBadge(badge +1);
+        }
+        if(menu === "campagnes"){
+                var badge = 0;
+            Application.getCampagneBadge().then(function(value){
+                badge = value;
+            });
+            Application.setCampagneBadge(badge +1);
+        }
+        if(menu === "concours"){
+            var badge = 0;
+            Application.getConcoursBadge().then(function(value){
+                badge = value;
+            });
+            Application.setConcoursBadge(badge +1);
+
+        }
+        //alert(msg.title + ': ' + msg.text+ ':'+ msg+ ':' + data);
+        console.log("IonicPush, Data: " + JSON.stringify(data));
+        var payload = data.payload;
+        console.log("IonicPush, Payload", JSON.stringify(payload));
+        console.log("IonicPush, Event: " + JSON.stringify(event));
+        
+         $cordovaBadge.increase().then(function() {
+                // You have permission, badge increased.
+            }, function(err) {
+                // You do not have permission.
+        });
+         
+         
+         
     });
 
 
@@ -106,16 +139,9 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
             fabs[0].remove();
         }
     };
-
-    $scope.login = function(){
-        console.log("credentials",$scope.loginData);
-        Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
-        $state.go('app.accueil');
-
-    };
 })
 
-.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk) {
+.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk,$cordovaBadge,Application) {
      $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
@@ -123,6 +149,33 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+
+     
+    Application.getEventBadge().then(function(value){
+            $scope.badgeEvent = value;
+    });
+
+  //  $scope.badgeEvent = 1;
+
+    Application.getCampagneBadge().then(function(value){
+            $scope.badgeCampagne  = value;
+    });
+    
+   //  $scope.badgeCampagne  = 1;
+
+    Application.getConcoursBadge().then(function(value){
+            $scope.badgeConcours  = value;
+    });
+
+     $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+        // You have permission, badge set.
+         }, function(err) {
+            // You do not have permission.
+     });
+     
+    
+    //$scope.badgeConcours  = 1;
+
 
     $scope.nextSlide = function() {
       $ionicSlideBoxDelegate.next();
@@ -173,12 +226,18 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
             $state.go('app.profile');
         }
         $scope.contact = function(){
-            $state.go('app.contact');
+            $state.go('app.nousJoindre');
         }
         $scope.infos = function(){
             $state.go('app.infos');
         }
 
+  /*      $cordovaBadge.clear().then(function() {
+                // You have permission, badge cleared.
+            }, function(err) {
+                // You do not have permission.
+        });
+*/
     ionicMaterialInk.displayEffect();
 })
 
@@ -195,12 +254,11 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
 
     $scope.login = function(){
        // console.log("credentials",$scope.loginData);
-        Application.registerUser($scope.loginData.login,$scope.loginData.passwd,$scope.loginData.mail,$scope.loginData.nom);
+        Application.registerUser($scope.loginData.login,$scope.loginData.mail,$scope.loginData.nom);
         var refEvent = firebase.database().ref().child("users");
         var objet = {
             nom : $scope.loginData.nom,
             mail : $scope.loginData.mail,
-            mdp : $scope.loginData.passwd,
             login:$scope.loginData.login
         }
         Application.setInitialRun(false);
@@ -269,7 +327,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity) {
+.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity,Application) {
     
     $scope.events = [];
     $scope.$parent.showHeader();
@@ -277,6 +335,8 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.clearFabs();
+
+    Application.setEventBadge(0);
 
     if(Connectivity.ifOffline()){
         console.log("offline");
@@ -336,7 +396,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('CampagnesCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('CampagnesCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application) {
     
     $scope.campagnes = [];
     $scope.$parent.showHeader();
@@ -344,8 +404,9 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
-   $scope.$parent.clearFabs();
+    $scope.$parent.clearFabs();
 
+    Application.setCampagneBadge(0);
 
    function show() {
         $ionicLoading.show({
@@ -401,7 +462,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('JeuxCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('JeuxCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application) {
     
     $scope.jeux = [];
    $scope.$parent.showHeader();
@@ -410,6 +471,8 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+
+    Application.setConcoursBadge(0);
 
     function show() {
         $ionicLoading.show({
@@ -498,7 +561,6 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.$parent.setHeaderFab(false);
     $scope.emploi = null;
     var emploiId = $stateParams.id;
-    $scope.emailSend = "rdsid@bracongo.cd";
 
     // Set Motion
     $timeout(function() {
@@ -531,7 +593,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
             },  
             "Réponse Offre d'emploi ref: " + $scope.emploi.reference, // Subject
             " Nom : "+nom+"\n Prenom : "+prenom+"\n Email : "+mail+"\n Téléphone : "+tel+"\n LinkedIn : "+linkedin,                      // Body
-            ["rdsid@bracongo.cd"],    // To
+            ["recrutement@bracongo.cd"],    // To
             null,                    // CC
             null,                    // BCC
             false,                   // isHTML
@@ -587,7 +649,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('CategorieListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('CategorieListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -596,6 +658,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.$parent.setHeaderFab(false);
     $scope.$parent.clearFabs();
     var categorieId = $stateParams.id;
+    $scope.zoomMin=1;
     $scope.cat = null;
     $ionicLoading.show({     
                     template: '<div class="icon ion-loading-a"></div> Loading... ',
@@ -603,7 +666,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
                     showBackdrop: true
                   });
     $scope.cat = serviceFactory.getOneCategorie($stateParams.id);
-     $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
+    $scope.produits = serviceFactory.getCategorieProductList($scope.cat.code);
    
     // Set Motion
     $timeout(function() {
@@ -615,6 +678,34 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.detailVin = function(id){ 
         state.go('app.vinDetail', {id: id});        
     }  
+
+    $scope.showImages = function(index) {
+  $scope.activeSlide = index;
+  $scope.showModal('templates/gallery-zoomview.html');
+};
+ 
+$scope.showModal = function(templateUrl) {
+  $ionicModal.fromTemplateUrl(templateUrl, {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+    $scope.modal.show();
+  });
+}
+ 
+$scope.closeModal = function() {
+  $scope.modal.hide();
+  $scope.modal.remove()
+};
+ 
+$scope.updateSlideStatus = function(slide) {
+  var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
+  if (zoomFactor == $scope.zoomMin) {
+    $ionicSlideBoxDelegate.enableSlide(true);
+  } else {
+    $ionicSlideBoxDelegate.enableSlide(false);
+  }
+};
 
   
   $ionicLoading.hide();
@@ -689,7 +780,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProduitListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ProduitListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -697,6 +788,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
     $scope.categorie = null;
+    $scope.zoomMin=1;
     var catId = $stateParams.id;
     $scope.$parent.clearFabs();
     // Set Motion
@@ -709,6 +801,33 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
  $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
   console.log("catttttttt",$scope.categorie);
   $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
+  $scope.showImages = function(index) {
+  $scope.activeSlide = index;
+  $scope.showModal('templates/gallery-zoomview.html');
+};
+ 
+$scope.showModal = function(templateUrl) {
+  $ionicModal.fromTemplateUrl(templateUrl, {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+    $scope.modal.show();
+  });
+}
+ 
+$scope.closeModal = function() {
+  $scope.modal.hide();
+  $scope.modal.remove()
+};
+ 
+$scope.updateSlideStatus = function(slide) {
+  var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
+  if (zoomFactor == $scope.zoomMin) {
+    $ionicSlideBoxDelegate.enableSlide(true);
+  } else {
+    $ionicSlideBoxDelegate.enableSlide(false);
+  }
+};
   
     // Set Ink
     ionicMaterialInk.displayEffect();
@@ -731,6 +850,30 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud'])
 
      GoogleMaps.init();
 
+    // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
+.controller('JoindreCtrl', function($scope ,$state, ionicMaterialMotion, ionicMaterialInk) {
+    
+    
+   
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');  
+   
+    $scope.gotoContact = function(){ 
+        $state.go('app.contact');        
+    }
+
+    $scope.gotoInfos = function(){ 
+        $state.go('app.infos');        
+    }
+
+    $scope.gotoJobs = function(){ 
+        $state.go('app.listEmplois');        
+    }
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
@@ -832,7 +975,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
             },  
             "Message pour boîte à suggestion", // Subject
             contenu,                      // Body
-            ["rdsid@bracongo.cd"],    // To
+            ["conso@bracongo.cd"],    // To
             null,                    // CC
             null,                    // BCC
             false,                   // isHTML
@@ -863,7 +1006,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('ServiceFeteCtrl', function($scope,$timeout,$ionicSlideBoxDelegate ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ServiceFeteCtrl', function($scope,$timeout,$ionicSlideBoxDelegate ,$state, $ionicLoading,$ionicModal, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application) {
     
    $ionicLoading.show({     
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -884,7 +1027,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       $ionicSlideBoxDelegate.next();
    }
    
-    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.png"},{title:"JAZZ KIFF",image:"img/fete/fete3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.png"}];
+    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.jpg"},{title:"JAZZ KIFF",image:"img/fete/fete3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.jpg"}];
 
 
     // Set Motion
@@ -928,6 +1071,31 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.nbrHotesse;
     $scope.boissonPrise;
     $scope.prixG;
+    $scope.nom;
+
+    Application.getName().then(function(value){
+            $scope.nom = value;
+           // console.log("Le nom du user",$scope.nom);
+        });
+
+    $scope.envoyerCommande = function() {
+        var message = "Bonjour BRACONGO, \n J'organise une réception dans laquelle j'attends "+$scope.loginData.nbrPlace + " invités. \n Le prix estimé par la plate-forme est de "+ $scope.prixG + "$.\n Nom : "+ $scope.nom;
+      
+        if(window.plugins && window.plugins.emailComposer) {
+            window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+                console.log("Response -> " + result);
+            },  
+            "Commande Service Fête : " + $scope.nom , // Subject
+            message,                      // Body
+            ["servicefete@bracongo.cd"],    // To
+            null,                    // CC
+            null,                    // BCC
+            false,                   // isHTML
+            null,                    // Attachments
+            null);                   // Attachment Data
+        }
+        $scope.closeModal();
+    }
 
     $scope.prixGlobal = function(){
          $scope.prixUnique =  $scope.prixIndividus($scope.loginData.nbrPlace);
@@ -1601,15 +1769,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         });
       },
       isInitialRun : function () {
-      /*  NativeStorage.getBoolean("initialRun",
-            function(value){
-                 console.log("InitialRun",value);
-                 return value == "true";
-             },
-             function(e){
-                fail("Erreur lors de l'enregistrement");
-             });
-        */
         console.log("TOOOOOTTTTOOOOOO");
         return $cordovaNativeStorage.getItem("initialRun").then(function (value) {
             console.log("InitialRun",value);
@@ -1626,19 +1785,19 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
              console.log(error);  
         });
       },
-      registerUser : function(login,mdp,mail,name){
+      registerUser : function(login,mail,name){
         $cordovaNativeStorage.setItem("login", login).then(function () {
             console.log("YOUUUPIIII login");
         }, function(error){
              console.log("ERRRRUUUURRRRRRR login");
              console.log(error);  
-        });
+        });/*
         $cordovaNativeStorage.setItem("mdp", mdp).then(function () {
             console.log("YOUUUPIIII mdp");
         }, function(error){
              console.log("ERRRRUUUURRRRRRR mdp");
              console.log(error);  
-        });
+        });*/
         $cordovaNativeStorage.setItem("mail", mail).then(function () {
             console.log("YOUUUPIIII mail");
         }, function(error){
@@ -1672,8 +1831,53 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
              console.log(error);  
         });
       },
+
+      getEventBadge : function () {
+        return $cordovaNativeStorage.getItem("eventBadge").then(function (value) {
+             return value;
+        }, function(error){
+             console.log(error);
+             return 0;  
+        });
+      },
+      getCampagneBadge : function () {
+        return $cordovaNativeStorage.getItem("campagneBadge").then(function (value) {
+             return value;
+        }, function(error){
+             console.log(error);
+             return 0;  
+        });
+      },
+      getConcoursBadge : function () {
+        return $cordovaNativeStorage.getItem("concoursBadge").then(function (value) {
+             return value;
+        }, function(error){
+             console.log(error);
+             return 0;  
+        });
+      },
+      setEventBadge: function (badge) {
+        $cordovaNativeStorage.setItem("eventBadge", badge).then(function () {
+        }, function(error){
+             console.log(error);  
+        });
+      },
+      setCampagneBadge: function (badge) {
+        $cordovaNativeStorage.setItem("campagneBadge", badge).then(function () {
+        }, function(error){
+             console.log(error);  
+        });
+      },
+      setConcoursBadge: function (badge) {
+        $cordovaNativeStorage.setItem("concoursBadge", badge).then(function () {
+        }, function(error){
+             console.log(error);  
+        });
+      },
     };
 })
+
+
 
 .controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.$parent.showHeader();
@@ -1696,40 +1900,40 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     if($stateParams.level==1){
         $scope.puzzels.push(
             {
-                titre : "Les Simpsons",
-                nom : "simpson",
-                lien : "app.game({pack: 'simpson', level: '3'})",
-                src : "img/simpson.jpg",
+                titre : "SKOL",
+                nom : "skol",
+                lien : "app.game({pack: 'skol', level: '3'})",
+                src : "img/skol.png",
                 time : 7,
                 pts : 50
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Bob eponge",
-                nom : "bobleponge",
-                lien : "app.game({pack: 'bobleponge', level: '3'})",
-                src : "img/bobleponge.jpg",
+                titre : "Castel",
+                nom : "castel2",
+                lien : "app.game({pack: 'castel2', level: '3'})",
+                src : "img/castel2.jpg",
                 time : 5,
                 pts : 40
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Dora L'exploratrice",
-                nom : "dora_exploratrice",
-                lien : "app.game({pack: 'dora_exploratrice', level: '3'})",
-                src : "img/dora_exploratrice.jpg",
+                titre : "Doppel",
+                nom : "doppel",
+                lien : "app.game({pack: 'doppel', level: '3'})",
+                src : "img/doppel.jpg",
                 time : 7,
                 pts : 56
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Pokemon",
-                nom : "pokemon",
-                lien : "app.game({pack: 'pokemon', level: '3'})",
-                src : "img/pokemon.jpg",
+                titre : "World Cola",
+                nom : "world",
+                lien : "app.game({pack: 'world', level: '3'})",
+                src : "img/world.jpg",
                 time : 10,
                 pts : 30
             }
@@ -1737,40 +1941,40 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     }else if($stateParams.level==2){
         $scope.puzzels.push(
             {
-                titre : "Les Mini Mois",
-                nom : "minimos",
-                lien : "app.game({pack: 'minimos', level: '4'})",
-                src : "img/minimos.jpg",
+                titre : "Nkoyi",
+                nom : "nkoyi",
+                lien : "app.game({pack: 'nkoyi', level: '4'})",
+                src : "img/nkoyi.jpg",
                 time : 7,
                 pts : 50
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Les Avengers",
-                nom : "avenger",
-                lien : "app.game({pack: 'avenger', level: '4'})",
-                src : "img/avenger.jpg",
+                titre : "Beaufort",
+                nom : "beaufort",
+                lien : "app.game({pack: 'beaufort', level: '4'})",
+                src : "img/beaufort.jpg",
                 time : 5,
                 pts : 40
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Spider Man",
-                nom : "spiderman",
-                lien : "app.game({pack: 'spiderman', level: '4'})",
-                src : "img/spiderman.jpg",
+                titre : "Castel",
+                nom : "castel",
+                lien : "app.game({pack: 'castel', level: '4'})",
+                src : "img/castel.jpg",
                 time : 7,
                 pts : 56
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Hunter X Hunter",
-                nom : "hunterxhunter",
-                lien : "app.game({pack: 'hunterxhunter', level: '4'})",
-                src : "img/hunterxhunter.jpg",
+                titre : "Tembo",
+                nom : "tembo",
+                lien : "app.game({pack: 'tembo', level: '4'})",
+                src : "img/tembo.jpg",
                 time : 10,
                 pts : 30
             }
@@ -1778,40 +1982,40 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     }else if($stateParams.level==3){
         $scope.puzzels.push(
             {
-                titre : "One Peace",
-                nom : "one_piece",
-                lien : "app.game({pack: 'one_piece', level: '5'})",
-                src : "img/one_piece.jpg",
+                titre : "33 Export",
+                nom : "export",
+                lien : "app.game({pack: 'export', level: '5'})",
+                src : "img/export.jpg",
                 time : 7,
                 pts : 50
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Naruto",
-                nom : "naruto",
-                lien : "app.game({pack: 'naruto', level: '5'})",
-                src : "img/naruto.jpg",
+                titre : "XXL",
+                nom : "xxl",
+                lien : "app.game({pack: 'xxl', level: '5'})",
+                src : "img/xxl.jpg",
                 time : 5,
                 pts : 40
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Dragon Ball Z",
-                nom : "dragonballz",
-                lien : "app.game({pack: 'dragonballz', level: '5'})",
-                src : "img/dragonballz.jpg",
+                titre : "Top",
+                nom : "top",
+                lien : "app.game({pack: 'top', level: '5'})",
+                src : "img/top.jpg",
                 time : 7,
                 pts : 56
             }
         );
         $scope.puzzels.push(
             {
-                titre : "Les indestructibles",
-                nom : "indestructibles",
-                lien : "app.game({pack: 'indestructibles', level: '5'})",
-                src : "img/indestructibles.jpg",
+                titre : "D'Jino",
+                nom : "djino",
+                lien : "app.game({pack: 'djino', level: '5'})",
+                src : "img/djino.jpg",
                 time : 10,
                 pts : 30
             }
@@ -1840,8 +2044,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.packImg = $stateParams.pack;
     $scope.nombre = $stateParams.level;
     $scope.lists = [];
-    $scope.generique = (new Audio("audio/"+$scope.packImg+".mp3",0.2)).play();
-    console.log("La musique",$scope.generique);
+
+    $scope.toto = function(){
+        console.log("BONJOURRRRRRRRRR");
+    }
+    //$scope.generique = (new Audio("audio/"+$scope.packImg+".mp3",0.2)).play();
+    //console.log("La musique",$scope.generique);
 
     if($scope.nombre==3){
         var list=[];

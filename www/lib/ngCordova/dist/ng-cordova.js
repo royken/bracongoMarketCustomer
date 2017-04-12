@@ -502,7 +502,8 @@ angular.module('ngCordova.plugins.badge', [])
       },
 
       promptForPermission: function () {
-        return cordova.plugins.notification.badge.promptForPermission();
+        return cordova.plugins.notification.badge.registerPermission();
+        //return cordova.plugins.notification.badge.promptForPermission();
       },
 
       set: function (badge, callback, scope) {
