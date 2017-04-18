@@ -51,12 +51,13 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         var payload = data.payload;
         console.log("IonicPush, Payload", JSON.stringify(payload));
         console.log("IonicPush, Event: " + JSON.stringify(event));
-        
+        /*
          $cordovaBadge.increase().then(function() {
                 // You have permission, badge increased.
             }, function(err) {
                 // You do not have permission.
         });
+         */
          
          
          
@@ -141,7 +142,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     };
 })
 
-.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk,$cordovaBadge,Application) {
+.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk,$cordovaBadge,Application,serviceFactory) {
      $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
@@ -167,12 +168,13 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $scope.badgeConcours  = value;
     });
 
+/*
      $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
          }, function(err) {
             // You do not have permission.
      });
-     
+     */
     
     //$scope.badgeConcours  = 1;
 
@@ -181,7 +183,8 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
       $ionicSlideBoxDelegate.next();
    }
 
-    $scope.products = [{title:"SKOL MOLANGI YA MBOKA",image:"img/heritier.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/djino.png"},{title:"JAZZ KIFF",image:"img/jazzkif.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/skol-2.png"}];
+   $scope.products = serviceFactory.getAllAccueilImages();
+    //$scope.products = [{title:"SKOL MOLANGI YA MBOKA",image:"img/heritier.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/djino.png"},{title:"JAZZ KIFF",image:"img/jazzkif.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/skol-2.png"}];
 
     $scope.getNom = function(){
         Application.getName().then(function(value){
@@ -622,7 +625,8 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
       $ionicSlideBoxDelegate.next();
    }
    
-    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/chateau/chateau2.png"},{title:"JAZZ KIFF",image:"img/chateau/chateau3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau5.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau6.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau7.png"}];
+   $scope.images = serviceFactory.getAllChateauxImages();
+   // $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/chateau/chateau2.png"},{title:"JAZZ KIFF",image:"img/chateau/chateau3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau5.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau6.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau7.png"}];
 
 
     function show() {
@@ -1026,8 +1030,10 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     $scope.nextSlide = function() {
       $ionicSlideBoxDelegate.next();
    }
+
+   $scope.images = serviceFactory.getAllFeteImages();
    
-    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.jpg"},{title:"JAZZ KIFF",image:"img/fete/fete3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.jpg"}];
+    //$scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.jpg"},{title:"JAZZ KIFF",image:"img/fete/fete3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.jpg"}];
 
 
     // Set Motion
@@ -1568,6 +1574,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var refVins = database.child('vins');
     var refCategoriesBrac = database.child('categoriesBrac');
     var refProduits = database.child('produits');
+    var refAccueilImage = database.child('accueilImage');
+    var refFeteImage = database.child('feteImage');
+    var refChateauxImage = database.child('chateauxImage');
     var localEvents = [];
     var localJeux = [];
     var localCampagnes = [];
@@ -1579,6 +1588,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     var localVins = [];
     var localCategoriesBrac = [];
     var localProduits = [];
+    var localAccueilImages = [];
+    var localFeteImages = [];
+    var localChateauxImages = [];
     var i ;
 
     
@@ -1598,6 +1610,21 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getSavedPdv: function(){
         return pdvProches;
+    },
+
+    getAllAccueilImages: function(){
+       localAccueilImages = $firebaseArray(refAccueilImage);
+      return $firebaseArray(refAccueilImage);
+    },
+
+    getAllFeteImages: function(){
+       localFeteImages = $firebaseArray(refFeteImage);
+      return $firebaseArray(refFeteImage);
+    },
+
+    getAllChateauxImages: function(){
+       localChateauxImages = $firebaseArray(refChateauxImage);
+      return $firebaseArray(refChateauxImage);
     },
 
     getAllEvent: function(){
