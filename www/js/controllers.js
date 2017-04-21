@@ -12,18 +12,14 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     var vm = this;
 
     $ionicPlatform.ready(function() {
-         //   $cordovaBadge.promptForPermission();
+            $cordovaBadge.promptForPermission();
 
     });
 
-    $rootScope.$on('cloud:²push:notification', function(event, data) {
-        console.log("NOTIFICATION ARRIVED xxxx");
-          console.log("NOTIFICATION ARRIVED xxxx");
-          console.log("NOTIFICATION ARRIVED xxxx");
-          console.log("NOTIFICATION ARRIVED xxxx");
+    $rootScope.$on('cloud:push:notification', function(event, data) {
+        
         var msg = data.message;
         var menu = msg.payload.menu;
-        console.log("LE MENU RECU",menu);
         if(menu === "events"){
             var badge = 0;
             Application.getEventBadge().then(function(value){
@@ -1599,7 +1595,7 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
     getPdvs: function(){
         console.log("HELLLLOOOO MAAAPPPPP xxxxxxxxx");
-      return $http.get("http://41.223.104.197:8080/pdv/api/pdv").then(function(response){
+      return $http.get("/api/pdv").then(function(response){
             console.log("HELLLLOOOO MAAAPPPPP");
           pdvProche = response;
           pdvProches = response.data;

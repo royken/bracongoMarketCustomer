@@ -11,17 +11,13 @@
             <h2> {{jeu.titre}}</h2>
              <p ng-bind-html="jeu.description"></p>
         </div>
-       <center><h3>Lots à gagner</h3></center>
-            <section class="timeline">
-                  <ul>
-                     <ion-list  ng-repeat="lot in jeu.lots">
-                     <li>
-                      <div>
-                        <h4>{{lot}}</h4>                         
-                      </div>
-                    </li>
-                    </ion-list>
-                  </ul>
-                </section>
+      
+            <div style="text-align:justify; padding: 2%; " >
+                Pour plus d'informations rendez-vous sur la page facebook               
+            </div>
+            <div style="text-align:center; padding: 2%; " >
+              <a  href="#" onclick="window.open('{{jeu.lien}}', '_system', 'location=yes'); return false;"> <img src="img/facebook.png" style="width: 50%;height: 35px;"> </a>
+                              
+            </div>
         </ion-content>
 </ion-view>
