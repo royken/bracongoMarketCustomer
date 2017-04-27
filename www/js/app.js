@@ -27,10 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         canRunActionsOnWake: true, //Can run actions outside the app,
         onNotification: function(notification) {
           // Handle new push notifications here
-          console.log("NOTIFICATION ARRIVED");
-          console.log("NOTIFICATION ARRIVED");
-          console.log("NOTIFICATION ARRIVED");
-          console.log("NOTIFICATION ARRIVED");
+          
           $cordovaBadge.increase().then(function() {
                 // You have permission, badge increased.
                 console.log("increased");
@@ -54,7 +51,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             console.log("result1 ",result);
         });
         var state = "app.accueil";
-        if (result) {
+        if (result === "true") {
            state = "app.login";
         }
         
@@ -471,6 +468,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
       'menuContent': {
         templateUrl: 'templates/serviceFete.html',
         controller: 'ServiceFeteCtrl'
+      },
+      'fabContent': {
+                template: ''
+            }
+    }
+  })
+.state('app.contactChateau', {
+    url: '/contactChateau',   
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/chateauPosition.html',
+        controller: 'ChateauPositionCtrl'
       },
       'fabContent': {
                 template: ''

@@ -12,6 +12,18 @@
                <a class="button button-full button-assertive ink" href="#/app/emploi/{{emploi.$id}}" > Plus</a>
             </div>
       </div>
+
+      <div  ng-show="(emplois.length < 1) && (load > 0)" style="margin-top: 20%; padding: 2% 2% 2% 2%">
+
+     <h4> Aucune offre disponible pour l'instant. Veuillez suivre le lien ci-dessous pour nous déposer votre CV.</h4></br> 
+
+      <div style="text-align:center; padding: 2%; " >
+              <a  style="color: #fff; background-color: #e42112"  onclick="window.open('http://bracongo.cd/recrutement/', '_system', 'location=yes'); return false;" class="button button-icon button-assertive "> Déposez votre CV </a>
+      </div>      
+           
+      </div>
+
+
      
   </ion-content>
 </ion-view>

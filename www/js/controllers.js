@@ -43,21 +43,19 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
 
         }
         //alert(msg.title + ': ' + msg.text+ ':'+ msg+ ':' + data);
-        console.log("IonicPush, Data: " + JSON.stringify(data));
-        var payload = data.payload;
-        console.log("IonicPush, Payload", JSON.stringify(payload));
-        console.log("IonicPush, Event: " + JSON.stringify(event));
-        /*
+        //console.log("IonicPush, Data: " + JSON.stringify(data));
+        //var payload = data.payload;
+       // console.log("IonicPush, Payload", JSON.stringify(payload));
+        //console.log("IonicPush, Event: " + JSON.stringify(event));
+       
          $cordovaBadge.increase().then(function() {
                 // You have permission, badge increased.
             }, function(err) {
                 // You do not have permission.
         });
-         */
          
          
-         
-    });
+ });
 
 
 
@@ -138,7 +136,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     };
 })
 
-.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk,$cordovaBadge,Application,serviceFactory) {
+.controller('AccueilCtrl', function($scope ,$state, $ionicSlideBoxDelegate,$timeout, $stateParams, ionicMaterialInk,$cordovaBadge,Application,serviceFactory,$cordovaToast) {
      $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
@@ -164,13 +162,13 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $scope.badgeConcours  = value;
     });
 
-/*
-     $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+
+    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
          }, function(err) {
             // You do not have permission.
      });
-     */
+   
     
     //$scope.badgeConcours  = 1;
 
@@ -179,9 +177,17 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
       $ionicSlideBoxDelegate.next();
    }
 
-   $scope.products = serviceFactory.getAllAccueilImages();
-    //$scope.products = [{title:"SKOL MOLANGI YA MBOKA",image:"img/heritier.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/djino.png"},{title:"JAZZ KIFF",image:"img/jazzkif.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/skol-2.png"}];
+   
+   //$scope.products = serviceFactory.getAllAccueilImages();
+    $scope.products = [{titre:"SKOL MOLANGI YA MBOKA",image:"img/accueil/skol-3.png"},{titre:"D'JINO EXPLOSION FRUITEE",image:"img/accueil/djino.jpg"}];
 
+    serviceFactory.getAllAccueilImages().$loaded().then(function(data){
+           // $scope.events = data;
+           if(data.length > 0){
+                $scope.products.push(data);
+           }
+            
+    });
     $scope.getNom = function(){
         Application.getName().then(function(value){
             $scope.nom = value;
@@ -198,7 +204,10 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $state.go('app.listCampagnes');        
         }
         $scope.jeuxPage = function(){ 
-            $state.go('app.listJeux');        
+            $cordovaToast.show("Lol :-)", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+         //   $state.go('app.listJeux');        
         }
         $scope.loisirsPage = function(){ 
             $state.go('app.listLoisirs');        
@@ -240,7 +249,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     ionicMaterialInk.displayEffect();
 })
 
-.controller('LoginCtrl', function($scope, $timeout,$state,  $stateParams, ionicMaterialInk,Application,firebase) {
+.controller('LoginCtrl', function($scope, $timeout,$state,$ionicHistory,  $stateParams, ionicMaterialInk,Application,firebase,Connectivity,$cordovaToast) {
     $scope.$parent.clearFabs();
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -253,17 +262,29 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
 
     $scope.login = function(){
        // console.log("credentials",$scope.loginData);
-        Application.registerUser($scope.loginData.login,$scope.loginData.mail,$scope.loginData.nom);
-        var refEvent = firebase.database().ref().child("users");
-        var objet = {
-            nom : $scope.loginData.nom,
-            mail : $scope.loginData.mail,
-            login:$scope.loginData.login
-        }
-        Application.setInitialRun(false);
-        refEvent.push(objet);
-        $state.go('app.accueil');
 
+       if(Connectivity.ifOffline()){
+            $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+                }, function (error) {
+            });
+        }
+        else{
+            Application.registerUser($scope.loginData.login,$scope.loginData.mail,$scope.loginData.nom);
+            var refEvent = firebase.database().ref().child("users");
+            var objet = {
+                nom : $scope.loginData.nom,
+                mail : $scope.loginData.mail,
+                login:$scope.loginData.login,
+                date: new Date()
+            }
+            Application.setInitialRun(false);
+            refEvent.push(objet);
+            $ionicHistory.nextViewOptions({
+                disableAnimate: true,
+                disableBack: true
+            });
+            $state.go('app.accueil');
+        }
     };
 })
 
@@ -326,7 +347,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
-.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity,Application) {
+.controller('EventsCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Connectivity,Application, $cordovaToast) {
     
     $scope.events = [];
     $scope.$parent.showHeader();
@@ -338,8 +359,17 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     Application.setEventBadge(0);
 
     if(Connectivity.ifOffline()){
-        console.log("offline");
-        $state.go('app.offline'); 
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+    serviceFactory.getAllEvent().$loaded().then(function(data){
+            $scope.events = data;
+            hide();
+    });
     }
 
     function show() {
@@ -352,11 +382,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         $ionicLoading.hide();
   };
     
-    show();
-    serviceFactory.getAllEvent().$loaded().then(function(data){
-            $scope.events = data;
-            hide();
-    });        
+            
     $scope.detailEvent = function(id){ 
         $state.go('app.itemEvent', {id: id});        
     }
@@ -395,7 +421,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('CampagnesCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application) {
+.controller('CampagnesCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application,$cordovaToast,Connectivity) {
     
     $scope.campagnes = [];
     $scope.$parent.showHeader();
@@ -404,6 +430,19 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+        serviceFactory.getAllCampagnes().$loaded().then(function(data){
+            $scope.campagnes = data;
+            hide();
+    });
+    }
 
     Application.setCampagneBadge(0);
 
@@ -417,11 +456,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         $ionicLoading.hide();
   };
     
-    show();
-    serviceFactory.getAllCampagnes().$loaded().then(function(data){
-            $scope.campagnes = data;
-            hide();
-    });
+    
  
     $scope.detailCampagne = function(id){ 
         $state.go('app.itemCampagne', {id: id});        
@@ -461,7 +496,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('JeuxCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application) {
+.controller('JeuxCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,Application,$cordovaToast,Connectivity) {
     
     $scope.jeux = [];
    $scope.$parent.showHeader();
@@ -470,6 +505,20 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+        serviceFactory.getAllJeux().$loaded().then(function(data){
+            $scope.jeux = data;
+            hide();
+    });
+    }
 
     Application.setConcoursBadge(0);
 
@@ -483,11 +532,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         $ionicLoading.hide();
   };
     
-    show();
-    serviceFactory.getAllJeux().$loaded().then(function(data){
-            $scope.jeux = data;
-            hide();
-    });
+    
     
     $scope.detailJeux = function(id){ 
         $state.go('app.itemJeux', {id: id});        
@@ -514,11 +559,12 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
 
     $scope.jeu = serviceFactory.getOneJeux(jeuId);
     console.log("jeu",$scope.jeu.titre);
+   console.log("lien",$scope.jeu.lien);
   
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('EmploisCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('EmploisCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$cordovaToast,Connectivity) {
     
     $scope.emplois = [];
     $scope.$parent.showHeader();
@@ -527,6 +573,22 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
+    $scope.load = 0;
+
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+        serviceFactory.getAllEmplois().$loaded().then(function(data){
+            $scope.emplois = data;
+            hide();
+            $scope.load = 1;
+    });
+    }
 
      function show() {
         $ionicLoading.show({
@@ -539,11 +601,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         $ionicLoading.hide();
     };
     
-    show();
-    serviceFactory.getAllEmplois().$loaded().then(function(data){
-            $scope.emplois = data;
-            hide();
-    });
+    
     $scope.detailEmploi = function(id){ 
         $state.go('app.itemEmploi', {id: id});        
     }
@@ -606,7 +664,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ChateauCtrl', function($scope ,$state,$ionicSlideBoxDelegate ,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ChateauCtrl', function($scope ,$state,$ionicSlideBoxDelegate ,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$cordovaToast,Connectivity) {
     
     $scope.categories = [];
     
@@ -617,12 +675,30 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+        serviceFactory.getAllCategories().$loaded().then(function(data){
+            $scope.categories = data;
+            hide();
+    }); 
+    }
+
+    $scope.pageMap = function(){
+        $state.go('app.contactChateau');
+    };
+
      $scope.nextSlide = function() {
       $ionicSlideBoxDelegate.next();
    }
    
-   $scope.images = serviceFactory.getAllChateauxImages();
-   // $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau1.png"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/chateau/chateau2.png"},{title:"JAZZ KIFF",image:"img/chateau/chateau3.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau4.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau5.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau6.png"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau7.png"}];
+   //$scope.images = serviceFactory.getAllChateauxImages();
+    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/chateau/chateau2.jpg"},{title:"JAZZ KIFF",image:"img/chateau/chateau3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau5.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau6.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/chateau/chateau7.jpg"}];
 
 
     function show() {
@@ -636,11 +712,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         $ionicLoading.hide();
     };
     
-    show();
-    serviceFactory.getAllCategories().$loaded().then(function(data){
-            $scope.categories = data;
-            hide();
-    });          
+             
 
     $scope.detailCat = function(id){ 
         $state.go('app.categorieList', {id: id});        
@@ -681,7 +753,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
 
     $scope.showImages = function(index) {
   $scope.activeSlide = index;
-  $scope.showModal('templates/gallery-zoomview.html');
+  $scope.showModal('templates/gallery-zoomview-chateau.html');
 };
  
 $scope.showModal = function(templateUrl) {
@@ -711,6 +783,24 @@ $scope.updateSlideStatus = function(slide) {
   $ionicLoading.hide();
 
     // Set Ink
+    ionicMaterialInk.displayEffect();
+})
+.controller('ChateauPositionCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk) {
+    
+    
+    $ionicLoading.show({     
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    duration: 3000
+                  });
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.$parent.clearFabs();
+    $ionicLoading.hide();
+
+    // Activate ink for controller
     ionicMaterialInk.displayEffect();
 })
 .controller('VinCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
@@ -740,7 +830,7 @@ $scope.updateSlideStatus = function(slide) {
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
-.controller('ProduitCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory) {
+.controller('ProduitCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$cordovaToast,Connectivity) {
     
     $scope.emplois = [];
     $ionicLoading.show({     
@@ -754,6 +844,20 @@ $scope.updateSlideStatus = function(slide) {
     $scope.$parent.setHeaderFab('right');
     $scope.$parent.clearFabs();
 
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+        show();
+        serviceFactory.getAllCategoriesBrac().$loaded().then(function(data){
+            $scope.categories = data;
+            hide();
+    });  
+    }
+
 
     function show() {
         $ionicLoading.show({
@@ -766,11 +870,7 @@ $scope.updateSlideStatus = function(slide) {
         $ionicLoading.hide();
     };
     
-    show();
-    serviceFactory.getAllCategoriesBrac().$loaded().then(function(data){
-            $scope.categories = data;
-            hide();
-    });   
+     
   
     $scope.listProduit = function(id){ 
         $state.go('app.produitList', {id: id});        
@@ -780,7 +880,7 @@ $scope.updateSlideStatus = function(slide) {
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProduitListCtrl', function($scope, $stateParams, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+.controller('ProduitListCtrl', function($scope, $stateParams,$state, $timeout,$ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,$ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
@@ -803,8 +903,13 @@ $scope.updateSlideStatus = function(slide) {
   $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
   $scope.showImages = function(index) {
   $scope.activeSlide = index;
-  $scope.showModal('templates/gallery-zoomview.html');
+  $scope.showModal('templates/gallery-zoomview-brac.html');
 };
+
+    $scope.gotoCampagne = function(){
+        $scope.closeModal();
+        $state.go('app.listCampagnes');
+    };
  
 $scope.showModal = function(templateUrl) {
   $ionicModal.fromTemplateUrl(templateUrl, {
@@ -814,11 +919,15 @@ $scope.showModal = function(templateUrl) {
     $scope.modal.show();
   });
 }
+
+
  
 $scope.closeModal = function() {
   $scope.modal.hide();
   $scope.modal.remove()
 };
+
+
  
 $scope.updateSlideStatus = function(slide) {
   var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
@@ -833,7 +942,7 @@ $scope.updateSlideStatus = function(slide) {
     ionicMaterialInk.displayEffect();
 })
 
-.controller('MapCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,GoogleMaps) {
+.controller('MapCtrl', function($scope ,$state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk,serviceFactory,GoogleMaps,$cordovaToast,Connectivity) {
     
     
     $ionicLoading.show({     
@@ -845,10 +954,19 @@ $scope.updateSlideStatus = function(slide) {
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
+    if(Connectivity.ifOffline()){
+       $cordovaToast.show("Pas de connexion internet, veuillez essayer plus tard", 'long', 'bottom').then(function(success) {
+        }, function (error) {
+        });
+        $state.go('app.accueil'); 
+    }
+    else{
+         GoogleMaps.init();
+    }
     
      $ionicLoading.hide();
 
-     GoogleMaps.init();
+    
 
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
@@ -1027,9 +1145,9 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       $ionicSlideBoxDelegate.next();
    }
 
-   $scope.images = serviceFactory.getAllFeteImages();
+   //$scope.images = serviceFactory.getAllFeteImages();
    
-    //$scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.jpg"},{title:"JAZZ KIFF",image:"img/fete/fete3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.jpg"}];
+    $scope.images = [{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete1.jpg"},{title:"D'JINO EXPLOSION FRUITEE",image:"img/fete/fete2.jpg"},{title:"JAZZ KIFF",image:"img/fete/fete3.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete4.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete5.jpg"},{title:"SKOL MOLANGI YA MBOKA",image:"img/fete/fete6.jpg"}];
 
 
     // Set Motion
@@ -1262,9 +1380,6 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         });
     
     }
-
-
-
     // Set Motion
     $timeout(function() {
         ionicMaterialMotion.slideUp({
@@ -1437,12 +1552,12 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       //toto = serviceFactory.getSavedPdv();
       //console.log("I've got ",toto);
 
-      console.log("My Possss",centerNorm);
-      serviceFactory.getPdvs().then(function(markers){
+      //console.log("My Possss",centerNorm);
+      serviceFactory.getPdvs(latitude,longitude).then(function(markers){
         var records = markers;
         /*Test*/
-        console.log("HELLLLOOOO");
-        console.log("My Possss 2",centerNorm);
+        //console.log("HELLLLOOOO");
+        //console.log("My Possss 2",centerNorm);
        /* for(var i = 0; i < records.length; i++){
             records[i].distance = getDistanceBetweenPoints(centerNorm, record[i], 'km').toFixed(2);
         }
@@ -1593,13 +1708,13 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
     
   return {
 
-    getPdvs: function(){
+    getPdvs: function(latitude,longitude){
         console.log("HELLLLOOOO MAAAPPPPP xxxxxxxxx");
-      return $http.get("/api/pdv").then(function(response){
+      return $http.get("http://41.223.104.197:8080/pdv/api/pdv/"+latitude+"/"+longitude).then(function(response){
             console.log("HELLLLOOOO MAAAPPPPP");
           pdvProche = response;
           pdvProches = response.data;
-          console.log("fresh", JSON.stringify(response));
+          //console.log("fresh", JSON.stringify(response));
           return pdvProches;
       });
     },
@@ -1795,10 +1910,10 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         console.log("TOOOOOTTTTOOOOOO");
         return $cordovaNativeStorage.getItem("initialRun").then(function (value) {
             console.log("InitialRun",value);
-            return value == "true";
+            return value === "true";
         }, function(error){
             console.log("EROR GET INITIALRUN");
-            $cordovaNativeStorage.setItem("initialRun", false).then(function () {
+            $cordovaNativeStorage.setItem("initialRun", true).then(function () {
             console.log("Initialrun set 2");
         }, function(error){
              console.log("roor setting initial run");
