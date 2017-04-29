@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     var vm = this;
 
     $ionicPlatform.ready(function() {
-            $cordovaBadge.promptForPermission();
+            //$cordovaBadge.promptForPermission();
 
     });
 
@@ -47,14 +47,14 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         //var payload = data.payload;
        // console.log("IonicPush, Payload", JSON.stringify(payload));
         //console.log("IonicPush, Event: " + JSON.stringify(event));
-       
+       /*
          $cordovaBadge.increase().then(function() {
                 // You have permission, badge increased.
             }, function(err) {
                 // You do not have permission.
         });
          
-         
+        */ 
  });
 
 
@@ -162,13 +162,13 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $scope.badgeConcours  = value;
     });
 
-
+/*
     $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
          }, function(err) {
             // You do not have permission.
      });
-   
+   */
     
     //$scope.badgeConcours  = 1;
 
@@ -1902,25 +1902,25 @@ google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         $cordovaNativeStorage.setItem("initialRun", initial).then(function () {
             console.log("Initialrun set");
         }, function(error){
-             console.log("ERRRRUUUURRRRRRR");
-             console.log(error);  
+            // console.log("ERRRRUUUURRRRRRR");
+            // console.log(error);  
         });
       },
       isInitialRun : function () {
-        console.log("TOOOOOTTTTOOOOOO");
+        //console.log("TOOOOOTTTTOOOOOO");
         return $cordovaNativeStorage.getItem("initialRun").then(function (value) {
-            console.log("InitialRun",value);
+          //  console.log("InitialRun",value);
             return value === "true";
         }, function(error){
-            console.log("EROR GET INITIALRUN");
+           // console.log("EROR GET INITIALRUN");
             $cordovaNativeStorage.setItem("initialRun", true).then(function () {
-            console.log("Initialrun set 2");
+           // console.log("Initialrun set 2");
         }, function(error){
-             console.log("roor setting initial run");
-             console.log(error);  
+            // console.log("roor setting initial run");
+            // console.log(error);  
         });
             $state.go("app.login");            
-             console.log(error);  
+            // console.log(error);  
         });
       },
       registerUser : function(login,mail,name){
