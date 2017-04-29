@@ -47,14 +47,14 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
         //var payload = data.payload;
        // console.log("IonicPush, Payload", JSON.stringify(payload));
         //console.log("IonicPush, Event: " + JSON.stringify(event));
-       /*
+       
          $cordovaBadge.increase().then(function() {
                 // You have permission, badge increased.
             }, function(err) {
                 // You do not have permission.
         });
          
-        */ 
+         
  });
 
 
@@ -162,13 +162,13 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $scope.badgeConcours  = value;
     });
 
-/*
+
     $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
          }, function(err) {
             // You do not have permission.
      });
-   */
+   
     
     //$scope.badgeConcours  = 1;
 
