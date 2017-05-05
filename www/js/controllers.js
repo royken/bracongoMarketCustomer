@@ -12,8 +12,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
     var vm = this;
 
     $ionicPlatform.ready(function() {
-            //$cordovaBadge.promptForPermission();
-
+            $cordovaBadge.promptForPermission();
     });
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -24,22 +23,31 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             var badge = 0;
             Application.getEventBadge().then(function(value){
                 badge = value;
-            });
-            Application.setEventBadge(badge +1);
+                Application.setEventBadge(badge +1);
+            }, function(error){
+                Application.setEventBadge(badge +1);
+             });
+            
         }
         if(menu === "campagnes"){
                 var badge = 0;
             Application.getCampagneBadge().then(function(value){
                 badge = value;
-            });
-            Application.setCampagneBadge(badge +1);
+                Application.setCampagneBadge(badge +1);
+            }, function(error){
+                Application.setCampagneBadge(badge +1);
+             });
+            
         }
         if(menu === "concours"){
             var badge = 0;
             Application.getConcoursBadge().then(function(value){
                 badge = value;
-            });
-            Application.setConcoursBadge(badge +1);
+                Application.setConcoursBadge(badge +1);
+            }, function(error){
+                Application.setConcoursBadge(badge +1);
+             });
+            
 
         }
         //alert(msg.title + ': ' + msg.text+ ':'+ msg+ ':' + data);
@@ -204,7 +212,7 @@ angular.module('starter.controllers', ['ionic','firebase','ionic.cloud','ngCordo
             $state.go('app.listCampagnes');        
         }
         $scope.jeuxPage = function(){ 
-            $cordovaToast.show("Lol :-)", 'long', 'bottom').then(function(success) {
+            $cordovaToast.show("Coming soon!!! ...", 'long', 'bottom').then(function(success) {
         }, function (error) {
         });
          //   $state.go('app.listJeux');        
@@ -899,7 +907,7 @@ $scope.updateSlideStatus = function(slide) {
     }, 300);
 
  $scope.categorie = serviceFactory.getOneCategorieBrac(catId);
-  console.log("catttttttt",$scope.categorie);
+  //console.log("catttttttt",$scope.categorie);
   $scope.produits = serviceFactory.getCategorieBracProductList($scope.categorie.code);
   $scope.showImages = function(index) {
   $scope.activeSlide = index;

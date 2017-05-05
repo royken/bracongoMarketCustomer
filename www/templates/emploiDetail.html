@@ -9,18 +9,17 @@
 
         </div>
         <div style="text-align:justify; padding: 2%; ">
-            
-            {{emploi.description}}
+             <p ng-bind-html="emploi.description"></p>
         </div>
        
          <div style="text-align:justify; padding: 2%; ">
-           <center> <strong > Misson</strong> </center> </br>
-                {{emploi.mission}}
+           <center> <strong > Misson</strong> </center>
+           <p ng-bind-html="emploi.mission"></p>
         
         </div>
        <div style="text-align:justify; padding: 2%; ">
-            <center> <strong > Profil recherché</strong> </center> </br>
-                {{emploi.profil}}
+            <center> <strong > Profil recherché</strong> </center> 
+             <p ng-bind-html="emploi.profil"></p>
             
         </div>
        <div style="text-align:justify; padding: 2%; ">
