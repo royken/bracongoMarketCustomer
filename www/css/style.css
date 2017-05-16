@@ -272,7 +272,7 @@ ul.rating li i {
 }
 
 .contents {
-    background-color: linear-gradient(to bottom, #dddddd, #939598);
+    background-color: #F5F5F5;
     color: #000;
 }
 
@@ -491,6 +491,14 @@ table.game-3 td:nth-child(3) {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center, center;
+}
+
+.popup-container .popup {
+    width: 500px;
+}
+
+#accueil {
+    background-image: url('../img/fond2.jpg') center;
 }
 
 

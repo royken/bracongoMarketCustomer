@@ -1,15 +1,15 @@
-<ion-view view-title='<img class="title-image" src="img/logo-01.png" />'> 
-  <ion-header-bar class="bar-assertive ink" style="background-color: #000000">
-      <div class="buttons button-assertive" style="background-color: #000000">
-      <h1 class="title">Accueil</h1>
-      </div>
-      <ion-nav-title>
+<ion-view view-title='<img class="title-image" src="img/logo-01.png" />'>
+    <ion-header-bar class="bar-assertive ink" style="background-color: #000000">
+        <div class="buttons button-assertive" style="background-color: #000000">
+            <h1 class="title">Accueil</h1>
+        </div>
+        <ion-nav-title>
             <img src=”img/logo-01.png”>
         </ion-nav-title>
     </ion-header-bar>
 
-    <ion-content  class="contents">
-    <ion-slide-box show-pager="true" auto-play="true" does-continue="true" >
+    <ion-content class="contents" style="background: url(img/fond2.jpg) center; background-size: cover;" id="accueil">
+        <ion-slide-box show-pager="true" auto-play="true" does-continue="true">
             <ion-slide ng-repeat="product in products">
                 <div class="box blue home-hello" ng-click="vm.showProductDetails(product)">
                     <!--<img ng-src="{{product.image}}"/> -->
@@ -19,29 +19,47 @@
                     </div>
                 </div>
             </ion-slide>
-    </ion-slide-box>
+        </ion-slide-box>
 
 
-    <div style="height: 80%">
-<div class="row animated bounceInLeft " ">
+        <div style="height: 80%">
+            <div class="row animated bounceInLeft " ">
 
-  <div class=" card col "><div class="item item-image" ng-click="eventsPage()"><img src="img/menu/black/event.png"/><span class="badge badge-assertive" ng-show="badgeEvent > 0">{{badgeEvent}}</span></div></div>
-  
-  <div class="card col"><div class="item item-image" ng-click="campagnesPage()"><img src="img/menu/black/campagne.png"/><span class="badge badge-energized" ng-show="badgeCampagne > 0">{{badgeCampagne}}</span></div></div>
-  <div class="card col"><div class="item item-image" ng-click="animation()"><img src="img/menu/black/produits.png"/></div></div>
-  
-</div>
-<div class="row" >
-  <div class="card col"><div class="item item-image" ng-click="chateaux()"><img src="img/menu/black/cle.png"/></div></div>
-  <div class="card col"><div class="item item-image" ng-click="barProche()"><img src="img/menu/black/bar.png"/></div></div>
-  <div class="card col"><div class="item item-image" ng-click="fete()"><img src="img/menu/black/fete.png"/></div></div>
-  
-</div>
-<div class="row animated bounceInLeft" >
-  <div class="card col"><div class="item item-image" ng-click="jeuxPage()"><img src="img/menu/black/bouteille.png"/></div></div>
-  <div class="card col"><div class="item item-image" ng-click="contact()"><img src="img/menu/black/contact.png"/></div></div>
-  <div class="card col"><div class="item item-image" ng-click="game()"><img src="img/menu/black/jeux.png"/></div></div>
-</div>
-</div>
+  <div class=" card col "><div class="item item-image " ng-click="eventsPage() "><img src="img/menu/black/event.png "/><span class="badge badge-assertive " ng-show="badgeEvent> 0">{{badgeEvent}}</span>
+            </div>
+        </div>
+
+        <div class="card col">
+            <div class="item item-image" ng-click="campagnesPage()"><img src="img/menu/black/campagne.png" /><span class="badge badge-energized" ng-show="badgeCampagne > 0">{{badgeCampagne}}</span></div>
+        </div>
+        <div class="card col">
+            <div class="item item-image" ng-click="animation()"><img src="img/menu/black/produits.png" /></div>
+        </div>
+
+        </div>
+        <div class="row">
+            <div class="card col">
+                <div class="item item-image" ng-click="chateaux()"><img src="img/menu/black/cle.png" /></div>
+            </div>
+            <div class="card col">
+                <div class="item item-image" ng-click="barProche()"><img src="img/menu/black/bar.png" /></div>
+            </div>
+            <div class="card col">
+                <div class="item item-image" ng-click="fete()"><img src="img/menu/black/fete.png" /></div>
+            </div>
+
+        </div>
+        <div class="row animated bounceInLeft">
+            <div class="card col">
+                <div class="item item-image" ng-click="jeuxPage()"><img src="img/menu/black/bouteille.png" /></div>
+            </div>
+            <div class="card col">
+                <div class="item item-image" ng-click="contact()"><img src="img/menu/black/contact.png" /></div>
+            </div>
+            <div class="card col">
+                <div class="item item-image" ng-click="game()"><img src="img/menu/black/jeux.png" /></div>
+            </div>
+        </div>
+        </div>
     </ion-content>
 </ion-view>

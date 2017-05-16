@@ -51,12 +51,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // console.log("IonicPush, Payload", JSON.stringify(payload))
         // console.log("IonicPush, Event: " + JSON.stringify(event))
 
-        $cordovaBadge.increase().then(function() {
-            // You have permission, badge increased.
-        }, function(err) {
-            // You do not have permission.
-        })
-
+        /* $cordovaBadge.increase().then(function() {
+             // You have permission, badge increased.
+         }, function(err) {
+             // You do not have permission.
+         })
+         */
     })
 
     var navIcons = document.getElementsByClassName('ion-navicon')
@@ -161,12 +161,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.badgeConcours = value
     })
 
-    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
-        // You have permission, badge set.
-    }, function(err) {
-        // You do not have permission.
-    })
-
+    /*    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+            // You have permission, badge set.
+        }, function(err) {
+            // You do not have permission.
+        })
+    */
 
     // $scope.badgeConcours  = 1
 
@@ -277,7 +277,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
         } else {
             Application.registerUser($scope.loginData.login, $scope.loginData.mail, $scope.loginData.nom)
-            var refEvent = firebase.database().ref().child('users')
+            var refUsers = firebase.database().ref().child('users')
             var objet = {
                 nom: $scope.loginData.nom,
                 mail: $scope.loginData.mail,
@@ -285,7 +285,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 date: new Date()
             }
             Application.setInitialRun(false)
-            refEvent.push(objet)
+            refUsers.push(objet)
             $ionicHistory.nextViewOptions({
                 disableAnimate: true,
                 disableBack: true
@@ -1087,7 +1087,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('ServiceFeteCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $state, $ionicLoading, $ionicModal, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application) {
+    .controller('ServiceFeteCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $state, $ionicLoading, $ionicModal, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $ionicPopup) {
         $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             duration: 3000
@@ -1153,20 +1153,53 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.boissonPrise
         $scope.prixG
         $scope.nom
-
+        $scope.data = {}
         Application.getName().then(function(value) {
             $scope.nom = value
                 // console.log("Le nom du user",$scope.nom)
         })
 
+        // When button is clicked, the popup will be shown...
+        $scope.showPopup = function() {
+
+
+            // Custom popup
+            var myPopup = $ionicPopup.show({
+                template: '<input type = "text" placeholder="Votre Nom" ng-model = "data.nom"/> <br/><input type = "email" placeholder="Votre No de Email" ng-model = "data.mail"/><br/> <input type="tel" placeholder="Votre No de Téléphone" ng-model="data.tel"/>',
+                title: 'Title',
+                subTitle: 'Subtitle',
+                scope: $scope,
+
+                buttons: [
+                    { text: 'Annuler' }, {
+                        text: '<b>Envoyer</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            if ((!$scope.data.nom) || (!$scope.data.mail) || (!$scope.data.tel)) {
+                                //don't allow the user to close unless he enters model...
+                                e.preventDefault();
+                            } else {
+                                return $scope.data;
+                            }
+                        }
+                    }
+                ]
+            });
+
+            myPopup.then(function(res) {
+                console.log('Tapped!', res);
+                $scope.envoyerCommande();
+            });
+        };
+
         $scope.envoyerCommande = function() {
-            var message = "Bonjour BRACONGO, \n J'organise une réception dans laquelle j'attends " + $scope.loginData.nbrPlace + ' invités. \n Le prix estimé par la plate-forme est de ' + $scope.prixG + '$.\n Nom : ' + $scope.nom
+            var message = "Bonjour BRACONGO, \n J'organise une réception dans laquelle j'attends " + $scope.loginData.nbrPlace + ' invités. \n Le prix estimé par la plate-forme est de ' + $scope.prixG + '$.\n Nom : ' + $scope.data.nom + '\n Email : ' + $scope.data.mail + '\n Téléphone : ' + $scope.data.tel
 
             if (window.plugins && window.plugins.emailComposer) {
                 window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
                             console.log('Response -> ' + result)
                         },
-                        'Commande Service Fête : ' + $scope.nom, // Subject
+                        'Commande Service Fête : ' + $scope.data.nom, // Subject
                         message, // Body
                         ['servicefete@bracongo.cd'], // To
                         null, // CC
@@ -1542,7 +1575,8 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                         var marker = new google.maps.Marker({
                             map: map,
                             animation: google.maps.Animation.DROP,
-                            position: markerPos
+                            position: markerPos,
+                            icon: 'img/pin/bar.png'
                         })
 
                         // Add the marker to the markerCache so we know not to add it again later
@@ -1867,7 +1901,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $cordovaNativeStorage.setItem('login', login).then(function() {
                     console.log('YOUUUPIIII login')
                 }, function(error) {
-                    console.log('ERRRRUUUURRRRRRR login')
                     console.log(error)
                 })
                 /*
@@ -1880,13 +1913,11 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $cordovaNativeStorage.setItem('mail', mail).then(function() {
                 console.log('YOUUUPIIII mail')
             }, function(error) {
-                console.log('ERRRRUUUURRRRRRR mail')
                 console.log(error)
             })
             $cordovaNativeStorage.setItem('name', name).then(function() {
                 console.log('YOUUUPIIII')
             }, function(error) {
-                console.log('ERRRRUUUURRRRRRR')
                 console.log(error)
             })
         },
@@ -1896,7 +1927,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 console.log('name', value)
                 return value
             }, function(error) {
-                console.log('ERRRRUUUUR Recup Nom')
                 console.log(error)
             })
         },
@@ -1906,7 +1936,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 console.log('name', value)
                 return value
             }, function(error) {
-                console.log('ERRRRUUUUR Recup Mail')
                 console.log(error)
             })
         },
