@@ -1154,6 +1154,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.prixG
         $scope.nom
         $scope.data = {}
+        $scope.cancel = false;
         Application.getName().then(function(value) {
             $scope.nom = value
                 // console.log("Le nom du user",$scope.nom)
@@ -1170,25 +1171,34 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 subTitle: 'Subtitle',
                 scope: $scope,
 
-                buttons: [
-                    { text: 'Annuler' }, {
-                        text: '<b>Envoyer</b>',
-                        type: 'button-positive',
-                        onTap: function(e) {
-                            if ((!$scope.data.nom) || (!$scope.data.mail) || (!$scope.data.tel)) {
-                                //don't allow the user to close unless he enters model...
-                                e.preventDefault();
-                            } else {
-                                return $scope.data;
-                            }
+                buttons: [{
+                    text: 'Annuler',
+                    onTap: function(e) {
+                        $scope.cancel = true;
+                        return $scope.cancel;
+                    }
+                }, {
+                    text: '<b>Envoyer</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if ((!$scope.data.nom) || (!$scope.data.mail) || (!$scope.data.tel)) {
+                            //don't allow the user to close unless he enters model...
+                            e.preventDefault();
+                        } else {
+                            $scope.cancel = false;
+                            return $scope.data;
                         }
                     }
-                ]
+                }]
             });
 
             myPopup.then(function(res) {
                 console.log('Tapped!', res);
-                $scope.envoyerCommande();
+                //console.log("cancelled", $scope.cancel);
+                if ($scope.cancel !== true) {
+                    //  console.log("J'envoie");
+                    $scope.envoyerCommande();
+                }
             });
         };
 
@@ -1213,7 +1223,8 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 
         $scope.prixGlobal = function() {
             $scope.prixUnique = $scope.prixIndividus($scope.loginData.nbrPlace)
-            $scope.prixG = $scope.prixUnique * $scope.loginData.nbrPlace
+                //$scope.prixG = $scope.prixUnique * $scope.loginData.nbrPlace
+            $scope.prixG = $scope.prixUnique;
         }
 
         $scope.reinitialier = function() {
@@ -1297,7 +1308,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 
         /* Calcul du prix individuel en fonction du nombre de personnes*/
         $scope.prixIndividus = function(nombrePersonne) {
-            var result = ((7 / 180000) * Math.pow(nombrePersonne, 2)) - ((31 / 1200) * nombrePersonne) + (222 / 36)
+            var result = ((3 / 1900000) * Math.pow(nombrePersonne, 3)) - ((541 / 342000) * Math.pow(nombrePersonne, 2)) + ((3659 / 1140) * nombrePersonne) + (15950.0 / 171);
             return Math.round(result)
         }
 
