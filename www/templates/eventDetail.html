@@ -1,11 +1,11 @@
 <ion-view view-title="Détail Evenement">
-  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
-    <div class="hero slide-up" style="background-image: url({{event.image}});">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="hero slide-up" style="background-image: url({{event.image}});">
             <div class="content">
             </div>
         </div>
         <div class="tabs tabs-dark tabs-icon-top static">
-            
+
             <a class="tab-item" href="tel:{{event.contact}}"><i class="icon ion-ios-telephone"></i>Appeler</a>
             <!--<a ui-sref="app.gallery" class="tab-item">
                 <i class="icon ion-images"></i> Photos
@@ -13,32 +13,32 @@
 
         </div>
         <div style="text-align:justify; padding: 2%; ">
-            <h2>{{event.titre}}</h2>
-                <p ng-bind-html="event.description"></p>
-          
+            <h3>{{event.titre}}</h3>
+            <p ng-bind-html="event.description"></p>
+
         </div>
         <div class="list card">
-        
+
             <a class="item item-icon-left" href="tel:{{event.contact}}"><i class="icon ion-ios-telephone"></i>{{event.contact}}</a>
-        
-       
-            <a class="item item-icon-left" ><i class="icon ion-ios-time"></i>{{event.heure}}</a>
-        
-       
-            <a class="item item-icon-left" ><i class="icon ion-ios-location-outline"></i>{{event.lieu}}</a>
-        
-        
-            <a class="item item-icon-left" ><i class="icon ion-ios-location"></i>{{event.adresse}}</a>
-       
-        
-            <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{event.date}}</a>
-        
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-time"></i>{{event.heure}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-location-outline"></i>{{event.lieu}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-location"></i>{{event.adresse}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-calendar"></i>{{event.date}}</a>
+
         </div>
         <div class="item item-image">
-<!--                href="#/app/event/{{event.$id}}"-->
-                <img class="full-image"  src="{{event.image}}">
+            <!--                href="#/app/event/{{event.$id}}"-->
+            <img class="full-image" src="{{event.image}}">
 
-            </div>
-        
-        </ion-content>
+        </div>
+
+    </ion-content>
 </ion-view>
