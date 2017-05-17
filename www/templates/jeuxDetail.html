@@ -5,20 +5,17 @@
             </div>
         </div>
         <div class="tabs tabs-dark tabs-icon-top static">
-
         </div>
         <div style="text-align:justify; padding: 2%; ">
             <h3> {{jeu.titre}}</h3>
             <p ng-bind-html="jeu.description"></p>
         </div>
-
-
         <div style="text-align:center; padding: 2%; ">
             <a ng-href="{{jeu.lien}}" onclick="window.open(this.href, '_system', 'location=yes'); return false;" class="button button-outline button-positive "> Participez </a>
 
         </div>
         <div class="item item-image">
-            <img class="full-image" src="{{jeu.image}}">
+            <img class="full-image" src="{{jeu.image}}" />
         </div>
     </ion-content>
 </ion-view>

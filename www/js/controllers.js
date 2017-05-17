@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-        //$cordovaBadge.promptForPermission()
+          $cordovaBadge.promptForPermission()
     })
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -51,12 +51,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // console.log("IonicPush, Payload", JSON.stringify(payload))
         // console.log("IonicPush, Event: " + JSON.stringify(event))
 
-        /* $cordovaBadge.increase().then(function() {
-             // You have permission, badge increased.
-         }, function(err) {
-             // You do not have permission.
-         })
-         */
+        $cordovaBadge.increase().then(function() {
+            // You have permission, badge increased.
+        }, function(err) {
+            // You do not have permission.
+        })
+
     })
 
     var navIcons = document.getElementsByClassName('ion-navicon')
@@ -158,15 +158,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     //  $scope.badgeCampagne  = 1
 
     Application.getConcoursBadge().then(function(value) {
-        $scope.badgeConcours = value
-    })
-
-    /*    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
-            // You have permission, badge set.
-        }, function(err) {
-            // You do not have permission.
+            $scope.badgeConcours = value
         })
-    */
+        
+            $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+                // You have permission, badge set.
+            }, function(err) {
+                // You do not have permission.
+            })
+        
 
     // $scope.badgeConcours  = 1
 
@@ -1197,6 +1197,14 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 //console.log("cancelled", $scope.cancel);
                 if ($scope.cancel !== true) {
                     //  console.log("J'envoie");
+                    var refUsers = firebase.database().ref().child('feteUsers')
+                    var objet = {
+                        nom: res.nom,
+                        mail: res.mail,
+                        tel: res.tel,
+                        date: new Date()
+                    }
+                    refUsers.push(objet)
                     $scope.envoyerCommande();
                 }
             });
@@ -1701,7 +1709,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         return {
             getPdvs: function(latitude, longitude) {
                 console.log('HELLLLOOOO MAAAPPPPP xxxxxxxxx')
-                return $http.get('http://41.223.104.197:8080/pdv/api/pdv/' + latitude + '/' + longitude).then(function(response) {
+                return $http.get('http://41.223.104.197:8080/pdv/api/pdv/' + latitude + '/' + longitude, { timeout: 30000 }).then(function(response) {
                     console.log('HELLLLOOOO MAAAPPPPP')
                     pdvProche = response
                     pdvProches = response.data
