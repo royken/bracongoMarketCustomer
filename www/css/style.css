@@ -276,9 +276,12 @@ ul.rating li i {
     color: #000;
 }
 
+
+/*
 h2 {
     color: #000;
 }
+*/
 
 .MyH2 {
     color: #000;
@@ -431,14 +434,17 @@ table.game-3 td:nth-child(3) {
 
 .customized-image {
     max-height: 100% !important;
-    max-width: : 100% !important;
+    max-width: 100% !important;
 }
 
+
+/*
 .list .item {
-    /*border: none;
+    border: none;
     min-height: 72px;
-    text-align: left;*/
+    text-align: left;
 }
+*/
 
 .fete-hello {
     height: 600px;

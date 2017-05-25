@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-          $cordovaBadge.promptForPermission()
+        $cordovaBadge.promptForPermission()
     })
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -158,15 +158,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     //  $scope.badgeCampagne  = 1
 
     Application.getConcoursBadge().then(function(value) {
-            $scope.badgeConcours = value
-        })
-        
-            $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
-                // You have permission, badge set.
-            }, function(err) {
-                // You do not have permission.
-            })
-        
+        $scope.badgeConcours = value
+    })
+
+    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+        // You have permission, badge set.
+    }, function(err) {
+        // You do not have permission.
+    })
+
 
     // $scope.badgeConcours  = 1
 
@@ -179,18 +179,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.products = [{ titre: 'SKOL MOLANGI YA MBOKA', image: 'img/accueil/skol-3.png' }, { titre: "D'JINO EXPLOSION FRUITEE", image: 'img/accueil/djino.jpg' }]
 
     serviceFactory.getAllAccueilImages().$loaded().then(function(data) {
-        // $scope.events = data
-        if (data.length > 0) {
-            $scope.products.push(data)
-        }
-    })
-    $scope.getNom = function() {
+            // $scope.events = data
+            if (data.length > 0) {
+                $scope.products.push(data)
+            }
+        })
+        /*  $scope.getNom = function() {
         Application.getName().then(function(value) {
             $scope.nom = value
             console.log('Le nom du user', $scope.nom)
         })
     }
-
+*/
 
     $scope.eventsPage = function() {
         $state.go('app.listEvent')
@@ -199,8 +199,9 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $state.go('app.listCampagnes')
     }
     $scope.jeuxPage = function() {
-        $cordovaToast.show('Coming soon!!! ...', 'long', 'bottom').then(function(success) {}, function(error) {})
-            //   $state.go('app.listJeux');        
+        //$cordovaToast.show('Coming soon!!! ...', 'long', 'bottom').then(function(success) {}, function(error) {})
+        $state.go('app.realite');
+        //   $state.go('app.listJeux');        
     }
     $scope.loisirsPage = function() {
         $state.go('app.listLoisirs')
@@ -243,57 +244,77 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 })
 
 .controller('LoginCtrl', function($scope, $timeout, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast) {
-    $scope.$parent.clearFabs()
-    $scope.loginData = {}
-    $scope.isExpanded = false
-    $scope.hasHeaderFabLeft = false
-    $scope.hasHeaderFabRight = false
-    $timeout(function() {
-        $scope.$parent.hideHeader()
-    }, 0)
-    ionicMaterialInk.displayEffect()
+        $scope.$parent.clearFabs()
+        $scope.loginData = {}
+        $scope.isExpanded = false
+        $scope.hasHeaderFabLeft = false
+        $scope.hasHeaderFabRight = false
+        $timeout(function() {
+            $scope.$parent.hideHeader()
+        }, 0)
+        ionicMaterialInk.displayEffect()
 
-    $scope.accueil = function() {
-        var refEvent = firebase.database().ref().child('users')
-        var objet = {
-            nom: 'anonyme',
-            mail: 'anonyme',
-            login: 'anonyme',
-            date: new Date()
-        }
-        Application.setInitialRun(false)
-        refEvent.push(objet)
-        $ionicHistory.nextViewOptions({
-            disableAnimate: true,
-            disableBack: true
-        })
-        $state.go('app.accueil')
-    }
-
-    $scope.login = function() {
-        // console.log("credentials",$scope.loginData)
-
-        if (Connectivity.ifOffline()) {
-            $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
-        } else {
-            Application.registerUser($scope.loginData.login, $scope.loginData.mail, $scope.loginData.nom)
-            var refUsers = firebase.database().ref().child('users')
+        $scope.accueil = function() {
+            var refEvent = firebase.database().ref().child('users')
             var objet = {
-                nom: $scope.loginData.nom,
-                mail: $scope.loginData.mail,
-                login: $scope.loginData.login,
+                nom: 'anonyme',
+                mail: 'anonyme',
+                login: 'anonyme',
                 date: new Date()
             }
             Application.setInitialRun(false)
-            refUsers.push(objet)
+            refEvent.push(objet)
             $ionicHistory.nextViewOptions({
                 disableAnimate: true,
                 disableBack: true
             })
             $state.go('app.accueil')
         }
-    }
-})
+
+        $scope.login = function() {
+            // console.log("credentials",$scope.loginData)
+
+            if (Connectivity.ifOffline()) {
+                $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
+            } else {
+                Application.registerUser($scope.loginData.login, $scope.loginData.mail, $scope.loginData.nom)
+                var refUsers = firebase.database().ref().child('users')
+                var objet = {
+                    nom: $scope.loginData.nom,
+                    mail: $scope.loginData.mail,
+                    login: $scope.loginData.login,
+                    date: new Date()
+                }
+                Application.setInitialRun(false)
+                refUsers.push(objet)
+                $ionicHistory.nextViewOptions({
+                    disableAnimate: true,
+                    disableBack: true
+                })
+                $state.go('app.accueil')
+            }
+        }
+    })
+    .controller('RealiteCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+        // Set Header
+        $scope.$parent.showHeader()
+        $scope.$parent.clearFabs()
+        $scope.isExpanded = false;
+        $scope.$parent.setExpanded(false);
+        $scope.$parent.setHeaderFab(false)
+
+        // Delay expansion
+        $timeout(function() {
+            $scope.isExpanded = true
+            $scope.$parent.setExpanded(true)
+        }, 300)
+
+        // Set Motion
+        //  ionicMaterialMotion.fadeSlideInRight()
+
+        // Set Ink
+        ionicMaterialInk.displayEffect()
+    })
 
 .controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     // Set Header
