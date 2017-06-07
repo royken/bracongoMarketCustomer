@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-        // $cordovaBadge.promptForPermission()
+         $cordovaBadge.promptForPermission()
     })
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -45,12 +45,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 Application.setConcoursBadge(badge + 1)
             })
         }
-        // alert(msg.title + ': ' + msg.text+ ':'+ msg+ ':' + data)
-        // console.log("IonicPush, Data: " + JSON.stringify(data))
-        // var payload = data.payload
-        // console.log("IonicPush, Payload", JSON.stringify(payload))
-        // console.log("IonicPush, Event: " + JSON.stringify(event))
-
         $cordovaBadge.increase().then(function() {
             // You have permission, badge increased.
         }, function(err) {
@@ -161,12 +155,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.badgeConcours = value
     })
 
-    /*   $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+       $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
     }, function(err) {
         // You do not have permission.
     })
-*/
+
 
     // $scope.badgeConcours  = 1
 
@@ -458,15 +452,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         }
 
         $scope.otherShare = function() {
+          //  var imageUrl = decodeURIComponent($scope.event.image);
             var options = {
-                message: $scope.event.titre, // not supported on some apps (Facebook, Instagram)
-                subject: $scope.event.description, // fi. for email
+                message: $scope.event.titre + "\n" + $scope.event.date, // not supported on some apps (Facebook, Instagram)
+                subject: $scope.event.titre, // fi. for email : Normalement $scope.event.description
                 files: [$scope.event.image], // an array of filenames either locally or remotely
                 url: '',
                 chooserTitle: 'Partager via' // Android only, you can override the default share sheet title
             }
 
+            console.log("options", options);
             var onSuccess = function(result) {
+                
                 console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
                 console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
             }
