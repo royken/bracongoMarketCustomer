@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-        $cordovaBadge.promptForPermission()
+        // $cordovaBadge.promptForPermission()
     })
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -161,12 +161,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.badgeConcours = value
     })
 
-    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+    /*   $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
     }, function(err) {
         // You do not have permission.
     })
-
+*/
 
     // $scope.badgeConcours  = 1
 
@@ -441,6 +441,44 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         })
         $scope.event = serviceFactory.getOneEvent(eventId)
             // console.log("l'event",$scope.event.titre)
+        function getContent() {
+            return $scope.event.titre + "\n" + $scope.event.description;
+        }
+        $scope.twitterShare = function() {
+            window.plugins.socialsharing.shareViaTwitter(getContent(), $scope.event.image, null);
+        }
+        $scope.facebookShare = function() {
+            console.log("L'images ", $scope.event.image);
+            window.plugins.socialsharing.shareViaFacebook(getContent(), $scope.event.image, null, function() { console.log('share ok') }, function(errormsg) { alert(errormsg) })
+        }
+
+        $scope.whatsappShare = function() {
+            console.log("L'images ", $scope.event.image);
+            window.plugins.socialsharing.shareViaWhatsApp(getContent(), $scope.event.image, $scope.event.image, function() { console.log('share ok') }, function(errormsg) { alert(errormsg) });
+        }
+
+        $scope.otherShare = function() {
+            var options = {
+                message: $scope.event.titre, // not supported on some apps (Facebook, Instagram)
+                subject: $scope.event.description, // fi. for email
+                files: [$scope.event.image], // an array of filenames either locally or remotely
+                url: '',
+                chooserTitle: 'Partager via' // Android only, you can override the default share sheet title
+            }
+
+            var onSuccess = function(result) {
+                console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+                console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+            }
+
+            var onError = function(msg) {
+                console.log("Sharing failed with message: " + msg);
+            }
+
+            window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+        }
+
+
         $ionicLoading.hide()
 
         // Set Ink
@@ -1730,11 +1768,11 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         return {
             getPdvs: function(latitude, longitude) {
                 console.log('HELLLLOOOO MAAAPPPPP xxxxxxxxx')
-                return $http.get('http://41.223.104.197:8080/pdv/api/pdv/' + latitude + '/' + longitude, { timeout: 30000 }).then(function(response) {
+                return $http.get('https://api.bracongo-cd.com:8443/pdv/rest/pdvs/nearest/' + latitude + '/' + longitude, { timeout: 30000 }).then(function(response) {
                     console.log('HELLLLOOOO MAAAPPPPP')
                     pdvProche = response
-                    pdvProches = response.data
-                        // console.log("fresh", JSON.stringify(response))
+                    pdvProches = response.data.payload.content;
+                    // console.log("fresh", JSON.stringify(response))
                     return pdvProches
                 })
             },
