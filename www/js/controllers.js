@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         }, function(err) {
             // You do not have permission.
         })
-
+        
     })
 
     var navIcons = document.getElementsByClassName('ion-navicon')
@@ -160,7 +160,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     }, function(err) {
         // You do not have permission.
     })
-
+    
 
     // $scope.badgeConcours  = 1
 
