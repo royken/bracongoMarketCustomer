@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCordova'])
 
-.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $state, $ionicPopover, $timeout, $ionicPlatform, $cordovaBadge, ApiEndpoint, Application) {
+.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $state, $ionicPopover, $timeout, $ionicPlatform, $cordovaBadge, ApiEndpoint, Application, $cordovaGoogleAnalytics) {
     // Form data for the login modal
     $scope.loginData = {}
     $scope.isExpanded = false
@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-         $cordovaBadge.promptForPermission()
+        $cordovaBadge.promptForPermission()
     })
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         }, function(err) {
             // You do not have permission.
         })
-        
+
     })
 
     var navIcons = document.getElementsByClassName('ion-navicon')
@@ -129,14 +129,26 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     }
 })
 
-.controller('AccueilCtrl', function($scope, $state, $ionicSlideBoxDelegate, $timeout, $stateParams, ionicMaterialInk, $cordovaBadge, Application, serviceFactory, $cordovaToast) {
+.controller('AccueilCtrl', function($scope, $state, $ionicSlideBoxDelegate, $timeout, $stateParams, ionicMaterialInk, $cordovaBadge, Application, serviceFactory, $cordovaToast, $cordovaGoogleAnalytics, Connectivity) {
     $scope.$parent.showHeader()
     $scope.$parent.clearFabs()
     $scope.isExpanded = false
     $scope.$parent.setExpanded(false)
     $scope.$parent.setHeaderFab(false)
     $scope.$parent.setHeaderFab('right')
-    $scope.$parent.clearFabs()
+    $scope.$parent.clearFabs();
+    $cordovaGoogleAnalytics.debugMode();
+    $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+    Application.getName().then(function(value) {
+        $scope.name = value
+        $cordovaGoogleAnalytics.setUserId($scope.name);
+    }, function(error) {
+        $cordovaGoogleAnalytics.setUserId('Anonyme');
+    })
+    $cordovaGoogleAnalytics.trackView('Accueil');
+    //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
+
 
 
     Application.getEventBadge().then(function(value) {
@@ -155,12 +167,13 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.badgeConcours = value
     })
 
-       $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
         // You have permission, badge set.
     }, function(err) {
         // You do not have permission.
     })
-    
+
+
 
     // $scope.badgeConcours  = 1
 
@@ -168,23 +181,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $ionicSlideBoxDelegate.next()
     }
 
-
+    $scope.products = null;
     // $scope.products = serviceFactory.getAllAccueilImages()
-    $scope.products = [{ titre: 'SKOL MOLANGI YA MBOKA', image: 'img/accueil/skol-3.png' }, { titre: "D'JINO EXPLOSION FRUITEE", image: 'img/accueil/djino.jpg' }]
 
-    serviceFactory.getAllAccueilImages().$loaded().then(function(data) {
-            // $scope.events = data
-            if (data.length > 0) {
-                $scope.products.push(data)
-            }
-        })
-        /*  $scope.getNom = function() {
-        Application.getName().then(function(value) {
-            $scope.nom = value
-            console.log('Le nom du user', $scope.nom)
+    if (Connectivity.ifOffline()) {
+        $scope.products = [{ titre: 'RUMBA, AU RYTHME DE CHEZ NOUS!', image: 'img/accueil/rumba.jpg' }, { titre: "MEDAILLE YA MUTUYA", image: 'img/accueil/nkoyi.jpg' }];
+    } else {
+        serviceFactory.getAllAccueilImages().$loaded().then(function(data) {
+            $scope.products = data;
+            $ionicSlideBoxDelegate.update();
         })
     }
-*/
+
 
     $scope.eventsPage = function() {
         $state.go('app.listEvent')
@@ -247,6 +255,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $scope.$parent.hideHeader()
         }, 0)
         ionicMaterialInk.displayEffect()
+        Application.setInitialRun(true);
 
         $scope.accueil = function() {
             var refEvent = firebase.database().ref().child('users')
@@ -289,14 +298,23 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             }
         }
     })
-    .controller('RealiteCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+    .controller('RealiteCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $cordovaGoogleAnalytics, Application) {
         // Set Header
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
         $scope.isExpanded = false;
         $scope.$parent.setExpanded(false);
         $scope.$parent.setHeaderFab(false)
-
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Réalité augmentée');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         // Delay expansion
         $timeout(function() {
             $scope.isExpanded = true
@@ -369,7 +387,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('EventsCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Connectivity, Application, $cordovaToast) {
+    .controller('EventsCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Connectivity, Application, $cordovaToast, $cordovaGoogleAnalytics) {
         $scope.events = []
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -378,7 +396,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.clearFabs()
 
         Application.setEventBadge(0)
-
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Evènements');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -409,7 +436,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('EventCtrl', function($scope, $stateParams, $timeout, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory) {
+    .controller('EventCtrl', function($scope, $stateParams, $timeout, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaGoogleAnalytics, Application) {
         // Set Header
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -417,10 +444,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(false)
         $scope.$parent.setHeaderFab(false)
         $scope.event = null
-        var eventId = $stateParams.id
-        console.log("L'id de l'event", $stateParams.id)
-        console.log("L'id de l'event", $stateParams)
-        console.log(eventId)
+        var eventId = $stateParams.id;
 
         // Set Motion
         $timeout(function() {
@@ -433,8 +457,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             duration: 3000
         })
-        $scope.event = serviceFactory.getOneEvent(eventId)
-            // console.log("l'event",$scope.event.titre)
+        $scope.event = serviceFactory.getOneEvent(eventId);
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('EventDetail' + $scope.event.titre);
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+        // console.log("l'event",$scope.event.titre)
         function getContent() {
             return $scope.event.titre + "\n" + $scope.event.description;
         }
@@ -452,7 +486,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         }
 
         $scope.otherShare = function() {
-          //  var imageUrl = decodeURIComponent($scope.event.image);
+            //  var imageUrl = decodeURIComponent($scope.event.image);
             var options = {
                 message: $scope.event.titre + "\n" + $scope.event.date, // not supported on some apps (Facebook, Instagram)
                 subject: $scope.event.titre, // fi. for email : Normalement $scope.event.description
@@ -463,7 +497,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 
             console.log("options", options);
             var onSuccess = function(result) {
-                
+
                 console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
                 console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
             }
@@ -481,7 +515,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Set Ink
         ionicMaterialInk.displayEffect()
     })
-    .controller('CampagnesCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $cordovaToast, Connectivity) {
+    .controller('CampagnesCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $cordovaToast, Connectivity, $cordovaGoogleAnalytics) {
         $scope.campagnes = []
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -489,6 +523,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Campagnes');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -553,7 +597,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Set Ink
         ionicMaterialInk.displayEffect()
     })
-    .controller('JeuxCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $cordovaToast, Connectivity) {
+    .controller('JeuxCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $cordovaToast, Connectivity, $cordovaGoogleAnalytics) {
         $scope.jeux = []
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -561,7 +605,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
-
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Concours');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -595,7 +648,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('JeuCtrl', function($scope, $stateParams, $timeout, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory) {
+    .controller('JeuCtrl', function($scope, $stateParams, $timeout, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaGoogleAnalytics, Application) {
         // Set Header
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -603,6 +656,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(false)
         $scope.$parent.setHeaderFab(false)
         $scope.jeu = null
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Concours Détails');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         var jeuId = $stateParams.id
             // Set Motion
         $timeout(function() {
@@ -618,7 +681,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Set Ink
         ionicMaterialInk.displayEffect()
     })
-    .controller('EmploisCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity) {
+    .controller('EmploisCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity, $cordovaGoogleAnalytics, Application) {
         $scope.emplois = []
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -627,7 +690,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
         $scope.load = 0
-
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Emplois');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -712,7 +784,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         ionicMaterialInk.displayEffect()
     })
 
-.controller('ChateauCtrl', function($scope, $state, $ionicSlideBoxDelegate, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity) {
+.controller('ChateauCtrl', function($scope, $state, $ionicSlideBoxDelegate, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity, $cordovaGoogleAnalytics, Application) {
         $scope.categories = []
 
         $scope.$parent.showHeader()
@@ -721,7 +793,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
-
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Châteaux');
+        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -871,7 +952,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Set Ink
         ionicMaterialInk.displayEffect()
     })
-    .controller('ProduitCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity) {
+    .controller('ProduitCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, $cordovaToast, Connectivity, $cordovaGoogleAnalytics, Application) {
         $scope.emplois = []
         $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -883,6 +964,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Nos ¨Produist');
 
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
@@ -976,7 +1066,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     ionicMaterialInk.displayEffect()
 })
 
-.controller('MapCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, GoogleMaps, $cordovaToast, Connectivity) {
+.controller('MapCtrl', function($scope, $state, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, serviceFactory, GoogleMaps, $cordovaToast, Connectivity, $cordovaGoogleAnalytics, Application) {
         $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             duration: 3000
@@ -986,6 +1076,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.isExpanded = true
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('PDV Proches');
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -1021,7 +1120,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('ContactCtrl', function($scope, $state, $stateParams, $http, $timeout, $ionicPopup, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, $cordovaGeolocation, serviceFactory) {
+    .controller('ContactCtrl', function($scope, $state, $stateParams, $http, $timeout, $ionicPopup, $ionicLoading, ionicMaterialMotion, ionicMaterialInk, $cordovaGeolocation, serviceFactory, $cordovaGoogleAnalytics, Application) {
         // Set Header
         $scope.$parent.showHeader()
         $scope.$parent.clearFabs()
@@ -1033,7 +1132,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.rating = {}
         $scope.rating.rate = 3
         $scope.rating.max = 5
-        $scope.pdvs = []
+        $scope.pdvs = [];
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Nous Contacter');
 
         // Set Motion
         $timeout(function() {
@@ -1143,7 +1251,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('ServiceFeteCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $state, $ionicLoading, $ionicModal, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $ionicPopup) {
+    .controller('ServiceFeteCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $state, $ionicLoading, $ionicModal, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Application, $ionicPopup, $cordovaGoogleAnalytics) {
         $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             duration: 3000
@@ -1154,7 +1262,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(false)
         $scope.$parent.setHeaderFab(false)
         $scope.tel = '+2437726627'
-        $scope.mail = 'servicefete@bracongo.cd'
+        $scope.mail = 'servicefetes@bracongo.cd';
+        $cordovaGoogleAnalytics.debugMode();
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        Application.getName().then(function(value) {
+            $scope.name = value
+            $cordovaGoogleAnalytics.setUserId($scope.name);
+        }, function(error) {
+            $cordovaGoogleAnalytics.setUserId('Anonyme');
+        })
+        $cordovaGoogleAnalytics.trackView('Service Fête');
         $scope.pageSimuler = function() {
             $state.go('app.simulateur')
         }
@@ -1275,7 +1392,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                         },
                         'Commande Service Fête : ' + $scope.data.nom, // Subject
                         message, // Body
-                        ['servicefete@bracongo.cd'], // To
+                        ['servicefetes@bracongo.cd'], // To
                         null, // CC
                         null, // BCC
                         false, // isHTML
