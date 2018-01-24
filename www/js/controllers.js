@@ -139,14 +139,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.$parent.clearFabs();
     //$cordovaGoogleAnalytics.debugMode();
     //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-    Application.getName().then(function(value) {
-            $scope.name = value
-                //$cordovaGoogleAnalytics.setUserId($scope.name);
-        }, function(error) {
-            //$cordovaGoogleAnalytics.setUserId('Anonyme');
-        })
-        //$cordovaGoogleAnalytics.trackView('Accueil');
-        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+    /* Application.getName().then(function(value) {
+             $scope.name = value
+                 //$cordovaGoogleAnalytics.setUserId($scope.name);
+         }, function(error) {
+             //$cordovaGoogleAnalytics.setUserId('Anonyme');
+         })
+     */
+    //$cordovaGoogleAnalytics.trackView('Accueil');
+    //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
     cordova.plugins.firebase.analytics.setEnabled(true);
     cordova.plugins.firebase.analytics.setCurrentScreen("Accueil");
 
@@ -308,13 +309,14 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setHeaderFab(false)
             //$cordovaGoogleAnalytics.debugMode();
             //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-        Application.getName().then(function(value) {
-                $scope.name = value
-                    // $cordovaGoogleAnalytics.setUserId($scope.name);
-            }, function(error) {
-                //$cordovaGoogleAnalytics.setUserId('Anonyme');
-            })
-            //$cordovaGoogleAnalytics.trackView('Réalité augmentée');
+            /* Application.getName().then(function(value) {
+                     $scope.name = value
+                         // $cordovaGoogleAnalytics.setUserId($scope.name);
+                 }, function(error) {
+                     //$cordovaGoogleAnalytics.setUserId('Anonyme');
+                 })
+             */
+            //$cordovaGoogleAnalytics.trackView('Réalité augmentée');        
             //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
             // Delay expansion
         $timeout(function() {
@@ -413,6 +415,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         cordova.plugins.firebase.analytics.setCurrentScreen("Evènements");
         //$cordovaGoogleAnalytics.trackView('Evènements');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -479,6 +482,10 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         //$cordovaGoogleAnalytics.trackView('EventDetail' + $scope.event.titre);
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
         // console.log("l'event",$scope.event.titre)
+
+        // $cordovaGoogleAnalytics.debugMode();
+        //  $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+
         function getContent() {
             return $scope.event.titre + "\n" + $scope.event.description;
         }
@@ -546,6 +553,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
               */
         //$cordovaGoogleAnalytics.trackView('Campagnes');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -633,6 +641,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         cordova.plugins.firebase.analytics.setCurrentScreen("Concours");
         // $cordovaGoogleAnalytics.trackView('Concours');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -687,6 +696,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
          */
         //$cordovaGoogleAnalytics.trackView('Concours Détails');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         var jeuId = $stateParams.id
             // Set Motion
         $timeout(function() {
@@ -724,6 +734,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         */
         // $cordovaGoogleAnalytics.trackView('Emplois');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -830,6 +841,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         */
         //$cordovaGoogleAnalytics.trackView('Châteaux');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -1004,6 +1016,9 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         */
         //$cordovaGoogleAnalytics.trackView('Nos ¨Produist');
 
+        //$cordovaGoogleAnalytics.trackView('Nos ¨Produist');
+
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -1118,6 +1133,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             })
         */
         //$cordovaGoogleAnalytics.trackView('PDV Proches');
+
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
@@ -1178,6 +1194,10 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             })
         */
         //$cordovaGoogleAnalytics.trackView('Nous Contacter');
+
+        //$cordovaGoogleAnalytics.debugMode();
+        //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+
 
         // Set Motion
         $timeout(function() {
@@ -1311,6 +1331,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             })
         */
         // $cordovaGoogleAnalytics.trackView('Service Fête');
+
         $scope.pageSimuler = function() {
             $state.go('app.simulateur')
         }
