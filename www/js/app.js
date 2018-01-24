@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput', 'firebase', 'ngCordova', 'ngMap', 'ionic.rating', 'ngCordova.plugins.nativeStorage', 'youtube-embed', 'ionic.cloud', 'ngSanitize'])
 
-.run(function($ionicPlatform, $state, Application, $ionicPush, $cordovaBadge, $cordovaGoogleAnalytics) {
+.run(function($ionicPlatform, $state, Application, $cordovaBadge) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -20,9 +20,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             StatusBar.styleDefault();
         }
 
-        $cordovaGoogleAnalytics.debugMode();
-        $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-        $ionicPush.register({
+        //$cordovaGoogleAnalytics.debugMode();
+        //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
+        /*      $ionicPush.register({
             canShowAlert: true, //Can pushes show an alert on your screen?
             canSetBadge: true, //Can pushes update app icon badges?
             canPlaySound: true, //Can notifications play a sound?
@@ -45,7 +45,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         }).then(function(t) {
             console.log('Token saved:', t.token);
         });
+*/
+        var notificationOpenedCallback = function(jsonData) {
+            console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+        };
 
+        window.plugins.OneSignal
+            .startInit("35a7d432-18c9-4a1a-b778-f1f178267270")
+            .handleNotificationOpened(notificationOpenedCallback)
+            .endInit();
 
         var result = null;
         Application.isInitialRun().then(function(value) {
