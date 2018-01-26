@@ -15,43 +15,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $cordovaBadge.promptForPermission()
     })
 
-    $rootScope.$on('cloud:push:notification', function(event, data) {
-        var msg = data.message
-        var menu = msg.payload.menu
-        if (menu === 'events') {
-            var badge = 0
-            Application.getEventBadge().then(function(value) {
-                badge = value
-                Application.setEventBadge(badge + 1)
-            }, function(error) {
-                Application.setEventBadge(badge + 1)
-            })
-        }
-        if (menu === 'campagnes') {
-            var badge = 0
-            Application.getCampagneBadge().then(function(value) {
-                badge = value
-                Application.setCampagneBadge(badge + 1)
-            }, function(error) {
-                Application.setCampagneBadge(badge + 1)
-            })
-        }
-        if (menu === 'concours') {
-            var badge = 0
-            Application.getConcoursBadge().then(function(value) {
-                badge = value
-                Application.setConcoursBadge(badge + 1)
-            }, function(error) {
-                Application.setConcoursBadge(badge + 1)
-            })
-        }
-        $cordovaBadge.increase().then(function() {
-            // You have permission, badge increased.
-        }, function(err) {
-            // You do not have permission.
-        })
-
-    })
 
     var navIcons = document.getElementsByClassName('ion-navicon')
     for (var i = 0; i < navIcons.length; i++) {
@@ -137,17 +100,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.$parent.setHeaderFab(false)
     $scope.$parent.setHeaderFab('right')
     $scope.$parent.clearFabs();
-    //$cordovaGoogleAnalytics.debugMode();
-    //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-    /* Application.getName().then(function(value) {
-             $scope.name = value
-                 //$cordovaGoogleAnalytics.setUserId($scope.name);
-         }, function(error) {
-             //$cordovaGoogleAnalytics.setUserId('Anonyme');
-         })
-     */
-    //$cordovaGoogleAnalytics.trackView('Accueil');
-    //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
     cordova.plugins.firebase.analytics.setEnabled(true);
     cordova.plugins.firebase.analytics.setCurrentScreen("Accueil");
 
@@ -307,18 +260,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.isExpanded = false;
         $scope.$parent.setExpanded(false);
         $scope.$parent.setHeaderFab(false)
-            //$cordovaGoogleAnalytics.debugMode();
-            //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-            /* Application.getName().then(function(value) {
-                     $scope.name = value
-                         // $cordovaGoogleAnalytics.setUserId($scope.name);
-                 }, function(error) {
-                     //$cordovaGoogleAnalytics.setUserId('Anonyme');
-                 })
-             */
-            //$cordovaGoogleAnalytics.trackView('Réalité augmentée');        
-            //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
-            // Delay expansion
+
         $timeout(function() {
             $scope.isExpanded = true
             $scope.$parent.setExpanded(true)
@@ -401,16 +343,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.clearFabs()
 
         Application.setEventBadge(0)
-            // $cordovaGoogleAnalytics.debugMode();
-            // $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-            // cordova.plugins.firebase.analytics.setCurrentScreen("Realité");
-            /* Application.getName().then(function(value) {
-                 $scope.name = value
-                     //   $cordovaGoogleAnalytics.setUserId($scope.name);
-             }, function(error) {
-                 //  $cordovaGoogleAnalytics.setUserId('Anonyme');
-             })
-             */
+
         cordova.plugins.firebase.analytics.setEnabled(true);
         cordova.plugins.firebase.analytics.setCurrentScreen("Evènements");
         //$cordovaGoogleAnalytics.trackView('Evènements');
@@ -472,19 +405,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
         cordova.plugins.firebase.analytics.setEnabled(true);
         cordova.plugins.firebase.analytics.setCurrentScreen('EventDetail' + $scope.event.titre);
-        /*Application.getName().then(function(value) {
-                $scope.name = value
-                    //$cordovaGoogleAnalytics.setUserId($scope.name);
-            }, function(error) {
-                //$cordovaGoogleAnalytics.setUserId('Anonyme');
-            })
-        */
-        //$cordovaGoogleAnalytics.trackView('EventDetail' + $scope.event.titre);
-        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
-        // console.log("l'event",$scope.event.titre)
 
-        // $cordovaGoogleAnalytics.debugMode();
-        //  $cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
 
         function getContent() {
             return $scope.event.titre + "\n" + $scope.event.description;
@@ -544,15 +465,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
         cordova.plugins.firebase.analytics.setEnabled(true);
         cordova.plugins.firebase.analytics.setCurrentScreen("Campagnes");
-        /*  Application.getName().then(function(value) {
-                  $scope.name = value
-                      // $cordovaGoogleAnalytics.setUserId($scope.name);
-              }, function(error) {
-                  //$cordovaGoogleAnalytics.setUserId('Anonyme');
-              })
-              */
-        //$cordovaGoogleAnalytics.trackView('Campagnes');
-        //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
+
 
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
@@ -612,7 +525,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             duration: 3000
         })
         $scope.campagne = serviceFactory.getOneCampagne(campagneId)
-        console.log('campagnes', $scope.campagne.titre)
+            //console.log('campagnes', $scope.campagne.titre)
         cordova.plugins.firebase.analytics.setEnabled(true);
         cordova.plugins.firebase.analytics.setCurrentScreen('CampagneDetail' + $scope.campagne.titre);
         $ionicLoading.hide()
@@ -628,15 +541,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.$parent.setExpanded(true)
         $scope.$parent.setHeaderFab('right')
         $scope.$parent.clearFabs()
-            //$cordovaGoogleAnalytics.debugMode();
-            //$cordovaGoogleAnalytics.startTrackerWithId('UA-106202214-1');
-            /* Application.getName().then(function(value) {
-                 $scope.name = value
-                     //$cordovaGoogleAnalytics.setUserId($scope.name);
-             }, function(error) {
-                 //$cordovaGoogleAnalytics.setUserId('Anonyme');
-             })
-             */
+
         cordova.plugins.firebase.analytics.setEnabled(true);
         cordova.plugins.firebase.analytics.setCurrentScreen("Concours");
         // $cordovaGoogleAnalytics.trackView('Concours');

@@ -46,13 +46,54 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             console.log('Token saved:', t.token);
         });
 */
+
         var notificationOpenedCallback = function(jsonData) {
-            console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+            // console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+        };
+
+        var notificationReceivedCallback = function(jsonData) {
+            //  console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
+            // console.log('Payload : ' + jsonData.payload);
+            // console.log('Menu : ' + jsonData.payload.additionalData.menu);
+            var menu = jsonData.payload.additionalData.menu;
+            if (menu === 'events') {
+                var badge = 0
+                Application.getEventBadge().then(function(value) {
+                    badge = value
+                    Application.setEventBadge(badge + 1)
+                }, function(error) {
+                    Application.setEventBadge(badge + 1)
+                })
+            }
+            if (menu === 'campagnes') {
+                var badge = 0
+                Application.getCampagneBadge().then(function(value) {
+                    badge = value
+                    Application.setCampagneBadge(badge + 1)
+                }, function(error) {
+                    Application.setCampagneBadge(badge + 1)
+                })
+            }
+            if (menu === 'concours') {
+                var badge = 0
+                Application.getConcoursBadge().then(function(value) {
+                    badge = value
+                    Application.setConcoursBadge(badge + 1)
+                }, function(error) {
+                    Application.setConcoursBadge(badge + 1)
+                })
+            }
+            $cordovaBadge.increase().then(function() {
+                // You have permission, badge increased.
+            }, function(err) {
+                // You do not have permission.
+            })
         };
 
         window.plugins.OneSignal
             .startInit("35a7d432-18c9-4a1a-b778-f1f178267270")
             .handleNotificationOpened(notificationOpenedCallback)
+            .handleNotificationReceived(notificationReceivedCallback)
             .endInit();
 
         var result = null;
