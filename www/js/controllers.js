@@ -12,7 +12,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-        $cordovaBadge.promptForPermission()
+        //   $cordovaBadge.promptForPermission()
     })
 
 
@@ -101,8 +101,8 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.$parent.setHeaderFab('right')
     $scope.$parent.clearFabs();
 
-    cordova.plugins.firebase.analytics.setEnabled(true);
-    cordova.plugins.firebase.analytics.setCurrentScreen("Accueil");
+    // cordova.plugins.firebase.analytics.setEnabled(true);
+    //  cordova.plugins.firebase.analytics.setCurrentScreen("Accueil");
 
 
 
@@ -119,15 +119,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     //  $scope.badgeCampagne  = 1
 
     Application.getConcoursBadge().then(function(value) {
-        $scope.badgeConcours = value
-    })
-
-    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
-        // You have permission, badge set.
-    }, function(err) {
-        // You do not have permission.
-    })
-
+            $scope.badgeConcours = value
+        })
+        /*
+            $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+                // You have permission, badge set.
+            }, function(err) {
+                // You do not have permission.
+            })
+        */
 
 
     // $scope.badgeConcours  = 1
@@ -344,8 +344,8 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 
         Application.setEventBadge(0)
 
-        cordova.plugins.firebase.analytics.setEnabled(true);
-        cordova.plugins.firebase.analytics.setCurrentScreen("Evènements");
+        //    cordova.plugins.firebase.analytics.setEnabled(true);
+        //    cordova.plugins.firebase.analytics.setCurrentScreen("Evènements");
         //$cordovaGoogleAnalytics.trackView('Evènements');
         //$cordovaGoogleAnalytics.setAllowIDFACollection(true);
 

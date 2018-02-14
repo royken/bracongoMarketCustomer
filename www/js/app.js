@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput', 'firebase', 'ngCordova', 'ngMap', 'ionic.rating', 'ngCordova.plugins.nativeStorage', 'youtube-embed', 'ionic.cloud', 'ngSanitize'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput', 'firebase', 'ngCordova', 'ngMap', 'ionic.rating', 'ngCordova.plugins.nativeStorage', 'youtube-embed', 'ngSanitize'])
 
 .run(function($ionicPlatform, $state, Application, $cordovaBadge) {
     $ionicPlatform.ready(function() {
@@ -90,11 +90,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             })
         };
 
-        window.plugins.OneSignal
-            .startInit("35a7d432-18c9-4a1a-b778-f1f178267270")
-            .handleNotificationOpened(notificationOpenedCallback)
-            .handleNotificationReceived(notificationReceivedCallback)
-            .endInit();
+        /*     window.plugins.OneSignal
+                 .startInit("35a7d432-18c9-4a1a-b778-f1f178267270")
+                 .handleNotificationOpened(notificationOpenedCallback)
+                 .handleNotificationReceived(notificationReceivedCallback)
+                 .endInit();
+         */
 
         var result = null;
         Application.isInitialRun().then(function(value) {
@@ -114,13 +115,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $httpProvider, $ionicCloudProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $sceDelegateProvider, $httpProvider) {
 
     // Turn off caching for demo simplicity's sake
     $ionicConfigProvider.views.maxCache(0);
     $sceDelegateProvider.resourceUrlWhitelist(['**']);
     $httpProvider.defaults.useXDomain = true;
-    $ionicCloudProvider.init({
+    /* $ionicCloudProvider.init({
         "core": {
             "app_id": "da4cdfc4"
         },
@@ -137,6 +138,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             }
         }
     });
+*/
 
     /*
     // Turn off back button text
